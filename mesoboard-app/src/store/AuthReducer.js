@@ -10,13 +10,15 @@ const AuthReducer = (state, action) => {
 
   switch (type) {
     case types.SIGNIN: {
-      const { email, password, token } = payload
+      const { token, expiresIn, code } = payload
       if (token)
         localStorage.setItem('token', token)
+      if (expiresIn)
+        localStorage.setItem('expiresIn', expiresIn)
 
       return {
         ...state,
-        user: { email, password },
+        user: { code },
         token
       }
     }

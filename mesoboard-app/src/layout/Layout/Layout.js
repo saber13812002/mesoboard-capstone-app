@@ -7,7 +7,6 @@ import {
 } from '../index'
 
 
-
 const Layout = () => {
   // let { path } = useRouteMatch();
   // console.log('Layout path', path)

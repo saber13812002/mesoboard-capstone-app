@@ -11,18 +11,24 @@ const AuthProvider = ({ children }) => {
   const [authState, dispatchAuthAction] = useReducer(AuthReducer, initialAuthState)
 
   const signinHandler = async (user) => {
-    const res = await fetch('https://randomuser.me/api/') //dummy url to simulate fetch
+    const data = {
+      code: '2212',
+      password: 'test123'
+    }
+
+    await fetch('/api/login', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(data)
+    }) //dummy url to simulate fetch
       // .then(data => console.log('data', data))
       .then(data => data.json())
       .then(res => {
         dispatchAuthAction({
           type: 'SIGNIN',
-          // payload: res,
-          payload: {
-            email: 'kevin.ramirez3@upr.edu',
-            password: 'Password',
-            token: 'AS4TDRFC5VSI9EOI4TJHPSH08DAG'
-          }
+          payload: { ...res, code: data.code }
         })
       })
   }
