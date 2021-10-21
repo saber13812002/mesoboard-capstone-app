@@ -16,21 +16,28 @@ const AuthProvider = ({ children }) => {
       password: 'test123'
     }
 
-    await fetch('/api/login', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(data)
-    }) //dummy url to simulate fetch
-      // .then(data => console.log('data', data))
-      .then(data => data.json())
-      .then(res => {
-        dispatchAuthAction({
-          type: 'SIGNIN',
-          payload: { ...res, code: data.code }
-        })
-      })
+    dispatchAuthAction({
+      type: 'SIGNIN',
+      // payload: { ...res, code: data.code }
+      payload: {
+        token: 'sdfjoashfasfho', code: data.code
+      }
+    })
+    // await fetch('/api/login', {
+    //   method: 'POST',
+    //   headers: {
+    //     'Content-Type': 'application/json'
+    //   },
+    //   body: JSON.stringify(data)
+    // }) //dummy url to simulate fetch
+    //   // .then(data => console.log('data', data))
+    //   .then(data => data.json())
+    //   .then(res => {
+    //     dispatchAuthAction({
+    //       type: 'SIGNIN',
+    //       payload: { ...res, code: data.code }
+    //     })
+    //   })
   }
 
   const signoutHandler = user => {
