@@ -66,8 +66,8 @@ const SidebarList = () => {
     return (
         <div class="wrapper">
             <ul>
-                {links.map(link =>
-                    <li>
+                {links.map((link, key) =>
+                    <li key={key}>
                         <NavLink id="link" className={link.className} activeClassName={link.activeClassName} to={link.to}>
                             <Icon icon={link.icon} className='mr-2' />
                             <span>{link.name}</span>

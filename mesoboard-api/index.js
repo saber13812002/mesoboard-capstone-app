@@ -14,9 +14,9 @@ app.use(cors());
 app.use(express.static(path.resolve(__dirname, '../mesoboard-app/build')));
 
 // Handle GET requests to /api route
-app.get("/api", (req, res) => {
-  res.json({ message: "Hello from server!" });
-});
+// app.get("/api", (req, res) => {
+//   res.json({ message: "Hello from server!" });
+// });
 
 // All other GET requests not handled before will return our React app
 app.get('*', (req, res) => {

@@ -2,12 +2,12 @@
   "name": "mesoboard-capstone-app",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "app.js",
   "engines": {
     "node": "12.0.0"
   },
   "scripts": {
-    "start": "node mesoboard-api/index.js",
+    "start": " cd mesoboard-api && nodemon app.js && cd ..",
     "build": "cd mesoboard-app && npm install && npm run build"
   },
   "repository": {
