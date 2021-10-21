@@ -2,16 +2,16 @@
 const path = require('path');
 const express = require('express');
 
-// const cors = require('cors');
+const cors = require('cors');
 
 const PORT = process.env.PORT || 3001;
 
 const app = express();
 
-// app.use(cors());
+app.use(cors());
 
 // Have Node serve the files for our built React app
-app.use(express.static(path.resolve(__dirname, '../client/build')));
+app.use(express.static(path.resolve(__dirname, '../mesoboard-app/build')));
 
 // Handle GET requests to /api route
 app.get("/api", (req, res) => {
@@ -20,7 +20,7 @@ app.get("/api", (req, res) => {
 
 // All other GET requests not handled before will return our React app
 app.get('*', (req, res) => {
-  res.sendFile(path.resolve(__dirname, '../client/build', 'index.html'));
+  res.sendFile(path.resolve(__dirname, '../mesoboard-app/build', 'index.html'));
 });
 
 app.listen(PORT, () => {
