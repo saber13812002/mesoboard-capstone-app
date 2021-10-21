@@ -1,0 +1,24 @@
+{
+  "name": "mesoboard-capstone-app",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node mesoboard-api/index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/keviinramiirez/mesoboard-capstone-app.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/keviinramiirez/mesoboard-capstone-app/issues"
+  },
+  "homepage": "https://github.com/keviinramiirez/mesoboard-capstone-app#readme",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.17.1"
+  }
+}
