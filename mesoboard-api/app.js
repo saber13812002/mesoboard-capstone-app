@@ -9,7 +9,7 @@ const PORT = process.env.PORT || 3001;
  */
 
 // Gives us access to variables set in the .env file via `process.env.VARIABLE_NAME` syntax
-require('dotenv').config();
+// require('dotenv').config();
 
 // Create the Express application
 var app = express();
