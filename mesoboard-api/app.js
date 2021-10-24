@@ -12,6 +12,11 @@ require('dotenv').config();
 // Create the Express application
 var app = express();
 
+// Handle GET requests to /api route
+app.get("/api", (req, res) => {
+  res.json({ message: "Hello from server!" });
+});
+
 // Configures the database and opens a global connection that can be used in any module with `mongoose.connection`
 require('./config/database');
 
@@ -24,12 +29,11 @@ require('./models/tokens');
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Allows our React application to make HTTP requests to Express application
+// Allows our Angular application to make HTTP requests to Express application
 app.use(cors());
 
-app.get("/api", (req, res) => {
-  res.json({ message: "Hello from server!" });
-});
+// When you run `ng build`, the output will go to the ./public directory
+app.use(express.static(path.join(__dirname, 'public')));
 
 /**
  * -------------- ROUTES ----------------
@@ -38,15 +42,6 @@ app.get("/api", (req, res) => {
 // Imports all of the routes from ./routes/index.js
 app.use(require('./routes'));
 
-
-// Where frontend builds to 
-// When you run `ng build`, the output will go to the ./build directory
-app.use(express.static(path.resolve(__dirname, '../mesoboard-app/build')));
-
-
-app.get('*', (req, res) => {
-  res.sendFile(path.resolve(__dirname, '../mesoboard-app/build', 'index.html'));
-});
 
 /**
  * -------------- SERVER ----------------
