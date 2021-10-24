@@ -17,6 +17,24 @@ var app = express();
 // Allows our React application to make HTTP requests to Express application
 app.use(cors());
 
+
+// // Configures the database and opens a global connection that can be used in any module with `mongoose.connection`
+// require('./config/database');
+
+// // Must first load the models
+// require('./models/users');
+// require('./models/permissions');
+// require('./models/tokens');
+
+// // Instead of using body-parser middleware, use the new Express implementation of the same thing
+// app.use(express.json());
+// app.use(express.urlencoded({ extended: true }));
+
+
+/**
+ * -------------- ROUTES ----------------
+ */
+
 // When you run `ng build`, the output will go to the ./public directory
 app.use(express.static(path.resolve(__dirname, '../mesoboard-app/build')));
 
@@ -26,25 +44,8 @@ app.get("/api", (req, res) => {
   res.json({ message: "Hello from server!" });
 });
 
-// Configures the database and opens a global connection that can be used in any module with `mongoose.connection`
-require('./config/database');
-
-// Must first load the models
-require('./models/users');
-require('./models/permissions');
-require('./models/tokens');
-
-// Instead of using body-parser middleware, use the new Express implementation of the same thing
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
-
-
-/**
- * -------------- ROUTES ----------------
- */
-
 // Imports all of the routes from ./routes/index.js
-app.use(require('./routes'));
+// app.use(require('./routes'));
 
 // All other GET requests not handled before will return our React app
 app.get('*', (req, res) => {
