@@ -31,7 +31,7 @@ require('./models/tokens');
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Allows our Angular application to make HTTP requests to Express application
+// Allows our React application to make HTTP requests to Express application
 app.use(cors());
 
 // When you run `ng build`, the output will go to the ./public directory
