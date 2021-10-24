@@ -1,6 +1,8 @@
+const path = require('path');
 const express = require('express');
 const cors = require('cors');
-const path = require('path');
+
+const PORT = process.env.PORT || 3001;
 
 /**
  * -------------- GENERAL SETUP ----------------
@@ -33,7 +35,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cors());
 
 // When you run `ng build`, the output will go to the ./public directory
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.resolve(__dirname, '../mesoboard-app/build')));
 
 /**
  * -------------- ROUTES ----------------
@@ -42,10 +44,17 @@ app.use(express.static(path.join(__dirname, 'public')));
 // Imports all of the routes from ./routes/index.js
 app.use(require('./routes'));
 
+// All other GET requests not handled before will return our React app
+app.get('*', (req, res) => {
+  res.sendFile(path.resolve(__dirname, '../mesoboard-app/build', 'index.html'));
+});
 
 /**
  * -------------- SERVER ----------------
  */
 
 // Server listens on http://localhost:3001
-app.listen(3001);
+// app.listen(3001);
+app.listen(PORT, () => {
+  console.log(`Server listening on ${PORT}`);
+});
