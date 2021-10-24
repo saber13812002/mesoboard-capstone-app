@@ -14,6 +14,13 @@ require('dotenv').config();
 // Create the Express application
 var app = express();
 
+// Allows our React application to make HTTP requests to Express application
+app.use(cors());
+
+// When you run `ng build`, the output will go to the ./public directory
+app.use(express.static(path.resolve(__dirname, '../mesoboard-app/build')));
+
+
 // Handle GET requests to /api route
 app.get("/api", (req, res) => {
   res.json({ message: "Hello from server!" });
@@ -31,11 +38,6 @@ require('./models/tokens');
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Allows our React application to make HTTP requests to Express application
-app.use(cors());
-
-// When you run `ng build`, the output will go to the ./public directory
-app.use(express.static(path.resolve(__dirname, '../mesoboard-app/build')));
 
 /**
  * -------------- ROUTES ----------------
