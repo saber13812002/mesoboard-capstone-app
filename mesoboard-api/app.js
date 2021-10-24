@@ -19,7 +19,7 @@ app.use(cors());
 
 
 // // Configures the database and opens a global connection that can be used in any module with `mongoose.connection`
-// require('./config/database');
+require('./config/database');
 
 // // Must first load the models
 // require('./models/users');
