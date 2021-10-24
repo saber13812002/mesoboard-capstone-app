@@ -7,7 +7,7 @@
     "node": "12.0.0"
   },
   "scripts": {
-    "start": "cd mesoboard-api && node app.js",
+    "start": "cd mesoboard-api && node index.js",
     "build": "cd mesoboard-app && npm install && npm run build"
   },
   "repository": {
