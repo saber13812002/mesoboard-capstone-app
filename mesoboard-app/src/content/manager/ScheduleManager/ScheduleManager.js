@@ -1,47 +1,71 @@
 import { useState } from 'react'
-import ScheduleTable from './ScheduleTable'
-import { MButton } from '../../../components/index'
+import { MButton } from '../../../components'
+import { ScheduleTable, ScheduleTurnsTable } from '../..'
+import { turnArray, employeeWeekDatesArray } from '../../../constants/scheduleConstant'
 import {
   Icon,
-  ICON_OPTIONS
-} from '../../../components/index'
+  ICON_OPTIONS,
+  ScheduleEdit
+} from '../../../components'
 
-/**
-  weekDateRange: {
-    startWeekDate: __,
-    endWeekDate: __,
-  }
-  employeeWeekDates: [
-    {
-      employee: { ...userInfo }, //access through AuthContext
-      tuesday: {
-        startHour: __,
-        endHour: __,
-        mealHour: __
-      },
-      wednesday:  { _asAbove_ },
-      thursday:   { _asAbove_ },
-      friday:     { _asAbove_ },
-      saturday:   { _asAbove_ },
-      sunday:     { _asAbove_ },
-      monday:     { _asAbove_ },
-      totalHours: __
-    }
-  ]
- */
 
 const ScheduleManager = () => {
-  // states should be handled with either context, zustang, or redux. you decide.
-  const [weekDateRange, setWeekDateRange] = useState({})
-  const [employeeWeekDates, setEmployeeWeekDates] = useState([])
+  // const [weekDateRange, setWeekDateRange] = useState({})
+  const [employeeWeekDates, setEmployeeWeekDates] = useState(employeeWeekDatesArray)
+  const [turns, setTurns] = useState(turnArray)
+  const [employeeToEdit, setEmployeeToEdit] = useState(null)
 
   // useEffect fetching the data to initialize the states
 
-  // functions to handle schedule editing (handle state management)
+  // functions to handle schedule turns modification and schedule editing (handle state management)
+  const openScheduleEdit = (employee) => {
+    setEmployeeToEdit(employee)
+  }
+
+  const closeScheduleEdit = () => {
+    setEmployeeToEdit(null)
+  }
+
+  const addNewTurn = () =>
+    setTurns(prev => [...prev, { id: null, start: null, end: null, lunch: null }])
+
+  const modifyWeekdayHoursByTurn = (weekdayIndex, turnIndex) => {
+    if (turnIndex == null || turnIndex < 0 || turnIndex > turns.length - 1)
+      return
+
+    const { id, start, end, lunch } = turns[turnIndex]
+    const newWeekday = {
+      turn: id,
+      startHour: start,
+      endHour: end,
+      mealHour: lunch
+    }
+
+    setEmployeeToEdit(emp => {
+      const newEmployee = { ...emp }
+      newEmployee.weekdays[weekdayIndex] = newWeekday
+      return newEmployee
+    })
+  }
+
+  const addWeekdayIntoList = (weekdayIndex) => {
+    const newWeekday = {
+      turn: 1,
+      startHour: turns[1].start,
+      endHour: turns[1].end,
+      mealHour: turns[1].lunch
+    }
+
+    setEmployeeToEdit(emp => {
+      const newEmployee = { ...emp }
+
+      newEmployee.weekdays[weekdayIndex] = newWeekday
+      return newEmployee
+    })
+  }
 
   return (
     <div>
-      {/* <p>ScheduleManager Component</p> */}
       {/* section for the weekDateRange component and the buttons */}
       <div className='d-flex justify-content-between mb-3'>
         <div>
@@ -64,25 +88,29 @@ const ScheduleManager = () => {
           />
           <Icon
             icon={ICON_OPTIONS.download}
-            variant={'primary'}
-            className={'ml-2'}
+            color={'primary'}
           />
         </div>
       </div>
 
 
       {/* section for the scheduleTable and approve button */}
-      <ScheduleTable />
-
-      <MButton
-        icon={ICON_OPTIONS.check}
-        text='Approve'
-        variant='primary'
-        className='mt-3'
-        size='sm'
-      />
+      <section className='mb-4'>
+        <ScheduleTable onOpenScheduleEdit={openScheduleEdit} employeeWeekDates={employeeWeekDates} />
+      </section>
 
       {/* section for the ScheduleEditModal portal component */}
+      <ScheduleTurnsTable turns={turns} onAddNewTurn={addNewTurn} />
+
+      {employeeToEdit &&
+        <ScheduleEdit
+          employee={employeeToEdit}
+          turns={turns}
+          onWeekdayHoursUpdate={modifyWeekdayHoursByTurn}
+          onWeekdayAdd={addWeekdayIntoList}
+          onCloseScheduleEdit={closeScheduleEdit}
+        />
+      }
     </div>
   )
 }
