@@ -16,16 +16,16 @@ const Sidebar = () => {
   }
 
   return (
-    <div className='sidebar'>
+    <>
       {window.innerWidth > 425 && (
-        <>
+        <div className='sidebar'>
           <MesonLogoContainer />
           <hr />
           <SidebarProfileSection onProfileCard={handleProfileCard} />
           <SidebarList />
-        </>
+        </div>
       )}
-    </div>
+    </>
   )
 }
 

@@ -4,7 +4,7 @@ import { NavLink } from 'react-router-dom'
 import {
     Icon,
     ICON_OPTIONS
-} from '../../components/index'
+} from '../../components'
 
 
 const SidebarList = () => {
@@ -64,13 +64,13 @@ const SidebarList = () => {
 
 
     return (
-        <div class="wrapper">
+        <div className="sidebarList">
             <ul>
-                {links.map((link, key) =>
-                    <li key={key}>
-                        <NavLink id="link" className={link.className} activeClassName={link.activeClassName} to={link.to}>
-                            <Icon icon={link.icon} className='mr-2' />
-                            <span>{link.name}</span>
+                {links.map(({ className, activeClassName, to, icon, name }, i) =>
+                    <li key={i}>
+                        <NavLink id="link" className={className} activeClassName={activeClassName} to={to}>
+                            <Icon icon={icon} className='mr-2' />
+                            <span>{name}</span>
                         </NavLink>
                     </li>
                 )}

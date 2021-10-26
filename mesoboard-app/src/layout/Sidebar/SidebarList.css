@@ -1,23 +1,25 @@
 .cname {
   color:#767676;
   display: flex;
-  width: 100%;
+  /* width: 100%; */
 }
 
 .acn {
-  border: black;
   color: #287F4E;
 }
 
-li {
+.sidebarList > ul > li {
   height: 40px;
   padding-left: 22px;
 }
 
-li > a:hover {
+.sidebarList > ul > li > a:hover {
   color: #287F4E !important;
 }
 
+.sidebarList > ul > li > a > svg {
+  width: 24px !important;
+}
 
 @media only screen and (max-width: 425px) {
   .sidebarIcon{

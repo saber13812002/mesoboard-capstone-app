@@ -1,7 +1,7 @@
 import { useContext } from 'react'
 import { Form, Button } from 'react-bootstrap';
-import { AuthContext } from '../store/index'
-import { AuthWrapper } from './index';
+import { AuthContext } from '../store'
+import { AuthWrapper } from '.';
 
 const Signin = () => {
   const { signin } = useContext(AuthContext)
