@@ -1,8 +1,8 @@
-import { Icon } from '../../index'
+import { Icon } from '../..'
 import { Button } from 'react-bootstrap'
 import './MButton.css'
 
-const MButton = ({ icon, text, variant = 'primary', className, size }) => {
+const MButton = ({ icon, text, variant = 'primary', className, size, style, onClick }) => {
   let iconSize = 'medium';
   if (icon) {
     iconSize = 'small'
@@ -11,8 +11,8 @@ const MButton = ({ icon, text, variant = 'primary', className, size }) => {
 
   // implement and handle the portal -> ScheduleEditModal component
   return (
-    <div className={className}>
-      <Button variant={`${variant}`} size={size} >
+    <div className={className} style={style}>
+      <Button variant={`${variant}`} size={size} onClick={onClick} >
         <div className='d-inline'>
           <Icon icon={icon} size={iconSize} isButtonIcon={true} />
         </div>

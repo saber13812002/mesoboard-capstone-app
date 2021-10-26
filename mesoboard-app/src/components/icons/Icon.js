@@ -1,16 +1,44 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import './Icon.css'
+import {
+  faCaretDown,
+  faBell,
+  faBars,
+  faHome,
+  faClock,
+  faUser,
+  faMoneyBill,
+  faPencilRuler,
+  faStickyNote,
+  faDownload,
+  faUpload,
+  faCheck,
+  faPlus,
+  faTrashAlt
+} from '@fortawesome/free-solid-svg-icons'
 
-// myViewbox.StretchDirection = StretchDirection.Both;
-// myViewbox.Stretch = Stretch.Fill;
-// myViewbox.MaxWidth = 400;
-// myViewbox.MaxHeight = 400;
+export const iconOptions = {
+  caretDown: faCaretDown,
+  bell: faBell,
+  bars: faBars,
+  home: faHome,
+  clock: faClock,
+  user: faUser,
+  money: faMoneyBill,
+  pencil: faPencilRuler,
+  note: faStickyNote,
+  download: faDownload,
+  upload: faUpload,
+  check: faCheck,
+  plus: faPlus,
+  trash: faTrashAlt
+}
 
-const Icon = ({ icon, size, variant, isButtonIcon, className }) => {
+const Icon = ({ icon, size, color, isButtonIcon, className }) => {
   // viewBox = "min-x min-y width height"
   let minX = 0;
   let minY = 0;
-  let color = '';
+  // let color = '';
 
   // let width = 248;
   // let height = 312;
@@ -33,12 +61,13 @@ const Icon = ({ icon, size, variant, isButtonIcon, className }) => {
     height = 612
   }
 
-  if (variant && variant.includes('primary')) {
+  if (color && color.includes('primary')) {
     color = '#287F4E'
   }
 
-
-
+  if (color && color.includes('danger')) {
+    color = '#BA302B'
+  }
 
   const viewBox = `${minX} ${minY} ${width} ${height}`
   return <FontAwesomeIcon
