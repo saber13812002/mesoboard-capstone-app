@@ -32,7 +32,7 @@ const ScheduleTurnsTable = ({ turns, onAddNewTurn }) => {
         text='Nuevo Turno'
         variant='primary'
         size='sm'
-        className='ml-2 pt-2'
+        className='ml-1 pt-2'
         style={{ marginTop: '-48px' }}
       />
     </div>
