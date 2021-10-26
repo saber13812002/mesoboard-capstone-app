@@ -1,16 +1,20 @@
-import { SidebarList } from '../../../layout/index'
-import {
-  NavDrawerModal,
-  MesonLogoContainer
-} from '../../index'
+import classes from './NavDrawerModal.module.css'
+import { SidebarList } from '../../../layout'
+import { Modal, MesonLogoContainer } from '../..'
 
 const NavDrawer = ({ onClose }) => {
+  const portalElement = document.getElementById('navdrawer-portal')
+
   return (
-    <NavDrawerModal onClose={onClose}>
+    <Modal
+      onClose={onClose}
+      portalElement={portalElement}
+      classes={classes}
+    >
       <MesonLogoContainer />
       <hr />
       <SidebarList />
-    </NavDrawerModal>
+    </Modal>
   )
 }
 
