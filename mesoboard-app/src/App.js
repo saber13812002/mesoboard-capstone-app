@@ -1,9 +1,9 @@
 import { useState, useEffect, useContext } from 'react' //rafce shortcut
 import './App.css';
 import { BrowserRouter as Router, Route, Redirect } from 'react-router-dom'
-import { Layout } from './layout/index'
-import { AuthContext, AuthProvider } from './store/index';
-import { Signin, VerifyPermission } from './authentication/index';
+import { Layout } from './layout'
+import { AuthContext, AuthProvider } from './store';
+import { Signin, VerifyPermission } from './authentication';
 
 const ProtectedRoute = ({ children, ...rest }) => {
   const { token } = useContext(AuthContext)

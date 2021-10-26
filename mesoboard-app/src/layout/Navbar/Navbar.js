@@ -4,7 +4,7 @@ import {
   NavDrawer,
   Icon,
   ICON_OPTIONS
-} from '../../components/index'
+} from '../../components'
 
 // const amountNotificationLabel = () => {
 //   const [notificationAmount, setNotificationAmount] = useState(0)

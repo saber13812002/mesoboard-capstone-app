@@ -1,5 +1,5 @@
 import './SidebarProfileSection.css'
-import { Icon, ICON_OPTIONS } from '../../components/index'
+import { Icon, ICON_OPTIONS } from '../../components'
 
 const SidebarProfileSection = ({ onProfileCard }) => {
   return (

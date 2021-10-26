@@ -2,7 +2,7 @@ import { useState } from 'react'
 import './ContentView.css'
 import { urlSlug } from '../../helpers/url'
 import { useRouteMatch } from 'react-router-dom'
-import { ContentHeader } from '../../components/index'
+import { ContentHeader } from '../../components'
 import {
   HomeManager,
   ScheduleManager,
@@ -10,7 +10,7 @@ import {
   ProfileManager,
   MemoManager,
   RequestManager
-} from '../../content/index'
+} from '../../content'
 
 /** returns the component to be viewed */
 const handleView = view => {

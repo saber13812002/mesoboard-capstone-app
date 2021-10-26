@@ -4,7 +4,7 @@ import {
   Navbar,
   Sidebar,
   ContentView
-} from '../index'
+} from '..'
 
 
 const Layout = () => {

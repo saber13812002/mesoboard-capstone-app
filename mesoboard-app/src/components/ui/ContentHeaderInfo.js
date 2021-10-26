@@ -1,5 +1,5 @@
 import React from 'react'
-import { TotalServicioProduccion } from '../index'
+import { TotalServicioProduccion } from '..'
 
 const ContentHeaderInfo = ({ view }) => {
   // const [infoTo]

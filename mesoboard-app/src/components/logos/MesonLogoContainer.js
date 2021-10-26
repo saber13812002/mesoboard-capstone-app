@@ -1,6 +1,6 @@
 import React from 'react'
 import './MesonLogoContainer.css'
-import { MesonLogo } from '../index'
+import { MesonLogo } from '..'
 
 const MesonLogoContainer = () => {
   return (

@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import './ContentHeader.css'
-import { ContentHeaderInfo } from '../index'
+import { ContentHeaderInfo } from '..'
 
 const ContentHeader = ({ view }) => {
   const [header, setHeader] = useState('')

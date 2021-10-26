@@ -4,9 +4,9 @@ import { Redirect, useLocation, Link } from 'react-router-dom'
 // import { Form, Button } from 'react-bootstrap';
 
 import MesoboardBackgroundImg from '../assets/mesoboard_background.jpg'
-import { MesonLogo } from '../components/index'
-import { AuthContext } from '../store/index'
-import { Signin } from '../authentication/index'
+import { MesonLogo } from '../components'
+import { AuthContext } from '../store'
+import { Signin } from '../authentication'
 
 const AuthWrapper = ({ children }) => {
   const [isTokenValid, setIsValidToken] = useState(false)
