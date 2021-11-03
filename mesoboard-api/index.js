@@ -3,6 +3,10 @@ const path = require('path');
 const express = require('express');
 const cors = require('cors');
 
+// routes
+const usersRouter = require('./routes/users')
+
+
 const PORT = process.env.PORT || 3001;
 
 const app = express();
@@ -13,9 +17,14 @@ app.use(cors());
 app.use(express.static(path.resolve(__dirname, '../mesoboard-app/build')));
 
 // Handle GET requests to /api route
-app.get("/api", (req, res) => {
-  res.json({ message: "Hello from server!" });
-});
+// app.get("/api", (req, res) => {
+//   res.json({ message: "Hello from server!" });
+// });
+
+
+app.get("/api", usersRouter);
+
+
 
 // All other GET requests not handled before will return our React app
 app.get('*', (req, res) => {
