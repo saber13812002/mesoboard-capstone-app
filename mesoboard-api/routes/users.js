@@ -144,21 +144,11 @@
 
 
 
-const express = require('express')
-const router = express.Router()
-const users = require('../controllers/users');
+const controller = require('../controllers/users');
+const router = require('express').Router();
 
-
-router.get('/users', users)
-
-// router.get('/users', (req, res) => {
-//     const query = 'select * from users;'
-
-//     db.any(query).then(users => {
-//         return res.status(200).json({ data: users })
-//     }).catch(err => {
-//         console.error(err)
-//     })
-// })
+router
+    .get('/hello', controller.hello)
+    .get('/users', controller.getAllUsers)
 
 module.exports = router;
