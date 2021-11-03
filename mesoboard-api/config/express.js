@@ -9,7 +9,7 @@ const { combine, timestamp, label, printf, prettyPrint, json } = format;
 const path = require('path');
 
 
-module.exports = function (db) {
+module.exports = function () {
   const app = express();
   const server = http.createServer(app);
 

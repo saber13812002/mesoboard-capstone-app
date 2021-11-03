@@ -2,10 +2,10 @@ const configurePostgres = require('./config/postgres');
 const configureExpress = require('./config/express');
 
 // Create a new Postgress connection instance
-const db = configurePostgres();
+configurePostgres();
 
 // Create a new Express application instance
-const app = configureExpress(db);
+const app = configureExpress();
 const PORT = require('./config/config.js').port;
 
 // Use the Express application instance to listen to the '3001' port
