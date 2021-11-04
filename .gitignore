@@ -1,0 +1,7 @@
+/node_modules
+node_modules/
+node_modules/*
+node_modules/**
+mesoboard-app/node_modules/
+.env
+id_rsa_priv.pem

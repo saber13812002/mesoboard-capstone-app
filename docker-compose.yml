@@ -1,0 +1,29 @@
+version: '3.8'
+
+volumes:
+  postgres_data:
+    external: true
+    name: postgres_data
+
+services:
+  
+  postgres:
+    image: postgres:13.1
+    container_name: postgres
+    healthcheck:
+      test: [ "CMD", "pg_isready", "-q", "-d", "postgres", "-U", "root" ]
+      timeout: 45s
+      interval: 10s
+      retries: 10
+    restart: always
+    environment:
+      - POSTGRES_USER=root
+      - POSTGRES_PASSWORD=root123
+      - APP_DB_USER=admin
+      - APP_DB_PASS=meso_2021
+      - APP_DB_NAME=mesodb
+    volumes:
+      - postgres_data:/var/lib/postgres
+      - ./db:/docker-entrypoint-initdb.d/
+    ports:
+      - 5432:5432
