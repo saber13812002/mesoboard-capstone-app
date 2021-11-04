@@ -1,28 +1,29 @@
 {
-  "name": "mesoboard-capstone-app",
+  "name": "mesoboard-server",
   "version": "1.0.0",
   "description": "",
   "main": "app.js",
   "engines": {
-    "node": "12.0.0"
+    "node": "16.13.0",
+    "npm": "8.1.0"
   },
   "scripts": {
-    "start": "cd mesoboard-api && node app.js",
-    "build": "cd mesoboard-app && npm install && npm run build"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/keviinramiirez/mesoboard-capstone-app.git"
+    "start": "node app.js",
+    "heroku-postbuild": "cd app-react && npm install && npm run build"
   },
   "keywords": [],
-  "author": "",
+  "author": "mesoboard-dev-team",
   "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/keviinramiirez/mesoboard-capstone-app/issues"
-  },
-  "homepage": "https://github.com/keviinramiirez/mesoboard-capstone-app#readme",
   "dependencies": {
+    "bluebird": "^3.7.2",
     "cors": "^2.8.5",
-    "express": "^4.17.1"
+    "dotenv": "^8.6.0",
+    "express": "^4.17.1",
+    "method-override": "^3.0.0",
+    "mongoose": "^5.7.14",
+    "morgan": "^1.10.0",
+    "nodemon": "^2.0.14",
+    "pg-promise": "^10.11.1",
+    "winston": "^3.3.3"
   }
 }
