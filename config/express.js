@@ -140,11 +140,11 @@ module.exports = function () {
   });
 
   // Have Node serve the files for our built React app
-  app.use(express.static(path.resolve(__dirname, '../mesoboard-app/build')));
+  app.use(express.static(path.resolve(__dirname, '../app-react/build')));
 
   // All other GET requests not handled before will return our React app
   app.get('*', (req, res) => {
-    res.sendFile(path.resolve(__dirname, '../mesoboard-app/build', 'index.html'));
+    res.sendFile(path.resolve(__dirname, '../app-react/build', 'index.html'));
   });
 
   return server;
