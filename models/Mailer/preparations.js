@@ -1,7 +1,7 @@
 
 const config = require('../../config/config.js');
 
-exports.prepareVerification = function (req, html) {
+exports.prepareVerification = (req, html) => {
   console.log('prepareVerification')
   console.log('req.body.content', req.body.content, config.mailServiceCredentials.name)
   const mailInfo = {
@@ -16,7 +16,7 @@ exports.prepareVerification = function (req, html) {
 };
 
 
-exports.prepareShout = function (req, emails, html) {
+exports.prepareShout = (req, emails, html) => {
   const mailInfo = {
     content: req.body.content, //text version of the email
     subject: req.body.title,
@@ -28,7 +28,7 @@ exports.prepareShout = function (req, emails, html) {
   return mailInfo;
 };
 
-exports.prepareResetEmail = function (req, html) {
+exports.prepareResetEmail = (req, html) => {
   const mailInfo = {
     content: "You Need to open the html version of this email", //text version of the email
     subject: "Reset Your Password for Mesoboard",
@@ -41,7 +41,7 @@ exports.prepareResetEmail = function (req, html) {
 
 };
 
-exports.prepareInvitationEmail = function (email, html) {
+exports.prepareInvitationEmail = (email, html) => {
   const mailInfo = {
     subject: "Register To Mesoboard",
     cc: [email],

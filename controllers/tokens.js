@@ -1,7 +1,7 @@
 const db = require('../config/postgres')();
 const authUtils = require('../lib/authUtils')
 
-exports.enforceMaxUserTokensConstraint = function (req, res, next) {
+exports.enforceMaxUserTokensConstraint = (req, res, next) => {
   const user_id = req.app.locals.user_id;
   const max_token_amount = 2;
   const max_token_for_query = max_token_amount - 1;
@@ -15,14 +15,14 @@ exports.enforceMaxUserTokensConstraint = function (req, res, next) {
     "END IF ;" +
     "END " +
     "$do$";
-  return db.any(query, [max_token_for_query, user_id]).then(function () {
+  return db.any(query, [max_token_for_query, user_id]).then(() => {
     next();
-  }).catch(function (error) {
+  }).catch(error => {
     next(error);
   });
 };
 
-exports.expireUserTokens = function (req, res, next) {
+exports.expireUserTokens = (req, res, next) => {
   console.log('expireUserTokens', req.body)
   const token = req.get('token');
   console.log(!token, 'token', token)
@@ -40,13 +40,13 @@ exports.expireUserTokens = function (req, res, next) {
       });
       // next();
       res.end()
-    }).catch(function (error) {
+    }).catch(error => {
       next(error);
     });
   }
 };
 
-exports.addToken = function (req, res, next) {
+exports.addToken = (req, res, next) => {
   console.log('add token');
   const user_id = req.app.locals.user_id;
   const user_type = req.app.locals.user_type;
@@ -56,7 +56,7 @@ exports.addToken = function (req, res, next) {
     `INSERT into tokens (token, user_id, expiration_date, user_type) 
      values($1, $2, current_timestamp + interval '48 hours', $3) returning user_id, token, user_type;`;
 
-  return db.one(query, [token, user_id, user_type]).then(function (data) {
+  return db.one(query, [token, user_id, user_type]).then(data => {
     data['token'] = token;
     data['expiresIn'] = expiresIn;
     if (req.path == '/api/auth/login') {
@@ -83,21 +83,21 @@ exports.addToken = function (req, res, next) {
       error.httpStatusCode = 500;
       next(error);
     }
-  }).catch(function (err) {
+  }).catch(err => {
     next(err);
   });
 };
 
-exports.removeExpiredTokens = function (req, res, next) {
+exports.removeExpiredTokens = (req, res, next) => {
   var query = "DELETE FROM tokens WHERE expiration_date < TIMESTAMP 'now'";
-  return db.any(query).then(function () {
+  return db.any(query).then(() => {
     next();
-  }).catch(function (err) {
+  }).catch(err => {
     next(err);
   });
 };
 
-exports.checkToken = function (req, res, next) {
+exports.checkToken = (req, res, next) => {
   var token = req.get('token');
   var error = new Error();
   if (!token) {
@@ -106,7 +106,7 @@ exports.checkToken = function (req, res, next) {
     return next(error);
   }
   var query = "SELECT * from tokens where token = $1";
-  return db.any(query, [token]).then(function (data) {
+  return db.any(query, [token]).then(data => {
     if (data.length == 0) {
       error.message = "Access Denied: Token Expired";
       error.httpStatusCode = 401;
@@ -116,7 +116,7 @@ exports.checkToken = function (req, res, next) {
       req.app.locals.user_type = data[0].user_type;
       next();
     }
-  }).catch(function (err) {
+  }).catch(err => {
     next(err);
   });
 };

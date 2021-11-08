@@ -1,6 +1,6 @@
 var db = require('../config/postgres')();
 
-exports.addPermission = function (req, res, next) {
+exports.addPermission = (req, res, next) => {
   var email = req.body.email;
   var last_update = new Date().toDateString();
   var permission_type = req.body.permission_type;
@@ -20,26 +20,26 @@ exports.addPermission = function (req, res, next) {
     error.httpStatusCode = 400;
     return next(error);
   }
-  return db.task(function (task) {
-    return task.any("select (count(*)>0) as existing_email from permissions where email = $1", email).then(function (data1) {
+  return db.task(t => {
+    return t.any("select (count(*)>0) as existing_email from permissions where email = $1", email).then(data1 => {
       if (data1[0].existing_email) {
         error.message = "Existing permission with specified email";
         error.httpStatusCode = 400;
         throw error;
       } else {
         var query = 'INSERT into permissions (email, last_update, permission_type) values ($1, $2, $3) returning *';
-        return task.any(query, [email, last_update, permission_type]);
+        return t.any(query, [email, last_update, permission_type]);
       }
     });
-  }).then(function (data) {
+  }).then(data => {
     req.app.locals.permission_data = data;
     next();
-  }).catch(function (error) {
+  }).catch(error => {
     next(error);
   });
 };
 
-exports.checkPermission = function (req, res, next) {
+exports.checkPermission = (req, res, next) => {
   console.log('checkPermission body:', req.body)
   const code = req.body.code
   const error = new Error();
@@ -53,9 +53,9 @@ exports.checkPermission = function (req, res, next) {
   const query = "SELECT (count(*) = 1) as code_exists FROM permissions WHERE code = $1;";
   const query1 = "SELECT permission_type FROM permissions WHERE code = $1;";
 
-  return db.task(function (t) {
+  return db.task(t => {
     console.log(typeof code)
-    return t.one(query, code).then(function (data) {
+    return t.one(query, code).then(data => {
       console.log('data', data)
       if (!data.code_exists) {
         console.log('Privisional code doesn\'t exist')
@@ -67,7 +67,7 @@ exports.checkPermission = function (req, res, next) {
         return t.any(query1, code);
       }
     });
-  }).then(function (data1) {
+  }).then(data1 => {
     console.log('data1', data1)
     if (data1.length == 1) { //if finds permission
       res.status(200)
@@ -78,7 +78,7 @@ exports.checkPermission = function (req, res, next) {
         });
       res.end();
     }
-  }).catch(function (err) {
+  }).catch(err => {
     next(err);
   });
 };

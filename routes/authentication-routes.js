@@ -3,7 +3,7 @@ var tokens = require('../controllers/tokens');
 var mailer = require('../controllers/mailer');
 var messenger = require('../controllers/messenger');
 
-module.exports = function (app) {
+module.exports = app => {
   app.route('/api/auth/login')
     .post(auth.login, tokens.enforceMaxUserTokensConstraint, tokens.addToken);
 

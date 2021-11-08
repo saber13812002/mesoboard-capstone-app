@@ -1,7 +1,6 @@
-var db = require('../config/postgres')();
+// var db = require('../config/postgres')();
 
-// exports.isValidUser = function authMiddleware(req, res, next) {
-exports.verifyJWT = function (req, res, next) {
+exports.verifyJWT = (req, res, next) => {
   const tokenParts = req.headers.authorization.split(' ');
 
   if (tokenParts[0] === 'Bearer' && tokenParts[1].match(/\S+\.\S+\.\S+/) !== null) {
@@ -17,7 +16,7 @@ exports.verifyJWT = function (req, res, next) {
   }
 }
 
-exports.isAdmin = function (req, res, next) {
+exports.isAdmin = (req, res, next) => {
   var user_type = req.app.locals.user_type;
   console.log('\n\nuser_type', user_type)
   if (user_type == 'admin') {
@@ -30,7 +29,7 @@ exports.isAdmin = function (req, res, next) {
   }
 };
 
-exports.fileCheck = function (req, res, next) {
+exports.fileCheck = (req, res, next) => {
   // var filename = req.files.filename;
   var name;
   if (req.files.poster)
@@ -64,7 +63,7 @@ exports.fileCheck = function (req, res, next) {
   next();
 }
 
-exports.isAdmin = function (req, res, next) {
+exports.isAdmin = (req, res, next) => {
   var user_type = req.app.locals.user_type;
   if (user_type == 'admin') {
     next();
@@ -76,7 +75,7 @@ exports.isAdmin = function (req, res, next) {
   }
 };
 
-exports.isManager = function (req, res, next) {
+exports.isManager = (req, res, next) => {
   var user_type = req.app.locals.user_type;
   if (user_type == 'manager') {
     next();
@@ -88,7 +87,7 @@ exports.isManager = function (req, res, next) {
   }
 };
 
-exports.isEmployee = function (req, res, next) {
+exports.isEmployee = (req, res, next) => {
   var user_type = req.app.locals.user_type;
   if (user_type == 'employee') {
     next();
@@ -100,7 +99,7 @@ exports.isEmployee = function (req, res, next) {
   }
 };
 
-exports.isAdminOrManager = function (req, res, next) {
+exports.isAdminOrManager = (req, res, next) => {
   var user_type = req.app.locals.user_type;
   if (user_type == 'admin' || user_type == 'manager') {
     next();

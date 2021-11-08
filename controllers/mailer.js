@@ -7,7 +7,7 @@ var views_dir = p.resolve(__dirname, '..', 'views'); //need to fix this
 var preparations = require('../models/Mailer/preparations')
 // var Mailer = require('../models/Mailer/Mailer');
 
-setTransporter = function () {
+setTransporter = () => {
   console.log('setTransporter', setTransporter)
   var transporter = nodemailer.createTransport({
     pool: true,
@@ -25,7 +25,7 @@ setTransporter = function () {
   return transporter;
 };
 
-readFile = function (dir, file) {
+readFile = (dir, file) => {
   var content = fs.readFileSync(dir + "/" + file, 'utf8', (err, data) => {
     if (err) {
       console.error(err);
@@ -35,7 +35,7 @@ readFile = function (dir, file) {
   return content;
 };
 
-attachLink = function (html1, html2, link) {
+attachLink = (html1, html2, link) => {
   var htmlContent = readFile(views_dir, html1);
   htmlContent += link;
   htmlContent += readFile(views_dir, html2);
@@ -43,7 +43,7 @@ attachLink = function (html1, html2, link) {
   return htmlContent;
 };
 
-setMailOptions = function (mailInfo) {
+setMailOptions = (mailInfo) => {
   var cc = "";
   var dSize = mailInfo.cc.length;
 
@@ -70,12 +70,12 @@ setMailOptions = function (mailInfo) {
   return mailOptions;
 };
 
-exports.sendVerificationEmail = function (req, res, next) {
+exports.sendVerificationEmail = (req, res, next) => {
   console.log('sendVerificationEmail')
   var token = req.app.locals.token;
   var email = req.app.locals.email;
   if (!email) {
-    return db.any("select email from users natural inner join tokens where token_str = $1", [token]).then(function (data) {
+    return db.any("select email from users natural inner join tokens where token_str = $1", [token]).then(data => {
       email = data.email;
     });
   }
@@ -91,45 +91,45 @@ exports.sendVerificationEmail = function (req, res, next) {
   var mailOptions = setMailOptions(mailInfo);
 
   //rror [ERR_HTTP_HEADERS_SENT]: Cannot set headers after they are sent to the client
-  return transporter.sendMail(mailOptions).then(function () {
+  return transporter.sendMail(mailOptions).then(() => {
     console.log('send email to ' + email)
     res.end();
-  }).catch(function (error) {
+  }).catch(error => {
     console.log('error', error)
     next(error);
   });
 };
 
-// exports.sendResetPasswordEmail = function (req, res, next) {
+// exports.sendResetPasswordEmail = (req, res, next) => {
 //   var email = req.body.email;
 //   var link = "https://" + req.hostname + "/api/auth/";
-//   return db.task(function (task) {
-//     return task.any("select * from users where email = $1", [email]).then(function (data) {
+//   return db.task(t => {
+//     return t.any("select * from users where email = $1", [email]).then(data => {
 //       link += data[0].user_id + "/reset_password/";
-//       return task.any("Insert into reset_password (user_id, request_date) VALUES($1, NOW()) Returning reset_id as rid", [data[0].user_id]);
+//       return t.any("Insert into reset_password (user_id, request_date) VALUES($1, NOW()) Returning reset_id as rid", [data[0].user_id]);
 //     });
-//   }).then(function (data) {
+//   }).then(data => {
 //     link += data[0].rid;
 //     var html = attachLink("reset-password/reset-password1.html", "reset-password/reset-password2.html", link);
 //     var mailInfo = preparations.prepareResetEmail(req, html);
 //     var transporter = setTransporter();
 //     var mailOptions = setMailOptions(mailInfo);
-//     return transporter.sendMail(mailOptions).then(function (data) {
+//     return transporter.sendMail(mailOptions).then(data => {
 //       res.status(200).json({
 //         data: data,
 //         status: "Success",
 //         message: 'Password Reset Email sent'
 //       });
 //       res.end();
-//     }).catch(function (error) {
+//     }).catch(error => {
 //       next(error);
 //     });
-//   }).catch(function (error) {
+//   }).catch(error => {
 //     next(error);
 //   });
 // };
 
-exports.sendRegisterInvitationEmail = function (req, res, next) {
+exports.sendRegisterInvitationEmail = (req, res, next) => {
   var request_data = req.app.locals.permission_data;
   var email = req.app.locals.email;
   var type = req.app.locals.permission_type;
@@ -140,14 +140,14 @@ exports.sendRegisterInvitationEmail = function (req, res, next) {
   var mailInfo = preparations.prepareInvitationEmail(email, html);
   var transporter = setTransporter();
   var mailOptions = setMailOptions(mailInfo);
-  return transporter.sendMail(mailOptions).then(function () {
+  return transporter.sendMail(mailOptions).then(() => {
     res.status(200).json({
       message: "Invitation email sent and permission added",
       status: "success",
       data: request_data
     });
     // res.end();
-  }).catch(function (error) {
+  }).catch(error => {
     console.error("Something failed", error);
     res.end();
   });

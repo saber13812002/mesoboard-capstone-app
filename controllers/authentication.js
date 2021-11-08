@@ -4,7 +4,7 @@ var db = require('../config/postgres')();
 var fs = require('fs');
 const authUtils = require('../lib/authUtils')
 
-exports.login = function (req, res, next) {
+exports.login = (req, res, next) => {
   var email = req.body.email;
   var password = req.body.password;
   console.log(email, password)
@@ -19,7 +19,7 @@ exports.login = function (req, res, next) {
 
   const query = `SELECT user_id, password as hash, user_type, first_name || ' ' || last_name as name, is_deleted, salt from users where email = $1`;
 
-  return db.one(query, email).then(function (data) {
+  return db.one(query, email).then(data => {
     console.log('data', data)
     if (!data || data.is_deleted) {
       error.httpStatusCode = 404;
@@ -42,12 +42,12 @@ exports.login = function (req, res, next) {
       return next(error);
     }
   })
-    .catch(function (err) {
+    .catch(err => {
       next(err);
     });
 };
 
-exports.checkTokenAndGetUser = function (req, res, next) {
+exports.checkTokenAndGetUser = (req, res, next) => {
   console.log('checkTokenAndGetUser')
   var user_id = req.body.user_id;
   var token = req.body.token;
@@ -70,18 +70,18 @@ exports.checkTokenAndGetUser = function (req, res, next) {
         });
       // res.end();
     }
-  }).catch(function (err) {
+  }).catch(err => {
     next(err);
   });
 }
 
-exports.confirmEmail = function (req, res, next) {
+exports.confirmEmail = (req, res, next) => {
   console.log('confirmEmail')
   var email = req.body.email;
   var token = req.body.token;
   //need something to validate this email (like a token maybe?)
-  return db.task(function (task) {
-    return task.one("select user_id from tokens where token = $1", token).then(function (data) {
+  return db.task(t => {
+    return t.one("select user_id from tokens where token = $1", token).then(data => {
       //console.log(data[0].user_id);
       id = data.user_id;
       l = fs.readFileSync(__dirname + "/../views/confirm-email/confirmed-email.html", 'utf8', (err, data) => {
@@ -92,20 +92,20 @@ exports.confirmEmail = function (req, res, next) {
       });
 
       //console.log(id);
-      return task.any("select email from users where user_id = $1", [id]).then(function (data2) {
-        email = data2[0].email;
+      return t.one("select email from users where user_id = $1", id).then(data2 => {
+        email = data2.email;
         var query = "Update users set verified = TRUE where email = $1 returning verified";
         return task.any(query, [email]);
       });
     });
-  }).then(function (data) {
+  }).then(data => {
     res.send(l);
-  }).catch(function (error) {
+  }).catch(error => {
     next(error);
   });
 };
 
-exports.createUser = function (req, res, next) {
+exports.createUser = (req, res, next) => {
   console.log('createUser')
   var code = req.body.code;
   var email = req.body.email;
@@ -125,8 +125,8 @@ exports.createUser = function (req, res, next) {
     return next(error);
   }
 
-  return db.task(function (task) {
-    return task.one("Select permission_type From permissions Where code = $1", code).then(function (data) {
+  return db.task(t => {
+    return t.one("Select permission_type From permissions Where code = $1", code).then(data => {
       if (!data) {
         error.message = "Provisional code does\'t exist";
         error.httpStatusCode = 403;
@@ -139,7 +139,7 @@ exports.createUser = function (req, res, next) {
       //check if criteria exists 
       //I was thinking, for employee will be either email or phone.
       //Which ever the employee chooses
-      return task.any("Select * from users where email = $1", [email]).then(function (data2) {
+      return t.any("Select * from users where email = $1", [email]).then(data2 => {
         if (data2.length > 0) {
           error.message = "User Already Exist";
           error.httpStatusCode = 403;
@@ -172,7 +172,7 @@ exports.createUser = function (req, res, next) {
                 user_type, gender, salt) values ($1, $2, $3, $4, $5,
                 $6, $7, $8, $9) returning user_id;`
 
-            return task.any(query4, userInfo);
+            return t.any(query4, userInfo);
           } else {
             error.message = "Unsupported account type";
             error.httpStatusCode = 401;
@@ -188,22 +188,22 @@ exports.createUser = function (req, res, next) {
         }
       });
     });
-  }).then(function (data) {
+  }).then(data => {
     req.app.locals.user_id = data[0].user_id;
     req.app.locals.user_type = user_type;
     req.app.locals.email = email;
     next();
-  }).catch(function (err) {
+  }).catch(err => {
     next(err);
   });
 };
 
-exports.resetPassConfirmation = function (req, res, next) {
+exports.resetPassConfirmation = (req, res, next) => {
   var user_id = req.params.user_id;
   var pid = req.params.pass_request_id;
   var link = "https://mesoboard-capstone-app.herokuapp.com/api/auth/resetPassword/" + user_id;
-  db.oneOrNone("Select * from reset_password where user_id = $1 and reset_id = $2", [user_id, pid]).then(function (data) {
-    // db.any("delete from reset_password where user_id = $1",[user_id]).then(function(data){
+  db.oneOrNone("Select * from reset_password where user_id = $1 and reset_id = $2", [user_id, pid]).then(data => {
+    // db.any("delete from reset_password where user_id = $1",[user_id]).then(data => {
     if (data == null) return res.redirect("https://mesoboard-capstone-app.herokuapp.com/not-found");
     else {
       file1 = readFile(__dirname + "/../views/reset-password", "reset-password-form1.html")

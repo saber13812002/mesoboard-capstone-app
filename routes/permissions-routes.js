@@ -3,7 +3,7 @@ var tokens = require('../controllers/tokens');
 // var mailer = require('../controllers/mailer');
 var security = require('../controllers/security');
 
-module.exports = function (app) {
+module.exports = app => {
 
   // app.route('/api/permissions/all')
   //   .get(tokens.removeExpiredTokens, tokens.checkToken, security.isAdminOrManager, permissions.getAllPermissions);
