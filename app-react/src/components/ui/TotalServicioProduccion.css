@@ -1,0 +1,22 @@
+.totalServicioProduccion {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+.totalServicioProduccion__info p {
+  display: inline;
+  color: #287F4E;
+  font-weight: bold;
+}
+
+
+
+/* other way of doing it */
+/* .totalServicioProduccion {
+  display: flex;
+  flex-direction: row;
+}
+.totalServicioProduccion__text > p {
+  color: #287F4E;
+  font-weight: bold;
+} */
