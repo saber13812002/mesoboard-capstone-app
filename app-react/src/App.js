@@ -4,7 +4,7 @@ import { BrowserRouter as Router, Route, Redirect } from 'react-router-dom'
 import { Layout } from './layout'
 import { AuthProvider } from './store';
 import { Signin, Authenticate } from './authentication';
-import { isLoggedIn } from './services/AuthService'
+import { isLoggedIn } from './services/authService'
 
 const ProtectedRoute = ({ children, ...rest }) => {
   return (
