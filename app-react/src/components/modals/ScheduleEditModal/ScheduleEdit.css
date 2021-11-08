@@ -1,0 +1,19 @@
+.scheduleEdit {
+  margin: 20px;
+}
+
+.scheduleEdit__data {
+  width: 150px;
+}
+
+.scheduleEdit__data > h4 {
+  width: 140px
+}
+
+.scheduleEdit__data > input {
+  width: 50px;
+}
+
+.scheduleEdit__data > .scheduleHoursBox {
+  font-size: 14px
+}
