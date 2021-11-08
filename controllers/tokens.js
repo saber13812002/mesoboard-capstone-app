@@ -27,12 +27,12 @@ exports.expireUserTokens = (req, res, next) => {
   const token = req.get('token');
   console.log(!token, 'token', token)
   if (!token) {
-    var error = new Error("Malformed Query: Missing Token");
+    const error = new Error("Malformed Query: Missing Token");
     error.httpStatusCode = 400;
     return next(error);
   } else {
     console.log('deleting token')
-    var query = "DELETE FROM tokens WHERE user_id in (SELECT user_id FROM tokens WHERE token = $1);";
+    const query = "DELETE FROM tokens WHERE user_id in (SELECT user_id FROM tokens WHERE token = $1);";
     return db.any(query, [token]).then(_ => {
       res.status(200).json({
         status: "success",
@@ -78,7 +78,7 @@ exports.addToken = (req, res, next) => {
       next();
     }
     else {
-      var error = new Error();
+      const error = new Error();
       error.message = "Unexpected path in add token";
       error.httpStatusCode = 500;
       next(error);
@@ -89,7 +89,7 @@ exports.addToken = (req, res, next) => {
 };
 
 exports.removeExpiredTokens = (req, res, next) => {
-  var query = "DELETE FROM tokens WHERE expiration_date < TIMESTAMP 'now'";
+  const query = "DELETE FROM tokens WHERE expiration_date < TIMESTAMP 'now'";
   return db.any(query).then(() => {
     next();
   }).catch(err => {
@@ -98,14 +98,14 @@ exports.removeExpiredTokens = (req, res, next) => {
 };
 
 exports.checkToken = (req, res, next) => {
-  var token = req.get('token');
-  var error = new Error();
+  const token = req.get('token');
+  const error = new Error();
   if (!token) {
     error.message = "Malformed Query: Missing Token";
     error.httpStatusCode = 400;
     return next(error);
   }
-  var query = "SELECT * from tokens where token = $1";
+  const query = "SELECT * from tokens where token = $1";
   return db.any(query, [token]).then(data => {
     if (data.length == 0) {
       error.message = "Access Denied: Token Expired";

@@ -1,4 +1,4 @@
-// var db = require('../config/postgres')();
+// const db = require('../config/postgres')();
 
 exports.verifyJWT = (req, res, next) => {
   const tokenParts = req.headers.authorization.split(' ');
@@ -17,12 +17,12 @@ exports.verifyJWT = (req, res, next) => {
 }
 
 exports.isAdmin = (req, res, next) => {
-  var user_type = req.app.locals.user_type;
+  const user_type = req.app.locals.user_type;
   console.log('\n\nuser_type', user_type)
   if (user_type == 'admin') {
     next();
   } else {
-    var error = new Error();
+    const error = new Error();
     error.message = "Forbidden: Admin privileges required for this operation.";
     error.httpStatusCode = 403;
     next(error);
@@ -30,8 +30,8 @@ exports.isAdmin = (req, res, next) => {
 };
 
 exports.fileCheck = (req, res, next) => {
-  // var filename = req.files.filename;
-  var name;
+  // const filename = req.files.filename;
+  let name;
   if (req.files.poster)
     name = req.files.poster.name;
 
@@ -53,7 +53,7 @@ exports.fileCheck = (req, res, next) => {
   if (req.files.purchase)
     name = req.files.purchase.name
 
-  var content = name.split('.');
+  const content = name.split('.');
   format = content[content.length - 1];
   if (format != 'pdf' && format != 'png' && format != 'jpg' && format != 'jpeg' && format != 'ppt' && format != 'pptx' && 'odp') {
     error = new Error('File Type not accepted');
@@ -64,11 +64,11 @@ exports.fileCheck = (req, res, next) => {
 }
 
 exports.isAdmin = (req, res, next) => {
-  var user_type = req.app.locals.user_type;
+  const user_type = req.app.locals.user_type;
   if (user_type == 'admin') {
     next();
   } else {
-    var error = new Error();
+    const error = new Error();
     error.message = "Forbidden: Admin privileges required for this operation.";
     error.httpStatusCode = 403;
     next(error);
@@ -76,11 +76,11 @@ exports.isAdmin = (req, res, next) => {
 };
 
 exports.isManager = (req, res, next) => {
-  var user_type = req.app.locals.user_type;
+  const user_type = req.app.locals.user_type;
   if (user_type == 'manager') {
     next();
   } else {
-    var error = new Error();
+    const error = new Error();
     error.message = "Forbidden: Manager privileges required for this operation.";
     error.httpStatusCode = 403;
     next(error);
@@ -88,11 +88,11 @@ exports.isManager = (req, res, next) => {
 };
 
 exports.isEmployee = (req, res, next) => {
-  var user_type = req.app.locals.user_type;
+  const user_type = req.app.locals.user_type;
   if (user_type == 'employee') {
     next();
   } else {
-    var error = new Error();
+    const error = new Error();
     error.message = "Forbidden: Employee privileges required for this operation.";
     error.httpStatusCode = 403;
     next(error);
@@ -100,11 +100,11 @@ exports.isEmployee = (req, res, next) => {
 };
 
 exports.isAdminOrManager = (req, res, next) => {
-  var user_type = req.app.locals.user_type;
+  const user_type = req.app.locals.user_type;
   if (user_type == 'admin' || user_type == 'manager') {
     next();
   } else {
-    var error = new Error();
+    const error = new Error();
     error.message = "Forbidden: Admin or Manager privileges required for this operation.";
     error.httpStatusCode = 403;
     next(error);

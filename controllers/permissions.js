@@ -1,12 +1,12 @@
-var db = require('../config/postgres')();
+const db = require('../config/postgres')();
 
 exports.addPermission = (req, res, next) => {
-  var email = req.body.email;
-  var last_update = new Date().toDateString();
-  var permission_type = req.body.permission_type;
+  const { email, permission_type } = req.body;
+  const last_update = new Date().toDateString();
   req.app.locals.permission_type = permission_type;
   req.app.locals.email = email;
-  var error = new Error();
+  const error = new Error();
+
   //check if email is empty
   if (!email) {
     error.message = "Malformed Query (missing email)";
@@ -20,6 +20,7 @@ exports.addPermission = (req, res, next) => {
     error.httpStatusCode = 400;
     return next(error);
   }
+
   return db.task(t => {
     return t.any("select (count(*)>0) as existing_email from permissions where email = $1", email).then(data1 => {
       if (data1[0].existing_email) {
@@ -27,7 +28,7 @@ exports.addPermission = (req, res, next) => {
         error.httpStatusCode = 400;
         throw error;
       } else {
-        var query = 'INSERT into permissions (email, last_update, permission_type) values ($1, $2, $3) returning *';
+        const query = 'INSERT into permissions (email, last_update, permission_type) values ($1, $2, $3) returning *';
         return t.any(query, [email, last_update, permission_type]);
       }
     });

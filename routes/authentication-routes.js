@@ -1,7 +1,7 @@
 const auth = require('../controllers/authentication');
-var tokens = require('../controllers/tokens');
-var mailer = require('../controllers/mailer');
-var messenger = require('../controllers/messenger');
+const tokens = require('../controllers/tokens');
+const mailer = require('../controllers/mailer');
+const messenger = require('../controllers/messenger');
 
 module.exports = app => {
   app.route('/api/auth/login')

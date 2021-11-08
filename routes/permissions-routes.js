@@ -1,7 +1,7 @@
-var permissions = require('../controllers/permissions');
-var tokens = require('../controllers/tokens');
-// var mailer = require('../controllers/mailer');
-var security = require('../controllers/security');
+const permissions = require('../controllers/permissions');
+const tokens = require('../controllers/tokens');
+// const mailer = require('../controllers/mailer');
+const security = require('../controllers/security');
 
 module.exports = app => {
 

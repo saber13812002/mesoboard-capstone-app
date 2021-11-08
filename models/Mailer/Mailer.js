@@ -1,5 +1,5 @@
-var nodemailer = require('nodemailer');
-var config = require('../../config/config.js');
+const nodemailer = require('nodemailer');
+const config = require('../../config/config.js');
 
 
 class Mailer {
@@ -10,18 +10,18 @@ class Mailer {
 
   setMailOptions(mailInfo) {
     console.log("Mailer.js - setMailOptions(mailInfo)");
-    var cc = "";
-    var dSize = mailInfo.cc.length;
+    const cc = "";
+    const dSize = mailInfo.cc.length;
 
     //converts array to string of recipients
-    for (var d = 0; d < dSize; d++) {
+    for (let d = 0; d < dSize; d++) {
       cc += mailInfo.cc[d];
       if (d < dSize - 1) {
         cc += ",";
       }
     }
 
-    var mailOptions = {
+    const mailOptions = {
       from: '"' + mailInfo.displayName + '"' + '<' + config.mailServiceCredentials.email + '>',
       bcc: cc,
       subject: mailInfo.subject,
@@ -33,7 +33,7 @@ class Mailer {
   };
 
   setTransporter() {
-    var transporter = nodemailer.createTransport({
+    const transporter = nodemailer.createTransport({
       pool: true,
       host: config.mailServiceCredentials.host,
       port: config.mailServiceCredentials.port,

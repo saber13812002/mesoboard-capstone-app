@@ -1,16 +1,15 @@
 
 /* first include the db config. This is important for every controller file because it does the db queries. */
-var db = require('../config/postgres')();
-var fs = require('fs');
+const db = require('../config/postgres')();
+const fs = require('fs');
 const authUtils = require('../lib/authUtils')
 
 exports.login = (req, res, next) => {
-  var email = req.body.email;
-  var password = req.body.password;
+  const { email, password } = req.body
   console.log(email, password)
 
   //check if fields are filled
-  var error = new Error();
+  const error = new Error();
   if (!email || !password) {
     error.httpStatusCode = 400;
     error.message = 'Malformed Query: Missing Email or Password';
@@ -49,8 +48,7 @@ exports.login = (req, res, next) => {
 
 exports.checkTokenAndGetUser = (req, res, next) => {
   console.log('checkTokenAndGetUser')
-  var user_id = req.body.user_id;
-  var token = req.body.token;
+  const { user_id, token } = req.body
 
   const query = `select users.user_id, first_name, last_name, email, password, users.user_type, gender, is_deleted, token 
     from users inner join tokens on users.user_id = tokens.user_id where users.user_id=$1 and tokens.token=$2`
@@ -77,8 +75,9 @@ exports.checkTokenAndGetUser = (req, res, next) => {
 
 exports.confirmEmail = (req, res, next) => {
   console.log('confirmEmail')
-  var email = req.body.email;
-  var token = req.body.token;
+  let email = req.body.email;
+  const token = req.body.token;
+
   //need something to validate this email (like a token maybe?)
   return db.task(t => {
     return t.one("select user_id from tokens where token = $1", token).then(data => {
@@ -94,8 +93,8 @@ exports.confirmEmail = (req, res, next) => {
       //console.log(id);
       return t.one("select email from users where user_id = $1", id).then(data2 => {
         email = data2.email;
-        var query = "Update users set verified = TRUE where email = $1 returning verified";
-        return task.any(query, [email]);
+        const query = "Update users set verified = TRUE where email = $1 returning verified";
+        return task.any(query, email);
       });
     });
   }).then(data => {
@@ -107,16 +106,12 @@ exports.confirmEmail = (req, res, next) => {
 
 exports.createUser = (req, res, next) => {
   console.log('createUser')
-  var code = req.body.code;
-  var email = req.body.email;
-  var password = req.body.password;
+  const { code, email, password, first_name, last_name, gender } = req.body;
   console.log('password', password)
-  var first_name = req.body.first_name;
-  var last_name = req.body.last_name;
-  var gender = req.body.gender;
-  var user_type = "";
   console.log('code', code)
-  var error = new Error();
+
+  let user_type = "";
+  const error = new Error();
   req.app.locals.email = email;
   //check if user fields are filled
   if (!code || !email || !password || !first_name || !last_name || !gender) {
@@ -148,13 +143,10 @@ exports.createUser = (req, res, next) => {
         else {
           //user doesn't exist
           const saltHash = authUtils.genPassword(password);
-          console.log('saltHash', saltHash)
-
-          // const salt = saltHash.salt;
-          // req.app.locals.salt = saltHash.salt;
-
           const hash = saltHash.hash;
           const salt = saltHash.salt;
+          console.log('saltHash', saltHash)
+
           const userInfo = [
             first_name,
             last_name,
@@ -199,9 +191,9 @@ exports.createUser = (req, res, next) => {
 };
 
 exports.resetPassConfirmation = (req, res, next) => {
-  var user_id = req.params.user_id;
-  var pid = req.params.pass_request_id;
-  var link = "https://mesoboard-capstone-app.herokuapp.com/api/auth/resetPassword/" + user_id;
+  const user_id = req.params.user_id;
+  const pid = req.params.pass_request_id;
+  const link = "https://mesoboard-capstone-app.herokuapp.com/api/auth/resetPassword/" + user_id;
   db.oneOrNone("Select * from reset_password where user_id = $1 and reset_id = $2", [user_id, pid]).then(data => {
     // db.any("delete from reset_password where user_id = $1",[user_id]).then(data => {
     if (data == null) return res.redirect("https://mesoboard-capstone-app.herokuapp.com/not-found");
