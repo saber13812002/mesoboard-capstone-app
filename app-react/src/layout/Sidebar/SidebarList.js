@@ -1,5 +1,5 @@
 import './SidebarList.css'
-import { NavLink } from 'react=router-dom'
+import { NavLink } from 'react-router-dom'
 import {
   Icon,
   ICON_OPTIONS
@@ -7,7 +7,7 @@ import {
 
 const SidebarList = () => {
   const styles = {
-    className: cname,
+    className: 'cname',
     activeClassName: 'acn'
   }
 
