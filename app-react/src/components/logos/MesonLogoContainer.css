@@ -1,0 +1,14 @@
+.mesonIconContainer__logoGrandparentContainer {
+  height: 80px;
+}
+
+.mesonIconContainer__logoParentContainer {
+  display: table;
+  margin: 0 auto;
+  height: inherit;
+}
+
+.mesonIconContainer__logoContainer {
+  display: table-cell;
+  vertical-align: middle;
+}
