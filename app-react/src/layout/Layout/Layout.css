@@ -1,0 +1,37 @@
+.layout {
+  display: grid;
+  grid-template-columns: 240px 1fr;
+  grid-template-rows: 80px 0 0 calc(100% - 80px); /* 80px value is reused on other components */
+  grid-template-areas:
+    "sidebar navbar"
+    "sidebar navbar"
+    "sidebar body"
+    "sidebar body";
+  height: 100vh;
+}
+
+.layout__sidebar {
+  grid-area: sidebar;
+  background: #ffffff;
+}
+
+.layout__navbar {
+  grid-area: navbar;
+  outline: 1px solid #d8d8d8ad;
+}
+
+.layout__body {
+  grid-area: body;
+  background: #F3F3F3;
+  overflow: auto;
+  padding: 32px;
+  outline: 1px solid #d8d8d8ad;
+}
+
+
+@media only screen and (max-width: 425px) {
+  .layout {
+    display: grid;
+    grid-template-columns: 0 1fr;
+  }
+}
