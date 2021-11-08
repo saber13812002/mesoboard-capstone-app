@@ -2,7 +2,8 @@ import { setLocalStorage } from '../services/authService'
 
 const types = {
   VERIFY: 'VERIFY',
-  LOGIN: 'LOGIN'
+  LOGIN: 'LOGIN',
+  RESET: 'RESET'
 }
 
 const AuthReducer = (state, action) => {
@@ -29,10 +30,15 @@ const AuthReducer = (state, action) => {
       }
     }
     case types.VERIFY: {
+      console.log('VERFIY')
       return {
         ...state,
         userType: payload.permission_type
       }
+    }
+    case types.RESET: {
+      console.log('RESET', payload)
+      return payload
     }
     default:
       return state;

@@ -5,7 +5,7 @@ import axios from 'axios'
 import { logoutStorage, getToken } from '../services/authService'
 
 const AuthProvider = ({ children }) => {
-  const state = {
+  const initState = {
     userId: undefined,
     firstName: '',
     lastName: '',
@@ -15,9 +15,7 @@ const AuthProvider = ({ children }) => {
     gender: '',
   }
 
-  const [authState, dispatchAuthAction] = useReducer(AuthReducer, state)
-
-
+  const [authState, dispatchAuthAction] = useReducer(AuthReducer, initState)
 
   const signinFetch = async (userInfo, setRedirect) => {
     const { email, password } = userInfo;
@@ -117,8 +115,13 @@ const AuthProvider = ({ children }) => {
     logout()
   }
 
+  const resetState = () =>
+    dispatchAuthAction({ type: 'RESET', payload: initState })
+
+
   const authContext = {
     authState,
+    resetState,
     verifyPermission: verifyPermissionFetch,
     signup: signupFetch,
     signin: signinFetch,

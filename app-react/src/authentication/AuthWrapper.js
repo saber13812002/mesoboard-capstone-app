@@ -1,4 +1,4 @@
-import './AuthWrapper.css'
+import './Auth.css'
 import { Redirect } from 'react-router-dom'
 
 import MesoboardBackgroundImg from '../assets/mesoboard_background.jpg'
@@ -11,17 +11,17 @@ const AuthWrapper = ({ children, redirectToApp }) => {
     <>
       {redirectToApp && <Redirect to={'/app/home'} />}
       {!redirectToApp && (
-        <div className='authWrapper'>
-          <div className='authWrapper__left'>
-            <div className='authWrapper__formContainer'>
+        <div className='auth'>
+          <div className='auth__left'>
+            <div className='auth__formContainer'>
               {children}
             </div>
           </div>
 
           {/* {childrenWithProps} */}
-          <div className='authWrapper__right'>
-            <img className='authWrapper__backImg' src={MesoboardBackgroundImg} alt='background img' />
-            <MesonLogo className='authWrapper__logo' height={200} />
+          <div className='auth__right'>
+            <img className='auth__backImg' src={MesoboardBackgroundImg} alt='background img' />
+            <MesonLogo className='auth__logo' height={200} />
           </div>
         </div>
       )}
