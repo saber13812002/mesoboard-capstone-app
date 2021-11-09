@@ -8,7 +8,8 @@ import {
   CheckManager,
   ProfileManager,
   MemoManager,
-  RequestManager
+  RequestManager,
+  UserPermissionsManager
 } from '../../contentView'
 
 /** returns the component to be viewed */
@@ -24,6 +25,8 @@ const handleView = view => {
       return <ProfileManager />
     case 'request':
       return <RequestManager />
+    case 'permissions':
+      return <UserPermissionsManager />
     default:
       return <MemoManager />
   }

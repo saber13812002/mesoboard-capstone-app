@@ -16,6 +16,8 @@ const ContentHeader = ({ view }) => {
         setHeader('memos'); break;
       case 'checks':
         setHeader('talonarios'); break;
+      case 'permissions':
+        setHeader('Permisos de Usuario'); break;
       default:
         setHeader('perfiles'); break;
     }

@@ -5,6 +5,7 @@ import CheckManager from "./manager/CheckManager/CheckManager";
 import ProfileManager from "./manager/ProfileManager/ProfileManager";
 import RequestManager from "./manager/RequestManager/RequestManager";
 import MemoManager from "./manager/MemoManager/MemoManager";
+import UserPermissionsManager from './manager/UserPermissionsManager/UserPermissionsManager'
 import ScheduleTable from './manager/ScheduleManager/ScheduleTable'
 import ScheduleTurnsTable from './manager/ScheduleManager/ScheduleTurnsTable'
 import ScheduleHoursBox from './shared/ScheduleShared/ScheduleHoursBox'
@@ -16,6 +17,7 @@ export {
   ProfileManager,
   RequestManager,
   MemoManager,
+  UserPermissionsManager,
   ScheduleTable,
   ScheduleTurnsTable,
   ScheduleHoursBox
