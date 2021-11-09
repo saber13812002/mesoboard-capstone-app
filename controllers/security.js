@@ -1,18 +1,32 @@
-// const db = require('../config/postgres')();
+const jwt = require('jsonwebtoken');
+const path = require('path');
+const fs = require('fs')
+const pathToKey = path.join(__dirname, '..', 'id_rsa_pub.pem');
+const PUB_KEY = fs.readFileSync(pathToKey, 'utf8');
 
 exports.verifyJWT = (req, res, next) => {
+  console.log('verifyJWT')
+  // console.log('PUB_KEY', PUB_KEY)
+  // console.log(req.headers)
   const tokenParts = req.headers.authorization.split(' ');
 
   if (tokenParts[0] === 'Bearer' && tokenParts[1].match(/\S+\.\S+\.\S+/) !== null) {
     try {
-      const verification = jsonwebtoken.verify(tokenParts[1], PUB_KEY, { algorithms: ['RS256'] });
+      console.log('verifying...')
+      const verification = jwt.verify(tokenParts[1], PUB_KEY, { algorithms: ['RS256'] });
+      // const verification = jwt.verify(`
+      // eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjEsImlhdCI6MTYzNjM4NTE3ODM3MSwiZXhwIjoxNjM2Mzg1MTc4MzcxfQ.fzVDDdUq5HprwmPQirQELAMX5L3azzjVy-GWfireafs79VZgl_t3a9sM3AtSnO9PjOUKLB3Pm6oZUcjS2JjcFYxCs97NcEmihV1xGPsCJJtsjukF4Ck5j9PPCRrHRnuN4pHO-WsreO4scIVbzEGhzbLklWLz7G3d2BOR-oi9J-EXgCNb6u4fENPxs9PJyNPMAMqBayUMeuHZQbFtoMLsHbk1mescpaiAm07d_X-Sow6HwT468Jhe3QinqJ8Vc_jWR9-IKlF-eeYiGe4cFx_Ksce2N3ZSAGqAlvkXoYBEn0NEghAhf7nhTgirosO2J0zaWI2NMZjjcXBPdqn_xVJ8Ud7bUz8HHqzyHZCLANjucNnjGnY1HRNf6xy75wYpQTAxUS2KH7EaOXB5STV6QwXZ-k2ttF0ZpdJWw2ePO2TdLaTRGv0R5tMXaZMtaV9hO1wBwNd8ep4hBD8N7LQBDdAcuClon6LmDYBqQVUyCSpUJco_VpcIzHfuHyqWkeiZvF9j_jO9jaYETwxOmm4tdjT7ZWwWTX4Vd_p9DWiFlDSTXTbOIx1Z2BpGNAHo0Xs8y3pm4yF1Ev5EKKwWuk__VWISMsvnfLgJ_KJxm9UcBii7AmcRMH-tT6J0FrNQTE55J0d99kRU35AwvmH6oumwOa6ZRUNaLpwaZwBBqRlHlVGGxM0
+      // `, PUB_KEY, { algorithms: ['RS256'] });
+
+      console.log('verified')
       req.jwt = verification; //store token on request object
       next();
     } catch (err) {
+      console.log(err)
       res.status(401).json({ success: false, msg: 'You are not authorized to visit this route' });
     }
   } else {
-    res.status(401).json({ success: false, msg: 'You are not authorized to visit this route' });
+    res.status(401).json({ success: false, msg: "Invalid token format. Don't forget the 'Bearer ' before the token signature" });
   }
 }
 
