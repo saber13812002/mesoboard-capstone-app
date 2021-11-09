@@ -9,7 +9,7 @@ import {
   ProfileManager,
   MemoManager,
   RequestManager
-} from '../../content'
+} from '../../contentView'
 
 /** returns the component to be viewed */
 const handleView = view => {
