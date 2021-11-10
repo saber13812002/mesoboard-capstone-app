@@ -3,6 +3,7 @@ const tokens = require('../controllers/tokens');
 const mailer = require('../controllers/mailer');
 const messenger = require('../controllers/messenger');
 
+// tokens.removeExpiredTokens
 module.exports = app => {
   app.route('/api/auth/login')
     .post(auth.login, tokens.enforceMaxUserTokensConstraint, tokens.addToken);

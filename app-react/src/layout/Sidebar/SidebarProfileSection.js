@@ -2,6 +2,7 @@ import './SidebarProfileSection.css'
 import { Icon, ICON_OPTIONS } from '../../components'
 
 const SidebarProfileSection = ({ onProfileCard }) => {
+  // add user info from context
   return (
     <div className='sidebarProfileSection'>
       <p>Welcome,</p>
