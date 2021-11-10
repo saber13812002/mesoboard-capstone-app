@@ -70,6 +70,8 @@ setMailOptions = (mailInfo) => {
   return mailOptions;
 };
 
+
+
 exports.sendVerificationEmail = (req, res, next) => {
   console.log('sendVerificationEmail')
   const { token, email } = req.app.locals
@@ -130,26 +132,39 @@ exports.sendVerificationEmail = (req, res, next) => {
 // };
 
 exports.sendRegisterInvitationEmail = (req, res, next) => {
-  const request_data = req.app.locals.permission_data;
-  const email = req.app.locals.email;
-  const type = req.app.locals.permission_type;
-
-  const link = "https://" + req.hostname + "/authenticate";
-  const html = attachLink("register-invitation/register-invitation1.html",
-    "register-invitation/register-invitation2.html", type) +
-    link + readFile(views_dir, "register-invitation/register-invitation3.html");
-  const mailInfo = preparations.prepareInvitationEmail(email, html);
-  const transporter = setTransporter();
-  const mailOptions = setMailOptions(mailInfo);
-  return transporter.sendMail(mailOptions).then(() => {
-    res.status(200).json({
-      message: "Invitation email sent and permission added",
-      status: "success",
-      data: request_data
-    });
-    // res.end();
-  }).catch(error => {
-    console.error("Something failed", error);
-    res.end();
+  // var request_data = req.app.locals.permission_data;
+  // var email = request_data.email;
+  // var type = request_data.permission_type;
+  const { email, type, code } = req.app.locals.permission_data
+  res.status(200).json({
+    status: 'Success',
+    message: `Added permission credentials of type ${type} with provisional code ${code} to ${email} successfully`
+    // email: email
   });
+  res.end()
 };
+
+// exports.sendRegisterInvitationEmail = (req, res, next) => {
+//   const request_data = req.app.locals.permission_data;
+//   const email = req.app.locals.email;
+//   const type = req.app.locals.permission_type;
+
+//   const link = "https://" + req.hostname + "/authenticate";
+//   const html = attachLink("register-invitation/register-invitation1.html",
+//     "register-invitation/register-invitation2.html", type) +
+//     link + readFile(views_dir, "register-invitation/register-invitation3.html");
+//   const mailInfo = preparations.prepareInvitationEmail(email, html);
+//   const transporter = setTransporter();
+//   const mailOptions = setMailOptions(mailInfo);
+//   return transporter.sendMail(mailOptions).then(() => {
+//     res.status(200).json({
+//       message: "Invitation email sent and permission added",
+//       status: "success",
+//       data: request_data
+//     });
+//     // res.end();
+//   }).catch(error => {
+//     console.error("Something failed", error);
+//     res.end();
+//   });
+// };
