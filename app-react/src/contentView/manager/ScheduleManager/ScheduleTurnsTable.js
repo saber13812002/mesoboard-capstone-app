@@ -17,7 +17,7 @@ const ScheduleTurnsTable = ({ turns, onAddNewTurn }) => {
         </thead>
         <tbody>
           {turns.map(({ id, start, end, lunch }) =>
-            <tr style={{ fontWeight: '500' }}>
+            <tr key={id} style={{ fontWeight: '500' }}>
               <td><strong>{id}</strong></td>
               <td>{start}</td>
               <td>{end}</td>
