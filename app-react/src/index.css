@@ -7,6 +7,7 @@
   margin: 0;
   padding: 0;
 }
+code { font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',monospace }
 
 ul {
   padding: 0 !important;
@@ -17,10 +18,6 @@ ul {
   color: initial !important;
 } */
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
-}
 
 li, a, button {
   text-decoration: none !important;
@@ -37,6 +34,52 @@ hr {
   color: #d8d8d8 !important;
 }
 
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+input[type=number] {/* Firefox */
+  -moz-appearance: textfield;
+}
+
+.dark-gray { color: #4C4C4C !important; }
+.bg-light-gray { background-color: #E4E4E4; }
+
+.circular-btn {
+  padding: 5px 10px 5px 10px;
+  border-radius: 20px;
+  cursor: pointer;
+}
+.circular-btn:hover { background-color: #38353510 }
+
+.card {
+  /* padding: 10px; */
+  border: 1px solid #ccc;
+  box-shadow: 2px 2px 6px 0px  rgba(0,0,0,0.3);
+} 
+
+/* forms */
+.form-control {
+  border: 1px solid #287F4E;
+}
+.form-control:focus {
+  box-shadow: 0 0 0 0.25rem rgb(40 127 78 / 25%) !important;
+}
+
+
+/* dropdown button as design */
+.dropdown > button.dropdown-toggle.btn {
+  background-color: inherit !important;
+  color: #767676;
+  display: flex;
+  justify-content: space-between;
+}
+.dropdown > button.dropdown-toggle.btn::after {
+  margin: auto 0;
+}
+
+/* bootstrap button theme */
 .btn-primary {
   background: #287F4E !important;
   border-color: #287F4E !important;
@@ -67,4 +110,3 @@ hr {
   background: #287F4E !important;
   /* border-color: #287F4E !important; */
 }
-

@@ -1,10 +1,65 @@
 import { useState } from 'react'
+import BootstrapTable from 'react-bootstrap-table-next';
+import './UserPermissionsManager.css';
+import { MButton, ICON_OPTIONS } from '../../../components'
+import { AddPermission } from '../../'
+
+
+const profiles = [{
+  employeeName: 'J. Ramírez, Iris',
+  email: 'iris.ramirez@gmail.com',
+  creationDate: '8/22/2021',
+  userType: 'employee'
+}, {
+  employeeName: 'D. Ocasio, Iván',
+  email: 'ivan.ocasio@gmail.com',
+  creationDate: '8/24/2021',
+  userType: 'employee'
+}]
+
+const columns = [{
+  dataField: 'employeeName',
+  text: 'Employee'
+}, {
+  dataField: 'email',
+  text: 'Email'
+}, {
+  dataField: 'creationDate',
+  text: 'Fecha de creación'
+}, {
+  dataField: 'userType',
+  text: 'Tipo de usuario'
+}];
+
+
 
 const UserPermissionsManager = () => {
+  const [addingNewPermission, setAddingNewPermission] = useState(false);
+
+  const handleBack = () => {
+    setAddingNewPermission(false)
+  }
+
+  const handleAddNewPermission = () => {
+    setAddingNewPermission(true)
+  }
+
   return (
-    <div>
-      USER PERMISSIONS
-    </div>
+    <>
+      {!addingNewPermission && <div className='userPermissionsManager'>
+        <BootstrapTable responsive bordered={false} keyField='id' data={profiles} columns={columns} />
+        <MButton
+          onClick={handleAddNewPermission}
+          icon={ICON_OPTIONS.plus}
+          text='Nuevo Permiso'
+          variant='primary'
+          size='sm'
+          className='ml-4 pt-2'
+          style={{ marginTop: '-48px' }}
+        />
+      </div>}
+      {addingNewPermission && <AddPermission onBack={handleBack} />}
+    </>
   )
 }
 

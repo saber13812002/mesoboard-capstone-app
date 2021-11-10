@@ -1,0 +1,23 @@
+
+.addPermission__card {
+  width: 35%
+}
+
+.addPermission__card > form {
+  width: 80%;
+  margin: 0 auto;
+  text-align: center;
+}
+
+/* .addPermission__card > form > h2 {
+  white-space: nowrap
+} */
+
+.addPermission__card > form > .form-control {
+  border: 1px solid #287F4E;
+}
+
+.addPermission__form > .dropdown > button,
+.dropdown-menu {
+  width: 100%;
+}

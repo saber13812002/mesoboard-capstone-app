@@ -109,6 +109,7 @@ exports.createUser = (req, res, next) => {
   const { code, email, password, first_name, last_name, gender } = req.body;
   console.log('password', password)
   console.log('code', code)
+  console.log('first_name', first_name)
 
   let user_type = "";
   const error = new Error();
@@ -153,20 +154,29 @@ exports.createUser = (req, res, next) => {
             email,
             hash,
             new Date().toUTCString(),
-            false,
             user_type,
             gender,
             salt
           ];
-          if (user_type == "admin") {
+
+          if (user_type == 'admin') {
             // console.log('userInfo', userInfo)
             const query4 = `insert into users(first_name, last_name, email, password, creation_date, is_deleted,
                 user_type, gender, salt) values ($1, $2, $3, $4, $5,
-                $6, $7, $8, $9) returning user_id;`
+                FALSE, $6, $7, $8) returning user_id;`
 
             return t.any(query4, userInfo);
-          } else {
-            error.message = "Unsupported account type";
+          }
+          else if (user_type == 'employee') {
+            // console.log('userInfo', userInfo)
+            const query4 = `insert into users(first_name, last_name, email, password, creation_date, is_deleted,
+                user_type, gender, salt) values ($1, $2, $3, $4, $5,
+                FALSE, $6, $7, $8) returning user_id;`
+
+            return t.any(query4, userInfo);
+          }
+          else {
+            error.message = 'Unsupported account type';
             error.httpStatusCode = 401;
             throw error;
           }

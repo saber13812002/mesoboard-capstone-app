@@ -8,6 +8,7 @@ import MemoManager from "./manager/MemoManager/MemoManager";
 import UserPermissionsManager from './manager/UserPermissionsManager/UserPermissionsManager'
 import ScheduleTable from './manager/ScheduleManager/ScheduleTable'
 import ScheduleTurnsTable from './manager/ScheduleManager/ScheduleTurnsTable'
+import AddPermission from './manager/UserPermissionsManager/AddPermission'
 import ScheduleHoursBox from './shared/ScheduleShared/ScheduleHoursBox'
 
 export {
@@ -20,5 +21,6 @@ export {
   UserPermissionsManager,
   ScheduleTable,
   ScheduleTurnsTable,
-  ScheduleHoursBox
+  ScheduleHoursBox,
+  AddPermission
 }

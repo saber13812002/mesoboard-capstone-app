@@ -2,6 +2,8 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import './Icon.css'
 import {
   faCaretDown,
+  faCaretLeft,
+  faAngleLeft,
   faBell,
   faBars,
   faHome,
@@ -19,6 +21,9 @@ import {
 
 export const iconOptions = {
   caretDown: faCaretDown,
+  caretLeft: faCaretLeft,
+  angleLeft: faAngleLeft,
+  caretDown: faCaretDown,
   bell: faBell,
   bars: faBars,
   home: faHome,
@@ -31,7 +36,7 @@ export const iconOptions = {
   upload: faUpload,
   check: faCheck,
   plus: faPlus,
-  trash: faTrashAlt
+  trash: faTrashAlt,
 }
 
 const Icon = ({ icon, size, color, isButtonIcon, className }) => {
@@ -57,7 +62,7 @@ const Icon = ({ icon, size, color, isButtonIcon, className }) => {
     minY = -100;
   }
 
-  if (size === 'small') {
+  if (size === 'sm' || size === 'small') {
     height = 612
   }
 
