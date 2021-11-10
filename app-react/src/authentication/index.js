@@ -1,5 +1,6 @@
+import AuthWrapper from './AuthWrapper'
 import Signin from "./Signin";
 import Authenticate from "./Authenticate";
-import AuthWrapper from './AuthWrapper'
+import Register from './Register'
 
-export { Signin, Authenticate, AuthWrapper }
+export { AuthWrapper, Signin, Authenticate, Register }

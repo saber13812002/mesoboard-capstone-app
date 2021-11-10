@@ -9,7 +9,8 @@ import { NavLink } from 'react-router-dom'
 const Signin = () => {
   const [redirectToApp, setRedirectToApp] = useState(isLoggedIn())
   const { signin } = useContext(AuthContext)
-  const [email] = useState('kevin.ramirez3@upr.edu')
+  // const [email] = useState('kevin.ramirez3@upr.edu')
+  const [email] = useState('employee@gmail.com')
   const [password] = useState('meso2021')
 
   const handleSignin = (e) => {

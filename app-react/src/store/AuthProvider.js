@@ -17,6 +17,9 @@ const AuthProvider = ({ children }) => {
 
   const [authState, dispatchAuthAction] = useReducer(AuthReducer, initState)
 
+  /** Reset this context state to its initial state */
+  const resetState = () => dispatchAuthAction({ type: 'RESET', payload: initState })
+
   const signinFetch = async (userInfo, setRedirect) => {
     const { email, password } = userInfo;
     // console.log('signinFetch', email, password)
@@ -105,6 +108,7 @@ const AuthProvider = ({ children }) => {
       }).then(_ => {
         console.log('setting redirect')
         logoutStorage()
+        resetState()
         setRedirect(true)
       }).catch(err => {
         console.log('err', err)
@@ -114,9 +118,6 @@ const AuthProvider = ({ children }) => {
     }
     logout()
   }
-
-  const resetState = () =>
-    dispatchAuthAction({ type: 'RESET', payload: initState })
 
 
   const authContext = {

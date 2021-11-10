@@ -42,9 +42,9 @@
   white-space: nowrap
 }
 
-form > .form-control {
+/* .auth__formContainer > form > .form-control {
   border: 1px solid #287F4E;
-}
+} */
 
 .btn-primary {
   background: linear-gradient(180deg, #287F4E 0%, #1A9C53 25%, #0FCA61 100%);
