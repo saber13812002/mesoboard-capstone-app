@@ -21,8 +21,10 @@ const AuthProvider = ({ children }) => {
 
   const fetchUserDataByToken = async () => {
     const getUserData = async () => {
-      return axios.get('protected/auth/userData')
+      console.log('about to')
+      axios.get('/protected/auth/userData')
         .then(res => {
+          console.log('res.data', res.data)
           dispatchAuthAction({
             type: 'SET_USER',
             payload: res.data,
@@ -37,7 +39,7 @@ const AuthProvider = ({ children }) => {
     const { email, password } = userInfo;
     // console.log('signinFetch', email, password)
     const signin = async () => {
-      axios.post('api/auth/login', { email, password })
+      axios.post('/api/auth/login', { email, password })
         .then(async res => {
           console.log('res.data', res.data)
           const { user_id, token } = res.data
@@ -59,7 +61,7 @@ const AuthProvider = ({ children }) => {
       // var user_type = "";
       userInfo['code'] = codeToRemove
 
-      return axios.post('api/auth/signup', userInfo)
+      return axios.post('/api/auth/signup', userInfo)
         .then(res => {
           const { user_id, token } = res.data
           return verifyTokenAndGetUserInfoFetch(user_id, token, setRedirectToApp)
@@ -76,7 +78,7 @@ const AuthProvider = ({ children }) => {
   const verifyTokenAndGetUserInfoFetch = async (user_id, token, setRedirectToApp) => {
     const verifyTokenGetUser = async () => {
       console.log('verifyTokenGetUser', user_id)
-      axios.post('api/auth/verifyToken/getUser', { user_id, token })
+      axios.post('/api/auth/verifyToken/getUser', { user_id, token })
         .then(res => {
           console.log('dispatch LOGIN', res.data)
           dispatchAuthAction({
@@ -101,7 +103,8 @@ const AuthProvider = ({ children }) => {
   const verifyPermissionFetch = async (code) => {
     const verifyPermission = async () => {
       console.log('code', code)
-      axios.post('api/permissions/verify', { code }).then(res => {
+      //Will be modified to search for already created users
+      axios.post('/api/permissions/verify', { code }).then(res => {
         console.log('res', res)
         dispatchAuthAction({
           type: 'VERIFY',
@@ -116,7 +119,7 @@ const AuthProvider = ({ children }) => {
   const logoutFetch = (setRedirect) => {
     const logout = async () => {
       const token = getToken()
-      // return axios.get('api/auth/logout', { headers: { 'token': 'Bearer ' + token})
+      // return axios.get('/api/auth/logout', { headers: { 'token': 'Bearer ' + token})
       return axios.get('protected/auth/logout')
         .then(_ => {
           logoutStorage()

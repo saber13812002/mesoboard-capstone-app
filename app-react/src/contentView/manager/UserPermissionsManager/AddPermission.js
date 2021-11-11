@@ -50,7 +50,7 @@ const AddPermission = ({ onBack }) => {
         console.log('res', res.data)
       })
         .catch(err => console.log('err', err))
-      // axios.post('api/permissions/verify', { code }).then(res => {
+      // axios.post('/api/permissions/verify', { code }).then(res => {
       //   console.log('res', res)
       //   dispatchAuthAction({
       //     type: 'VERIFY',
