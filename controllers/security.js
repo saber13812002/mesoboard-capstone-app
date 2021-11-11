@@ -35,78 +35,33 @@ exports.isAdmin = (req, res, next) => {
   }
 };
 
-exports.fileCheck = (req, res, next) => {
-  // const filename = req.files.filename;
-  let name;
-  if (req.files.poster)
-    name = req.files.poster.name;
+// exports.isManager = (req, res, next) => {
+//   const user_type = req.app.locals.user_type;
+//   if (user_type == 'manager') {
+//     next();
+//   } else {
+//     const error = new Error();
+//     error.message = "Forbidden: Manager privileges required for this operation.";
+//     error.httpStatusCode = 403;
+//     next(error);
+//   }
+// };
 
-  if (req.files.presentation)
-    name = req.files.presentation.name;
-
-  if (req.files.resume)
-    name = req.files.resume.name;
-
-  if (req.files.picture)
-    name = req.files.picture.name;
-
-  if (req.files.proposal)
-    name = req.files.proposal.name;
-
-  if (req.files.sponsorLogo)
-    name = req.files.sponsorLogo.name;
-
-  if (req.files.purchase)
-    name = req.files.purchase.name
-
-  const content = name.split('.');
-  format = content[content.length - 1];
-  if (format != 'pdf' && format != 'png' && format != 'jpg' && format != 'jpeg' && format != 'ppt' && format != 'pptx' && 'odp') {
-    error = new Error('File Type not accepted');
-    return next(error);
-  }
-
-  next();
-}
-
-exports.isAdmin = (req, res, next) => {
-  const user_type = req.app.locals.user_type;
-  if (user_type == 'admin') {
-    next();
-  } else {
-    const error = new Error();
-    error.message = "Forbidden: Admin privileges required for this operation.";
-    error.httpStatusCode = 403;
-    next(error);
-  }
-};
-
-exports.isManager = (req, res, next) => {
-  const user_type = req.app.locals.user_type;
-  if (user_type == 'manager') {
-    next();
-  } else {
-    const error = new Error();
-    error.message = "Forbidden: Manager privileges required for this operation.";
-    error.httpStatusCode = 403;
-    next(error);
-  }
-};
-
-exports.isEmployee = (req, res, next) => {
-  const user_type = req.app.locals.user_type;
-  if (user_type == 'employee') {
-    next();
-  } else {
-    const error = new Error();
-    error.message = "Forbidden: Employee privileges required for this operation.";
-    error.httpStatusCode = 403;
-    next(error);
-  }
-};
+// exports.isEmployee = (req, res, next) => {
+//   const user_type = req.app.locals.user_type;
+//   if (user_type == 'employee') {
+//     next();
+//   } else {
+//     const error = new Error();
+//     error.message = "Forbidden: Employee privileges required for this operation.";
+//     error.httpStatusCode = 403;
+//     next(error);
+//   }
+// };
 
 exports.isAdminOrManager = (req, res, next) => {
-  const user_type = req.app.locals.user_type;
+  // const user_type = req.app.locals.user_type;
+  const user_type = req.jwt.user_type;
   console.log('user_type', user_type)
   if (user_type == 'admin' || user_type == 'manager') {
     next();
@@ -117,3 +72,40 @@ exports.isAdminOrManager = (req, res, next) => {
     next(error);
   }
 };
+
+
+
+
+// exports.fileCheck = (req, res, next) => {
+//   // const filename = req.files.filename;
+//   let name;
+//   if (req.files.poster)
+//     name = req.files.poster.name;
+
+//   if (req.files.presentation)
+//     name = req.files.presentation.name;
+
+//   if (req.files.resume)
+//     name = req.files.resume.name;
+
+//   if (req.files.picture)
+//     name = req.files.picture.name;
+
+//   if (req.files.proposal)
+//     name = req.files.proposal.name;
+
+//   if (req.files.sponsorLogo)
+//     name = req.files.sponsorLogo.name;
+
+//   if (req.files.purchase)
+//     name = req.files.purchase.name
+
+//   const content = name.split('.');
+//   format = content[content.length - 1];
+//   if (format != 'pdf' && format != 'png' && format != 'jpg' && format != 'jpeg' && format != 'ppt' && format != 'pptx' && 'odp') {
+//     error = new Error('File Type not accepted');
+//     return next(error);
+//   }
+
+//   next();
+// }

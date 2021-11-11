@@ -13,7 +13,7 @@ module.exports = app => {
     .get(tokens.expireUserTokens);
 
   app.route('/api/auth/signup')
-    .post(auth.createUser, tokens.addToken, messenger.sendVerificationCode);
+    .post(auth.createUser, tokens.addToken, messenger.sendVerificationCode); //send message code MW only purpose is to end response, for now
   // .post(auth.createUser, tokens.addToken, mailer.sendVerificationEmail);
 
   app.route('/api/auth/confirmEmail/:email/:token')
