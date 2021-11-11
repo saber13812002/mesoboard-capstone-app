@@ -64,7 +64,7 @@ exports.checkTokenAndGetUser = (req, res, next) => {
       data['exp'] = '2'; //amount of days
       res.status(200)
         .json({
-          data,
+          ...data,
           message: 'Valid user metadata',
         });
       // res.end();
@@ -225,9 +225,10 @@ exports.getUserData = function (req, res, next) {
   console.log('req.jwt', req.jwt)
   const user_id = req.jwt.sub;
   // const user_type = req.jwt.user_type;
-  const error = new Error();
+  console.log('\n\nuser_id', user_id)
   const query = `select user_id, first_name, last_name, email, user_type, gender from users where user_id=$1`;
-  return db.one(query, user_id).then(function (data) {
+  return db.one(query, user_id).then(data => {
+    console.log('data', data)
     res.status(200).json({
       // data,
       ...data,
@@ -235,7 +236,10 @@ exports.getUserData = function (req, res, next) {
       status: "Success"
     });
     res.end();
-  }).catch(function (error) {
+  }).catch(_ => {
+    const error = new Error();
+    error.httpStatusCode = 409;
+    error.message = `User with id ${user_id} does not exist`;
     next(error);
   });
   // error.message = "Invalid account type";

@@ -63,7 +63,7 @@ exports.addToken = (req, res, next) => {
     if (req.path == '/api/auth/login') {
       console.log('added token on login')
       res.status(200).json({
-        data,
+        ...data,
         status: 'success',
         messge: 'successfully added token'
       });

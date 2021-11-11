@@ -43,6 +43,7 @@ exports.addPermission = (req, res, next) => {
       }
     });
   }).then(data => {
+    console.log('permission_data:', data)
     req.app.locals.permission_data = data;
     next();
   }).catch(error => {
@@ -75,15 +76,15 @@ exports.checkPermission = (req, res, next) => {
         throw error;
       } else {
         console.log('getting permission_type from permissions table')
-        return t.any(query1, code);
+        return t.one(query1, code);
       }
     });
   }).then(data1 => {
-    console.log('data1', data1)
-    if (data1.length == 1) { //if finds permission
+    console.log('permission_type', data1.permission_type)
+    if (data1) { //if finds permission
       res.status(200)
         .json({
-          data: data1[0],
+          ...data1,
           message: 'Retrieved Permission',
           status: 'success'
         });

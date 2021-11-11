@@ -47,7 +47,7 @@ const UserPermissionsManager = () => {
   return (
     <>
       {!addingNewPermission && <div className='userPermissionsManager'>
-        <BootstrapTable responsive bordered={false} keyField='id' data={profiles} columns={columns} />
+        <BootstrapTable responsive bordered={false} keyField='dataField' data={profiles} columns={columns} />
         <MButton
           onClick={handleAddNewPermission}
           icon={ICON_OPTIONS.plus}

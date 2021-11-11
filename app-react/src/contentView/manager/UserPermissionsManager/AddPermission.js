@@ -44,13 +44,13 @@ const AddPermission = ({ onBack }) => {
     console.log('permissionType', selectedPermissionType.value)
 
 
-    const verifyPermission = async () => {
+    const addPermissionFetch = async () => {
       // console.log('code', code)
-      axios.post('/api/permissions/add', { email, permission_type, code }).then(res => {
-        console.log('res', res)
+      axios.post('protected/permissions/add', { email, permission_type, code }).then(res => {
+        console.log('res', res.data)
       })
         .catch(err => console.log('err', err))
-      // axios.post('/api/permissions/verify', { code }).then(res => {
+      // axios.post('api/permissions/verify', { code }).then(res => {
       //   console.log('res', res)
       //   dispatchAuthAction({
       //     type: 'VERIFY',
@@ -59,16 +59,14 @@ const AddPermission = ({ onBack }) => {
       // })
       //   .catch(err => console.log('err', err))
     }
-    verifyPermission()
+    addPermissionFetch()
 
     e.preventDefault()
   }
 
 
   const handleSelect = (id) => {
-    // console.log('id', id);
-    const permissionType = permissionTypes.find(r => r.id === id)
-    // console.log('permissionType', permissionType)
+    const permissionType = permissionTypes.find(r => r.id == id)
     setSelectedPermissionType(permissionType)
   }
 
@@ -93,7 +91,11 @@ const AddPermission = ({ onBack }) => {
             className='pt-3 pb-3'
             onSelect={handleSelect}
           >
-            {permissionTypes.map(permissionType => <Dropdown.Item key={permissionType.value} eventKey={permissionType.id}>{permissionType.label}</Dropdown.Item>)}
+            {permissionTypes.map(permissionType =>
+              <Dropdown.Item key={permissionType.value} eventKey={permissionType.id}>
+                {permissionType.label}
+              </Dropdown.Item>
+            )}
           </DropdownButton>
 
           <div className='d-flex justify-content-start w-100'>
