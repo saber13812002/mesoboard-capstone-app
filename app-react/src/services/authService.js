@@ -1,9 +1,10 @@
 import moment from 'moment'
 
-export const setLocalStorage = ({ token, expiresIn }) => {
-  const expires = moment().add(expiresIn, 'days');
-  localStorage.setItem('expiresIn', JSON.stringify(expires.valueOf()))
+export const setLocalStorage = ({ token, exp, userId }) => {
+  const expiresIn = moment().add(exp, 'days');
+  localStorage.setItem('exp', JSON.stringify(expiresIn.valueOf()))
   localStorage.setItem('token', token)
+  localStorage.setItem('sub', userId)
 }
 
 export const getToken = () => {
@@ -13,7 +14,20 @@ export const getToken = () => {
 export const logoutStorage = () => {
   console.log('logoutStorage')
   localStorage.removeItem('token')
-  localStorage.removeItem('expiresIn')
+  localStorage.removeItem('exp')
+  localStorage.removeItem('sub')
+}
+
+export const verifyCredentialsToLogin = () => {
+  const isLogged = isLoggedIn()
+
+  if (isLogged) {
+
+  }
+  else {
+    // then logout
+  }
+  return isLogged
 }
 
 export const isLoggedIn = () => {
@@ -21,14 +35,14 @@ export const isLoggedIn = () => {
 }
 
 export const isLoggedOut = () => {
-  console.log(localStorage.getItem('expiresIn'))
-  if (!localStorage.getItem('expiresIn')) return true
-  console.log('isLoggedOut service', !moment().isBefore(getExpiration()))
+  console.log(localStorage.getItem('exp'))
+  if (!localStorage.getItem('exp')) return true
+  // console.log('isLoggedOut service', !moment().isBefore(getExpiration()))
   return !isLoggedIn()
 }
 
 const getExpiration = () => {
-  const expiration = localStorage.getItem('expiresIn')
+  const expiration = localStorage.getItem('exp')
   const expiresAt = JSON.parse(expiration)
   return moment(expiresAt)
 }
