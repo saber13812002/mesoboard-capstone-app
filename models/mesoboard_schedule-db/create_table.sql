@@ -1,5 +1,6 @@
-CREATE TABLE IF NOT EXISTS calendar_dates (
-	calendar_dates_id integer PRIMARY KEY,
+-- table
+CREATE TABLE IF NOT EXISTS schedule (
+	schedule_id integer PRIMARY KEY,
 	date timestamp NOT NULL,
 	date_format text NOT NULL, 		-- mm/dd/yyyy
 	date_short_format text NOT NULL, -- m/d/yyyy

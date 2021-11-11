@@ -1,12 +1,16 @@
 const tokens = require('../controllers/tokens');
 const security = require('../controllers/security');
-const calendar = require('../controllers/calendar');
+const schedule = require('../controllers/schedule');
 const authUtils = require('../lib/authUtils')
 
 module.exports = app => {
-  app.route('/api/calendar/week')
-    // .get(security.verifyJWT, calendar.getWeekSchedule)
-    .get(calendar.getWeekSchedule)
+  app.route('/api/schedule/week')
+    // .get(security.verifyJWT, schedule.getWeekSchedule)
+    // .get(schedule.getWeekSchedule)
+    .get(security.verifyJWT)
+
+  app.route('/protected/schedule/week')
+    .get(schedule.getWeekSchedule)
 };
 
 // module.exports = app => {
