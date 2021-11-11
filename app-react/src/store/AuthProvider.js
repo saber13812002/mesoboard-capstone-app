@@ -10,15 +10,32 @@ const AuthProvider = ({ children }) => {
     firstName: '',
     lastName: '',
     email: '',
-    password: '',
+    // password: '',
     userType: '',
     gender: '',
   }
-
   const [authState, dispatchAuthAction] = useReducer(AuthReducer, initState)
 
   /** Reset this context state to its initial state */
   const resetState = () => dispatchAuthAction({ type: 'RESET', payload: initState })
+
+  const fetchUserDataByToken = async () => {
+    const getUserData = async () => {
+      return axios.get('/protected/auth/userData')
+        // return axios.get('/api/auth/user', { token: 'Bearer ' + getToken() })
+        .then(res => {
+          // const { user_id, token } = res.data.data
+          dispatchAuthAction({
+            type: 'SET_USER',
+            // payload: { ...res.data },
+            payload: res.data,
+          })
+          console.log('then', res)
+          return res
+        })
+    }
+    getUserData()
+  }
 
   const signinFetch = async (userInfo, setRedirect) => {
     const { email, password } = userInfo;
@@ -101,20 +118,17 @@ const AuthProvider = ({ children }) => {
   const logoutFetch = (setRedirect) => {
     const logout = async () => {
       const token = getToken()
-      return axios.get('/api/auth/logout', {
-        headers: {
-          'token': token
-        }
-      }).then(_ => {
-        console.log('setting redirect')
-        logoutStorage()
-        resetState()
-        setRedirect(true)
-      }).catch(err => {
-        console.log('err', err)
-        if (err.response.status)
-          console.log('msg', err.response.status)
-      })
+      // return axios.get('/api/auth/logout', { headers: { 'token': 'Bearer ' + token})
+      return axios.get('/protected/auth/logout')
+        .then(_ => {
+          logoutStorage()
+          resetState()
+          setRedirect(true) //maybe use history.push('/login') instead
+        }).catch(err => {
+          console.log('err', err)
+          if (err.response.status)
+            console.log('msg', err.response.status)
+        })
     }
     logout()
   }
@@ -127,6 +141,7 @@ const AuthProvider = ({ children }) => {
     signup: signupFetch,
     signin: signinFetch,
     logout: logoutFetch,
+    fetchUserDataByToken
   }
 
   return <AuthContext.Provider value={authContext}>

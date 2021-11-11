@@ -46,6 +46,7 @@ exports.login = (req, res, next) => {
     });
 };
 
+// not protected - need pass token on body
 exports.checkTokenAndGetUser = (req, res, next) => {
   console.log('checkTokenAndGetUser')
   const { user_id, token } = req.body
@@ -60,7 +61,7 @@ exports.checkTokenAndGetUser = (req, res, next) => {
       return next(error);
     }
     else {
-      data['expiresIn'] = '2'; //amount of days
+      data['exp'] = '2'; //amount of days
       res.status(200)
         .json({
           data,
@@ -216,4 +217,28 @@ exports.resetPassConfirmation = (req, res, next) => {
     //must delete reset_password request when pass are changed
     // });
   });
+};
+
+exports.getUserData = function (req, res, next) {
+  // const user_id = parseInt(req.body.user_id);
+  // const user_type = req.body.user_type;
+  console.log('req.jwt', req.jwt)
+  const user_id = req.jwt.sub;
+  // const user_type = req.jwt.user_type;
+  const error = new Error();
+  const query = `select user_id, first_name, last_name, email, user_type, gender from users where user_id=$1`;
+  return db.one(query, user_id).then(function (data) {
+    res.status(200).json({
+      // data,
+      ...data,
+      message: "Succesfully retrieved user data",
+      status: "Success"
+    });
+    res.end();
+  }).catch(function (error) {
+    next(error);
+  });
+  // error.message = "Invalid account type";
+  // error.httpStatusCode = 500;
+  // next(error);
 };

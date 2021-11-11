@@ -1,30 +1,43 @@
 import { setLocalStorage } from '../services/authService'
 
 const types = {
+  RESET: 'RESET',
   VERIFY: 'VERIFY',
   LOGIN: 'LOGIN',
-  RESET: 'RESET'
+  SET_USER: 'SET_USER',
 }
 
 const AuthReducer = (state, action) => {
   const { type, payload } = action;
 
   switch (type) {
-    case types.LOGIN: {
-      const { user_id, first_name, last_name, email, password, user_type, gender, token, expiresIn } = payload
-      console.log('-expiresIn', expiresIn)
-      console.log('email', email)
-
-      if (token && expiresIn)
-        setLocalStorage({ token, expiresIn })
-
+    case types.SET_USER: {
+      const { user_id, first_name, last_name, email, user_type, gender } = payload
       return {
-        ...state,
+        // ...state,
         userId: user_id,
         firstName: first_name,
         lastName: last_name,
         email,
-        password,
+        userType: user_type,
+        gender,
+      }
+    }
+    case types.LOGIN: {
+      const { user_id, first_name, last_name, email, user_type, gender, token, exp } = payload
+      console.log('-exp', exp)
+      console.log('email', email)
+
+      if (token && exp)
+        setLocalStorage({ token, exp, userId: user_id })
+
+      return {
+        ...state, //not neccessary I think
+        userId: user_id,
+        firstName: first_name,
+        lastName: last_name,
+        email,
+        // password,
         userType: user_type,
         gender,
       }
