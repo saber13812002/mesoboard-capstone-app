@@ -5,12 +5,13 @@ const pathToKey = path.join(__dirname, '..', 'id_rsa_pub.pem');
 const PUB_KEY = fs.readFileSync(pathToKey, 'utf8');
 
 exports.verifyJWT = (req, res, next) => {
+  console.log('verifyJWT')
   const tokenParts = req.headers.authorization.split(' ');
 
   if (tokenParts[0] === 'Bearer' && tokenParts[1].match(/\S+\.\S+\.\S+/) !== null) {
     try {
-      const verification = jwt.verify(tokenParts[1], PUB_KEY, { algorithms: ['RS256'] });
-      req.jwt = verification; //store token on request object
+      const payload = jwt.verify(tokenParts[1], PUB_KEY, { algorithms: ['RS256'] });
+      req.jwt = payload; //store token's payload on request object
       next();
     } catch (err) {
       console.log(err)

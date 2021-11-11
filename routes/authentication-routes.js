@@ -1,14 +1,15 @@
 const auth = require('../controllers/authentication');
 const tokens = require('../controllers/tokens');
-const mailer = require('../controllers/mailer');
+// const mailer = require('../controllers/mailer');
 const messenger = require('../controllers/messenger');
+// const security = require('../controllers/security');
 
 // tokens.removeExpiredTokens
 module.exports = app => {
   app.route('/api/auth/login')
     .post(auth.login, tokens.enforceMaxUserTokensConstraint, tokens.addToken);
 
-  app.route('/api/auth/logout')
+  app.route('/protected/auth/logout')
     .get(tokens.expireUserTokens);
 
   app.route('/api/auth/signup')
@@ -18,8 +19,15 @@ module.exports = app => {
   app.route('/api/auth/confirmEmail/:email/:token')
     .get(auth.confirmEmail);
 
+  // used for login and registering on the app
   app.route('/api/auth/verifyToken/getUser')
     .post(auth.checkTokenAndGetUser);
+
+  // used for when logged in, but react app was refreshed
+  app.route('/protected/auth/userData')
+    .get(tokens.removeExpiredTokens, auth.getUserData);
+
+  // .get(tokens.removeExpiredTokens, tokens.checkToken, auth.getUserData);
 
   // app.route('/api/auth/changePassword')
   //     .post(tokens.checkToken, auth.changePassword);

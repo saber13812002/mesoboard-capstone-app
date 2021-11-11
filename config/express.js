@@ -36,12 +36,18 @@ module.exports = function () {
   // app.use(cors(corsOptions));
   ////// app.use(fileUpload());
 
+  /** Routes that contain '/protected' in their path string will first
+   *  verify the user's authorization by a Bearer Token and assign the
+   *  jwt payload to the request object if verification was successful.
+   */
+  app.use('/protected', require('../controllers/security').verifyJWT)
+
   /***************************/
   /* REQUIRE THE ROUTES HERE */
   /***************************/
   require('../routes/authentication-routes')(app);
   require('../routes/permissions-routes')(app);
-  require('../routes/calendar-routes')(app);
+  require('../routes/schedule-routes')(app);
 
   // Have Node serve the files for our built React app
   app.use(express.static(path.resolve(__dirname, '../app-react/build')));
