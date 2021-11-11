@@ -23,27 +23,26 @@ exports.enforceMaxUserTokensConstraint = (req, res, next) => {
 };
 
 exports.expireUserTokens = (req, res, next) => {
-  console.log('expireUserTokens', req.body)
-  const token = req.get('token');
-  console.log(!token, 'token', token)
-  if (!token) {
-    const error = new Error("Malformed Query: Missing Token");
-    error.httpStatusCode = 400;
-    return next(error);
-  } else {
-    console.log('deleting token')
-    const query = "DELETE FROM tokens WHERE user_id in (SELECT user_id FROM tokens WHERE token = $1);";
-    return db.any(query, [token]).then(_ => {
-      res.status(200).json({
-        status: "success",
-        message: "Successfully logged out of all devices."
-      });
-      // next();
-      res.end()
-    }).catch(error => {
-      next(error);
+  console.log('expireUserTokens')
+  const token = req.headers.authorization.split(' ')[1];
+  // const token = req.get('token');
+
+  // if (!token) { //remove this ya que se implementó '/protected' routes that verifies the token
+  //   const error = new Error("Malformed Query: Missing Token");
+  //   error.httpStatusCode = 400;
+  //   return next(error);
+  // } else {
+  const query = "DELETE FROM tokens WHERE user_id in (SELECT user_id FROM tokens WHERE token = $1);";
+  return db.any(query, token).then(_ => {
+    res.status(200).json({
+      status: "success",
+      message: "Successfully logged out of all devices."
     });
-  }
+    // next();
+    res.end()
+  }).catch(error => {
+    next(error);
+  });
 };
 
 exports.addToken = (req, res, next) => {
@@ -51,14 +50,16 @@ exports.addToken = (req, res, next) => {
   const user_id = req.app.locals.user_id;
   const user_type = req.app.locals.user_type;
 
-  const { token, expiresIn } = authUtils.issueJWT(user_id);
+  let { token, exp } = authUtils.issueJWT(user_id, user_type);
+  token = token.split(' ')[1] //exclude the Bearer part of the token
+
   const query =
     `INSERT into tokens (token, user_id, expiration_date, user_type) 
      values($1, $2, current_timestamp + interval '48 hours', $3) returning user_id, token, user_type;`;
 
   return db.one(query, [token, user_id, user_type]).then(data => {
     data['token'] = token;
-    data['expiresIn'] = expiresIn;
+    data['exp'] = exp;
     if (req.path == '/api/auth/login') {
       console.log('added token on login')
       res.status(200).json({
@@ -97,8 +98,11 @@ exports.removeExpiredTokens = (req, res, next) => {
   });
 };
 
+// may not be used now with the '/protected' routes implementation
 exports.checkToken = (req, res, next) => {
-  const token = req.get('token');
+  // const token = req.get('token');
+  const token = req.jwt.token;
+  console.log('checkToken -> token:\n', token)
   const error = new Error();
   if (!token) {
     error.message = "Malformed Query: Missing Token";
