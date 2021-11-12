@@ -1,67 +1,84 @@
+import { useState, useEffect } from 'react'
 import './SidebarList.css'
 import { NavLink } from 'react-router-dom'
-import {
-  Icon,
-  ICON_OPTIONS
-} from '../../components'
+import { Icon, iconComponents } from '../../components'
+import { urlPaths } from '../../services/urlService'
+import { sidebarItemNames, setSidebarActiveItemNameByUrlPath } from '../../services/sidebarService'
 
 const SidebarList = () => {
+  const [activeItemName, setActiveItemName] = useState(sidebarItemNames.home)
+  const [hoveredItemName, setHoveredItemName] = useState(undefined)
+
+  useEffect(() => {
+    setSidebarActiveItemNameByUrlPath(setActiveItemName)
+  }, [])
+
   const styles = {
-    className: 'cname',
-    activeClassName: 'acn'
+    activeClassName: 'activeClassName'
   }
 
   const links = [
     {
-      to: '/app/home',
-      name: 'Home',
-      icon: ICON_OPTIONS.home,
+      to: urlPaths.home,
+      name: sidebarItemNames.home,
+      IconComponent: iconComponents.Home,
     },
     {
-      to: '/app/schedule',
-      name: 'Schedule',
-      icon: ICON_OPTIONS.clock,
+      to: urlPaths.schedule,
+      name: sidebarItemNames.schedule,
+      IconComponent: iconComponents.Calendar,
     },
     {
-      to: '/app/profiles',
-      name: 'Perfiles',
-      icon: ICON_OPTIONS.user,
+      to: urlPaths.profiles,
+      name: sidebarItemNames.profiles,
+      IconComponent: iconComponents.Profile,
     },
     {
-      to: '/app/checks',
-      name: 'Talonarios',
-      icon: ICON_OPTIONS.money,
+      to: urlPaths.checks,
+      name: sidebarItemNames.checks,
+      IconComponent: iconComponents.MoneyCheck,
     },
     {
-      to: '/app/request',
-      name: 'Solicitudes',
-      icon: ICON_OPTIONS.pencil,
+      to: urlPaths.requests,
+      name: sidebarItemNames.requests,
+      IconComponent: iconComponents.Requests,
     },
     {
-      to: '/app/memo',
-      name: 'Memorandos',
-      icon: ICON_OPTIONS.note,
+      to: urlPaths.memos,
+      name: sidebarItemNames.memos,
+      IconComponent: iconComponents.Memos,
     },
     {
-      to: '/app/permissions',
-      name: 'Permisos de Usuario',
-      icon: ICON_OPTIONS.note,
+      to: urlPaths.permissions,
+      name: sidebarItemNames.permissions,
+      IconComponent: iconComponents.Permissions,
     },
   ]
 
   return (
     <div className="sidebarList">
       <ul>
-        {links.map(({ to, icon, name }, i) =>
-          <li key={i}>
+        {links.map(({ to, IconComponent, name }, i) =>
+          <li
+            key={i}
+            onMouseEnter={() => setHoveredItemName(name)}
+            onMouseLeave={() => setHoveredItemName(undefined)}
+          >
             <NavLink
-              id="link"
-              className={styles.className}
-              activeClassName={styles.activeClassName}
               to={to}
+              activeClassName={styles.activeClassName}
+              onClick={() => setActiveItemName(name)}
             >
-              <Icon icon={icon} className='mr-2' />
-              <span>{name}</span>
+              <div className='d-flex align-items-center'>
+                <Icon
+                  IconComponent={IconComponent}
+                  color='grey'
+                  size='md'
+                  isSidebarItemActive={(activeItemName == name) || (hoveredItemName == name)}
+                  className='mr-2'
+                />
+                <span>{name}</span>
+              </div>
             </NavLink>
           </li>
         )}

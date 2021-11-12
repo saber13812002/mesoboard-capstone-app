@@ -1,5 +1,5 @@
 import './ContentView.css'
-import { urlSlug } from '../../services/url'
+import { urlSlug } from '../../services/urlService'
 import { useRouteMatch } from 'react-router-dom'
 import { ContentHeader } from '../../components'
 import {
@@ -34,13 +34,14 @@ const handleView = view => {
 
 const ContentView = () => {
   let { url } = useRouteMatch();
+  const slug = urlSlug(url)
   // console.log('url', urlSlug(url))
 
   return (
     <div className='body'>
-      <ContentHeader view={urlSlug(url)} />
+      <ContentHeader view={slug} />
       <div className='body__content'>
-        {handleView(urlSlug(url))}
+        {handleView(slug)}
       </div>
     </div>
   )
