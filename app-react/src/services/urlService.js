@@ -1,9 +1,3 @@
-// export const pathHome = '/app/home'
-// export const pathSchedule = '/app/schedule'
-// export const pathProfiles = '/app/profiles'
-// export const pathRequests = '/app/requests'
-// export const pathChecks = '/app/checks'
-// export const pathMemo = '/app/memos'
 export const urlPaths = {
   // transfer above to here
   home: '/app/home',
