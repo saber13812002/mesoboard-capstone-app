@@ -1,6 +1,6 @@
 import { useContext } from 'react'
 import './SidebarProfileSection.css'
-import { Icon, ICON_OPTIONS } from '../../components'
+import { Icon, iconComponents } from '../../components'
 import { AuthContext } from '../../store'
 
 const SidebarProfileSection = ({ onProfileCard }) => {
@@ -15,7 +15,12 @@ const SidebarProfileSection = ({ onProfileCard }) => {
         {firstName && <>
           <p>{firstName} {lastName}</p>
           <div className='sidebarProfileSection__icon'>
-            <Icon icon={ICON_OPTIONS.caretDown} />
+            <Icon
+              IconComponent={iconComponents.CaretDown}
+              size='sm'
+              color='dark'
+              className='mt-1'
+            />
           </div>
         </>}
       </div>

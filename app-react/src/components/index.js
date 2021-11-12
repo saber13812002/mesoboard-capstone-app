@@ -1,5 +1,6 @@
 // components
-import Icon, { iconOptions } from './icons/Icon';
+import Icon from './ui/Icon/Icon'
+import iconComponents from './ui/Icon/iconComponents'
 import NavDrawer from "./modals/NavDrawerModal/NavDrawer";
 import ScheduleEdit from "./modals/ScheduleEditModal/ScheduleEdit";
 import Modal from './modals/Modal'
@@ -13,10 +14,10 @@ import ContentHeaderInfo from './ui/ContentHeaderInfo'
 import TotalServicioProduccion from './ui/TotalServicioProduccion'
 import MButton from './ui/Buttons/MButton'
 
-
 // components
 export {
   Icon,
+  iconComponents,
   NavDrawer,
   ScheduleEdit,
   Modal,
@@ -30,6 +31,3 @@ export {
   TotalServicioProduccion,
   MButton
 }
-
-// icon enum/options
-export const ICON_OPTIONS = iconOptions

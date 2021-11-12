@@ -2,7 +2,7 @@ import { Table, Thead, Tbody, Tr, Th, Td } from 'react-super-responsive-table';
 import 'react-super-responsive-table/dist/SuperResponsiveTableStyle.css';
 import { ScheduleHoursBox } from '../..';
 import './ScheduleTable.css'
-import { MButton, ICON_OPTIONS } from '../../../components'
+import { iconComponents, MButton } from '../../../components'
 
 const tableHeaders = ['Employee', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday', 'Monday', 'Total Hours']
 
@@ -45,7 +45,8 @@ const ScheduleTable = ({ employeeWeekDates, onOpenScheduleEdit }) => {
           {employeeWeekDates.map((employeeWeekInfo, i) => (handleRow(employeeWeekInfo, i)))}
         </Tbody>
         <MButton
-          icon={ICON_OPTIONS.check}
+          IconComponent={iconComponents.checkMark}
+          iconSize='sm'
           text='Approve'
           variant='primary'
           className='mt-3 ml-1 mb-2'

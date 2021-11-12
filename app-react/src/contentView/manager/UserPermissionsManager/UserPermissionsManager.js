@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import BootstrapTable from 'react-bootstrap-table-next';
 import './UserPermissionsManager.css';
-import { MButton, ICON_OPTIONS } from '../../../components'
+import { iconComponents, MButton } from '../../../components'
 import { AddPermission } from '../../'
 
 
@@ -35,6 +35,7 @@ const columns = [{
 
 const UserPermissionsManager = () => {
   const [addingNewPermission, setAddingNewPermission] = useState(false);
+  console.log('UserPermissionsManager')
 
   const handleBack = () => {
     setAddingNewPermission(false)
@@ -50,7 +51,8 @@ const UserPermissionsManager = () => {
         <BootstrapTable responsive bordered={false} keyField='dataField' data={profiles} columns={columns} />
         <MButton
           onClick={handleAddNewPermission}
-          icon={ICON_OPTIONS.plus}
+          IconComponent={iconComponents.Plus}
+          iconSize='sm'
           text='Nuevo Permiso'
           variant='primary'
           size='sm'

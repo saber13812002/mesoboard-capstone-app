@@ -1,7 +1,7 @@
 import './ScheduleEdit.css'
 import classes from './ScheduleEditModal.module.css'
 import { Modal } from '../..'
-import { MButton, Icon, ICON_OPTIONS } from '../..'
+import { Icon, iconComponents, MButton } from '../..'
 import { WEEK_DAY_ENUM } from '../../../constants/scheduleConstant'
 import { ScheduleHoursBox } from '../../../contentView'
 
@@ -30,7 +30,8 @@ const ScheduleEdit = ({ employee, onWeekdayAdd, onWeekdayHoursUpdate, onCloseSch
               return (
                 <MButton
                   key={i}
-                  icon={ICON_OPTIONS.plus}
+                  IconComponent={iconComponents.Plus}
+                  iconColor='dark'
                   text={WEEK_DAY_ENUM[i]}
                   variant='outline-primary'
                   className='mr-2'
@@ -49,7 +50,11 @@ const ScheduleEdit = ({ employee, onWeekdayAdd, onWeekdayHoursUpdate, onCloseSch
                   <h4>{WEEK_DAY_ENUM[i]}</h4>
                   <input type='number' onChange={(e) => handleTurnChange(i, e)} />
                   <ScheduleHoursBox weekday={weekday} showMealMins={false} className='scheduleEdit__hoursBox' />
-                  <Icon icon={ICON_OPTIONS.trash} variant='danger' className='mb-3' />
+                  <Icon
+                    IconComponent={iconComponents.trash}
+                    size='md'
+                    color='red'
+                  />
                 </div>
               )
             }

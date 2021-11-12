@@ -1,6 +1,6 @@
 import './ScheduleTurnsTable.css'
 import { Table } from 'react-bootstrap'
-import { MButton, ICON_OPTIONS } from '../../../components'
+import { MButton, iconComponents } from '../../../components'
 
 const ScheduleTurnsTable = ({ turns, onAddNewTurn }) => {
   return (
@@ -28,7 +28,7 @@ const ScheduleTurnsTable = ({ turns, onAddNewTurn }) => {
       </Table>
       <MButton
         onClick={onAddNewTurn}
-        icon={ICON_OPTIONS.plus}
+        IconComponent={iconComponents.Plus}
         text='Nuevo Turno'
         variant='primary'
         size='sm'

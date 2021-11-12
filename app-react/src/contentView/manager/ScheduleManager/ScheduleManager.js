@@ -1,12 +1,14 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { MButton } from '../../../components'
 import { ScheduleTable, ScheduleTurnsTable } from '../..'
 import { turnArray, employeeWeekDatesArray } from '../../../constants/scheduleConstant'
 import {
   Icon,
-  ICON_OPTIONS,
+  iconComponents,
   ScheduleEdit
 } from '../../../components'
+import axios from 'axios'
+import { DateRange } from '../..'
 
 
 const ScheduleManager = () => {
@@ -14,8 +16,24 @@ const ScheduleManager = () => {
   const [employeeWeekDates] = useState(employeeWeekDatesArray)
   const [turns, setTurns] = useState(turnArray)
   const [employeeToEdit, setEmployeeToEdit] = useState(null)
+  const [dateRange, setDateRange] = useState({ dateStart: '11/09/2021', dateEnd: '11/15/2021' })
 
   // useEffect fetching the data to initialize the states
+  useEffect(async () => {
+    const getWeekSchedule = async () => {
+      console.log('fetching week schedule')
+      const date = new Date()
+      axios.get('/protected/schedule/week', { date }).then(res => {
+        console.log('week schedule', res.data);
+        console.log()
+        console.log('employeeWeekDates', employeeWeekDates)
+
+      })
+        .catch(err => console.log(err))
+    }
+    getWeekSchedule()
+    // setTimeout(() => getWeekSchedule(), 5000)
+  }, [])
 
   // functions to handle schedule turns modification and schedule editing (handle state management)
   const openScheduleEdit = (employee) => {
@@ -68,27 +86,33 @@ const ScheduleManager = () => {
     <div>
       {/* section for the weekDateRange component and the buttons */}
       <div className='d-flex justify-content-between mb-3'>
-        <div>
-          Date Range
-        </div>
-        <div className='d-flex'>
+        {dateRange && (
+          <DateRange />
+        )}
+        <div className='d-flex align-items-center'>
           <MButton
-            icon={ICON_OPTIONS.download}
+            className='mr-2'
             text='Template CSV'
             variant='outline-primary'
-            className='mr-2'
             size='sm'
+            IconComponent={iconComponents.Download}
+            iconSize='sm'
+            iconColor='dark'
           />
           <MButton
-            icon={ICON_OPTIONS.upload}
+            className='mr-2'
             text='Import CSV'
             variant='secondary'
-            className='mr-2'
             size='sm'
+            IconComponent={iconComponents.Upload}
+            iconSize='sm'
+            iconColor='dark'
           />
           <Icon
-            icon={ICON_OPTIONS.download}
-            color={'primary'}
+            IconComponent={iconComponents.Download}
+            size='lg'
+            color='primary'
+            className='mr-2'
           />
         </div>
       </div>

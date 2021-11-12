@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import './AddPermission.css'
-import { Icon, ICON_OPTIONS, MButton } from '../../../components'
+import { MButton } from '../../../components'
 import { Form, Dropdown, DropdownButton } from 'react-bootstrap'
 import axios from 'axios'
 
@@ -104,14 +104,13 @@ const AddPermission = ({ onBack }) => {
               className='mr-3'
               text='Cancelar'
               variant='light'
-              size='sm'
+              type='submit'
             />
             <MButton
               type='submit'
-              icon={ICON_OPTIONS.plus}
               text='Añadir Permiso'
               variant='primary'
-              size='sm'
+              type='submit'
             />
           </div>
         </Form>

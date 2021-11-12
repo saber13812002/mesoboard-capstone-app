@@ -1,6 +1,9 @@
 
 .addPermission__card {
-  width: 35%
+  width: 32%;
+  /* width: 420px; */
+  min-width: 302px;
+  max-width: 420px
 }
 
 .addPermission__card > form {
