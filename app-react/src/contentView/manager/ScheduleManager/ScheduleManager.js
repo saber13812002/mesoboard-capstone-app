@@ -28,41 +28,41 @@ const ScheduleManager = () => {
   const closeScheduleEdit = () => {
     setEmployeeToEdit(null)
   }
-  const onSaveTurn = (startHour,endHour,lunchHour) =>{
-    console.log(startHour,endHour,lunchHour)
+  const onSaveTurn = (hourStart, hourEnd, lunchHour) => {
+    console.log(hourStart, hourEnd, lunchHour)
     setTurns(prev => {
       let turnClone = [...prev]
-      const lastTurn= prev[prev.length-1]
+      const lastTurn = prev[prev.length - 1]
       lastTurn.id = prev.length
-      lastTurn.start =  timeFromInt(startHour, { format: 12,leadingZero: false })
-      lastTurn.end =  timeFromInt(endHour, { format: 12,leadingZero: false })
-      lastTurn.lunch =  timeFromInt(lunchHour, { format: 12,leadingZero: false })
+      lastTurn.start = timeFromInt(hourStart, { format: 12, leadingZero: false })
+      lastTurn.end = timeFromInt(hourEnd, { format: 12, leadingZero: false })
+      lastTurn.lunch = timeFromInt(lunchHour, { format: 12, leadingZero: false })
       turnClone = sortTurns(turnClone)
-      turnClone.forEach((turn,i)=>
-      turn.id=i+1
+      turnClone.forEach((turn, i) =>
+        turn.id = i + 1
       )
       setAddingNewTurn(false)
-      
-    console.log(lastTurn, timeFromInt(startHour))
+
+      console.log(lastTurn, timeFromInt(hourStart))
       return turnClone
     })
 
-    
+
   }
 
-  
-  const sortTurns = (turn) =>{
+
+  const sortTurns = (turn) => {
     console.log('--------------')
-    const res = turn.sort((a,b)=>{
-      console.log(a.start,b.start)
-      return ('' + a.start).localeCompare(b.start) 
+    const res = turn.sort((a, b) => {
+      console.log(a.start, b.start)
+      return ('' + a.start).localeCompare(b.start)
     })
     console.log(res)
     return res
   }
 
 
-  const addNewTurn = () =>{
+  const addNewTurn = () => {
     setTurns(prev => [...prev, { id: null, start: null, end: null, lunch: null }])
     setAddingNewTurn(true)
   }
@@ -74,9 +74,9 @@ const ScheduleManager = () => {
     const { id, start, end, lunch } = turns[turnIndex]
     const newWeekday = {
       turn: id,
-      startHour: start,
-      endHour: end,
-      mealHour: lunch
+      hourStart: start,
+      hourEnd: end,
+      hourLunch: lunch
     }
 
     setEmployeeToEdit(emp => {
@@ -89,9 +89,9 @@ const ScheduleManager = () => {
   const addWeekdayIntoList = (weekdayIndex) => {
     const newWeekday = {
       turn: 1,
-      startHour: turns[1].start,
-      endHour: turns[1].end,
-      mealHour: turns[1].lunch
+      hourStart: turns[1].start,
+      hourEnd: turns[1].end,
+      hourLunch: turns[1].lunch
     }
 
     setEmployeeToEdit(emp => {
@@ -138,7 +138,7 @@ const ScheduleManager = () => {
       </section>
 
       {/* section for the ScheduleEditModal portal component */}
-      <ScheduleTurnsTable turns={turns} onAddNewTurn={addNewTurn} addingNewTurn ={addingNewTurn} onSaveTurn={onSaveTurn} />
+      <ScheduleTurnsTable turns={turns} onAddNewTurn={addNewTurn} addingNewTurn={addingNewTurn} onSaveTurn={onSaveTurn} />
 
       {employeeToEdit &&
         <ScheduleEdit
