@@ -1,21 +1,33 @@
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { MButton } from '../../../components'
 import { ScheduleTable, ScheduleTurnsTable } from '../..'
 import { turnArray, employeeWeekDatesArray } from '../../../constants/scheduleConstant'
 import { Icon, iconComponents, ScheduleEdit } from '../../../components'
+import { timeFromInt } from 'time-number';
 import { DateRange } from '../..'
+import { getDateId } from '../../../services/scheduleService'
 // import axios from 'axios'
 import moment from 'moment'
-import { getDateId } from '../../../services/scheduleService'
-
-
 
 const ScheduleManager = () => {
   // const [weekDateRange, setWeekDateRange] = useState({})
-  const [employeeWeekDates] = useState(employeeWeekDatesArray)
+  // <<<<<<< HEAD
+  //   const [employeeWeekDates] = useState(employeeWeekDatesArray)
+  //   const [turns, setTurns] = useState(turnArray)
+  //   const [employeeToEdit, setEmployeeToEdit] = useState(null)
+
+  //   // functions to handle schedule turns modification and schedule editing (handle state management)
+  //   const openScheduleEdit = employee => setEmployeeToEdit(employee)
+  //   const closeScheduleEdit = () => setEmployeeToEdit(null)
+
+
+  //   const addNewTurn = () =>
+  //     setTurns(prev => [...prev, { id: null, start: null, end: null, lunch: null }])
+  // =======
+  const [employeeWeekDates, setEmployeeWeekDates] = useState(employeeWeekDatesArray)
   const [turns, setTurns] = useState(turnArray)
   const [employeeToEdit, setEmployeeToEdit] = useState(null)
-
+  const [addingNewTurn, setAddingNewTurn] = useState(false)
   const [currentMoment, setCurrentMoment] = useState(moment())
   const [weekSchedule, setWeekSchedule] = useState([]) //array of json, at least containing id as desired
 
@@ -25,7 +37,7 @@ const ScheduleManager = () => {
   // console.log('moment().isoWeekday()', moment().isoWeekday())
   // console.log('moment().calendar()', moment().calendar())
 
-
+  // useEffect fetching the data to initialize the states
   // useEffect fetching the data to initialize the states
   useEffect(() => {
     const week = [];
@@ -56,7 +68,7 @@ const ScheduleManager = () => {
   }, [currentMoment])
 
 
-  /* 
+  /*
     {
       employeeName: 'Iris J. Ramirez',
       totalHours: 40.00,
@@ -91,8 +103,44 @@ const ScheduleManager = () => {
     }
   }
 
-  const addNewTurn = () =>
+  const onSaveTurn = (hourStart, hourEnd, lunchHour) => {
+    console.log(hourStart, hourEnd, lunchHour)
+    setTurns(prev => {
+      let turnClone = [...prev]
+      const lastTurn = prev[prev.length - 1]
+      lastTurn.id = prev.length
+      lastTurn.start = timeFromInt(hourStart, { format: 12, leadingZero: false })
+      lastTurn.end = timeFromInt(hourEnd, { format: 12, leadingZero: false })
+      lastTurn.lunch = timeFromInt(lunchHour, { format: 12, leadingZero: false })
+      turnClone = sortTurns(turnClone)
+      turnClone.forEach((turn, i) =>
+        turn.id = i + 1
+      )
+      setAddingNewTurn(false)
+
+      console.log(lastTurn, timeFromInt(hourStart))
+      return turnClone
+    })
+
+
+  }
+
+
+  const sortTurns = (turn) => {
+    console.log('--------------')
+    const res = turn.sort((a, b) => {
+      console.log(a.start, b.start)
+      return ('' + a.start).localeCompare(b.start)
+    })
+    console.log(res)
+    return res
+  }
+
+  const addNewTurn = () => {
     setTurns(prev => [...prev, { id: null, start: null, end: null, lunch: null }])
+    setAddingNewTurn(true)
+  }
+  // >>>>>>> 64dd3c7498388095f28a3881ea8c9433a1aa68bc
 
   const modifyWeekdayHoursByTurn = (weekdayIndex, turnIndex) => {
     if (turnIndex == null || turnIndex < 0 || turnIndex > turns.length - 1)
@@ -101,9 +149,9 @@ const ScheduleManager = () => {
     const { id, start, end, lunch } = turns[turnIndex]
     const newWeekday = {
       turn: id,
-      startHour: start,
-      endHour: end,
-      mealHour: lunch
+      hourStart: start,
+      hourEnd: end,
+      hourLunch: lunch
     }
 
     setEmployeeToEdit(emp => {
@@ -116,9 +164,9 @@ const ScheduleManager = () => {
   const addWeekdayIntoList = (weekdayIndex) => {
     const newWeekday = {
       turn: 1,
-      startHour: turns[1].start,
-      endHour: turns[1].end,
-      mealHour: turns[1].lunch
+      hourStart: turns[1].start,
+      hourEnd: turns[1].end,
+      hourLunch: turns[1].lunch
     }
 
     setEmployeeToEdit(emp => {
@@ -133,15 +181,18 @@ const ScheduleManager = () => {
     <div>
       {/* section for the weekDateRange component and the buttons */}
       <div className='d-flex justify-content-between mb-3'>
-        {weekSchedule.length > 0 && (
-          // <DateRange dateStart={'Nov. 9, 2021'} dateEnd={'Nov. 16, 2021'} />
-          <DateRange
-            dateStart={weekSchedule[0].toDate()}
-            dateEnd={weekSchedule[6].toDate()}
-            onGoToNextWeek={goToNextWeek}
-            onGoToPrevious={goToPrevious}
-          />
-        )}
+
+        {
+          weekSchedule.length > 0 && (
+            // <DateRange dateStart={'Nov. 9, 2021'} dateEnd={'Nov. 16, 2021'} />
+            <DateRange
+              dateStart={weekSchedule[0].toDate()}
+              dateEnd={weekSchedule[6].toDate()}
+              onGoToNextWeek={goToNextWeek}
+              onGoToPrevious={goToPrevious}
+            />
+          )
+        }
         {/* <div className='d-flex align-items-start'>
           <MButton
             className='mr-2'
@@ -168,18 +219,19 @@ const ScheduleManager = () => {
             className='mr-2'
           />
         </div> */}
-      </div>
+      </div >
 
 
       {/* section for the scheduleTable and approve button */}
-      {/* <section className='mb-4'>
+      <section className='mb-4'>
         <ScheduleTable onOpenScheduleEdit={openScheduleEdit} employeeWeekDates={employeeWeekDates} />
-      </section> */}
+      </section>
 
       {/* section for the ScheduleEditModal portal component */}
-      {/* <ScheduleTurnsTable turns={turns} onAddNewTurn={addNewTurn} /> */}
+      <ScheduleTurnsTable turns={turns} onAddNewTurn={addNewTurn} addingNewTurn={addingNewTurn} onSaveTurn={onSaveTurn} />
 
-      {employeeToEdit &&
+      {
+        employeeToEdit &&
         <ScheduleEdit
           employee={employeeToEdit}
           turns={turns}
@@ -188,7 +240,7 @@ const ScheduleManager = () => {
           onCloseScheduleEdit={closeScheduleEdit}
         />
       }
-    </div>
+    </div >
   )
 }
 
