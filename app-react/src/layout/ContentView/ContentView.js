@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import './ContentView.css'
-import { urlSlug } from '../../services/url'
+import { urlSlug } from '../../services/urlService'
 import { useRouteMatch } from 'react-router-dom'
 import { ContentHeader } from '../../components'
 import {

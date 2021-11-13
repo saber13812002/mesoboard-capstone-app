@@ -1,5 +1,5 @@
 import Signin from "./Signin";
-import VerifyPermission from "./VerifyPermission";
+import Authenticate from "./Authenticate";
 import AuthWrapper from './AuthWrapper'
 
-export { Signin, VerifyPermission, AuthWrapper }
+export { Signin, Authenticate, AuthWrapper }

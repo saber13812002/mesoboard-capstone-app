@@ -3,7 +3,7 @@ import { Form, Button } from 'react-bootstrap';
 import { AuthWrapper } from '.'
 import { AuthContext } from '../store'
 
-const VerifyPermission = () => {
+const Authenticate = () => {
   const { verifyPermission } = useContext(AuthContext)
 
   const handleVerifyPermission = (e) => {
@@ -26,4 +26,4 @@ const VerifyPermission = () => {
   )
 }
 
-export default VerifyPermission
+export default Authenticate

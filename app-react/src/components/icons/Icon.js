@@ -34,7 +34,7 @@ export const iconOptions = {
   trash: faTrashAlt
 }
 
-const Icon = ({ icon, size, color, isButtonIcon, className , onClick}) => {
+const Icon = ({ icon, size, color, isButtonIcon, className, onClick }) => {
   // viewBox = "min-x min-y width height"
   let minX = 0;
   let minY = 0;
