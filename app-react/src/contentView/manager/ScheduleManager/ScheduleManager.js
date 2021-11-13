@@ -2,13 +2,12 @@ import { useState, useEffect } from 'react'
 import { MButton } from '../../../components'
 import { ScheduleTable, ScheduleTurnsTable } from '../..'
 import { turnArray, employeeWeekDatesArray } from '../../../constants/scheduleConstant'
-import {
-  Icon,
-  iconComponents,
-  ScheduleEdit
-} from '../../../components'
-import axios from 'axios'
+import { Icon, iconComponents, ScheduleEdit } from '../../../components'
 import { DateRange } from '../..'
+// import axios from 'axios'
+import moment from 'moment'
+import { getDateId } from '../../../services/scheduleService'
+
 
 
 const ScheduleManager = () => {
@@ -16,32 +15,80 @@ const ScheduleManager = () => {
   const [employeeWeekDates] = useState(employeeWeekDatesArray)
   const [turns, setTurns] = useState(turnArray)
   const [employeeToEdit, setEmployeeToEdit] = useState(null)
-  const [dateRange, setDateRange] = useState({ dateStart: '11/09/2021', dateEnd: '11/15/2021' })
+
+  const [currentMoment, setCurrentMoment] = useState(moment())
+  const [weekSchedule, setWeekSchedule] = useState([]) //array of json, at least containing id as desired
+
+  const weekStart = currentMoment.clone().startOf('week').add(2, 'day'); //tuesday
+  const weekEnd = currentMoment.clone().endOf('week').add(2, 'day'); //monday
+
+  // console.log('moment().isoWeekday()', moment().isoWeekday())
+  // console.log('moment().calendar()', moment().calendar())
+
 
   // useEffect fetching the data to initialize the states
-  useEffect(async () => {
-    const getWeekSchedule = async () => {
-      console.log('fetching week schedule')
-      const date = new Date()
-      axios.get('/protected/schedule/week', { date }).then(res => {
-        console.log('week schedule', res.data);
-        console.log()
-        console.log('employeeWeekDates', employeeWeekDates)
-
-      })
-        .catch(err => console.log(err))
+  useEffect(() => {
+    const week = [];
+    let currentDay = weekStart.clone()
+    const nextTuesday = weekEnd.clone().add(1, 'day')
+    while (currentDay.isBefore(nextTuesday, 'day')) {
+      week.push(currentDay.clone())
+      currentDay.add(1, 'day')
     }
-    getWeekSchedule()
-    // setTimeout(() => getWeekSchedule(), 5000)
-  }, [])
+
+
+
+    const m = week[0];
+    getDateId(m)
+    // console.log(getDateId(m))
+
+    console.log('week', week)
+    setWeekSchedule(week)
+    // const getWeekSchedule = async () => {
+    //   axios.get('/protected/schedule/week', { currentMoment }).then(res => {
+    //     const week = res.data
+    //     console.log('week schedule', week);
+    //     setWeekSchedule(week)
+    //   })
+    //     .catch(err => console.log(err))
+    // }
+    // getWeekSchedule()
+  }, [currentMoment])
+
+
+  /* 
+    {
+      employeeName: 'Iris J. Ramirez',
+      totalHours: 40.00,
+      isHourLunch: false,
+      weekSchedule: [
+        {
+          turn: 1,
+          startHour: '6:30AM',
+          endHour: '3.00PM',
+          lunchHour: '11:00AM'
+        },
+        null,
+      ]
+    }
+  */
 
   // functions to handle schedule turns modification and schedule editing (handle state management)
-  const openScheduleEdit = (employee) => {
-    setEmployeeToEdit(employee)
+  const openScheduleEdit = employee => setEmployeeToEdit(employee)
+  const closeScheduleEdit = () => setEmployeeToEdit(null)
+
+  const goToPrevious = () => {
+    console.log('-----', weekStart.clone().add(-7, 'day'))
+    setCurrentMoment(weekStart.clone().add(-7, 'day'))
   }
 
-  const closeScheduleEdit = () => {
-    setEmployeeToEdit(null)
+  const goToNextWeek = () => {
+    const TuesdayInTwoWeeks = weekEnd.clone().add(8, 'day')
+    console.log('currentMoment', currentMoment)
+    console.log('currentMoment.isBefore(TuesdayInTwoWeeks)', currentMoment.isBefore(TuesdayInTwoWeeks))
+    if (currentMoment.isBefore(TuesdayInTwoWeeks)) {
+      setCurrentMoment(weekEnd.clone().add(1, 'day'))
+    }
   }
 
   const addNewTurn = () =>
@@ -86,10 +133,16 @@ const ScheduleManager = () => {
     <div>
       {/* section for the weekDateRange component and the buttons */}
       <div className='d-flex justify-content-between mb-3'>
-        {dateRange && (
-          <DateRange />
+        {weekSchedule.length > 0 && (
+          // <DateRange dateStart={'Nov. 9, 2021'} dateEnd={'Nov. 16, 2021'} />
+          <DateRange
+            dateStart={weekSchedule[0].toDate()}
+            dateEnd={weekSchedule[6].toDate()}
+            onGoToNextWeek={goToNextWeek}
+            onGoToPrevious={goToPrevious}
+          />
         )}
-        <div className='d-flex align-items-center'>
+        {/* <div className='d-flex align-items-start'>
           <MButton
             className='mr-2'
             text='Template CSV'
@@ -114,17 +167,17 @@ const ScheduleManager = () => {
             color='primary'
             className='mr-2'
           />
-        </div>
+        </div> */}
       </div>
 
 
       {/* section for the scheduleTable and approve button */}
-      <section className='mb-4'>
+      {/* <section className='mb-4'>
         <ScheduleTable onOpenScheduleEdit={openScheduleEdit} employeeWeekDates={employeeWeekDates} />
-      </section>
+      </section> */}
 
       {/* section for the ScheduleEditModal portal component */}
-      <ScheduleTurnsTable turns={turns} onAddNewTurn={addNewTurn} />
+      {/* <ScheduleTurnsTable turns={turns} onAddNewTurn={addNewTurn} /> */}
 
       {employeeToEdit &&
         <ScheduleEdit

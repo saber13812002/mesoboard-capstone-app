@@ -11,12 +11,14 @@ import { IconContext } from 'react-icons'
  * - style
  * - isSidebarItemActive: Should only be used by sidebar items. Determines if this icon should be colored with the primary color.
  */
-const Icon = ({ IconComponent, size = 'md', color = 'dark', className, style, isSidebarItemActive }) => {
+const Icon = ({ IconComponent, size = 'md', color = 'dark', className, style, isSidebarItemActive, onClick }) => {
   switch (size) {
     case 'sm':
       size = '14px'; break;
     case 'lg':
       size = '24px'; break;
+    case 'x-lg':
+      size = '32px'; break;
     default:
       size = '20px'; //'md'
   }
@@ -47,6 +49,7 @@ const Icon = ({ IconComponent, size = 'md', color = 'dark', className, style, is
         size={size}
         className={`icon ${className}`}
         style={style}
+        onClick={onClick}
       />
     </IconContext.Provider>
   )

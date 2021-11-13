@@ -35,7 +35,6 @@ export const isLoggedIn = () => {
 }
 
 export const isLoggedOut = () => {
-  console.log(localStorage.getItem('exp'))
   if (!localStorage.getItem('exp')) return true
   // console.log('isLoggedOut service', !moment().isBefore(getExpiration()))
   return !isLoggedIn()

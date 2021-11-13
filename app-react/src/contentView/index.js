@@ -9,6 +9,7 @@ import UserPermissionsManager from './manager/UserPermissionsManager/UserPermiss
 import ScheduleTable from './manager/ScheduleManager/ScheduleTable'
 import ScheduleTurnsTable from './manager/ScheduleManager/ScheduleTurnsTable'
 import AddPermission from './manager/UserPermissionsManager/AddPermission'
+import DateRange from './manager/ScheduleManager/DateRange'
 import ScheduleHoursBox from './shared/ScheduleShared/ScheduleHoursBox'
 
 export {
@@ -22,5 +23,6 @@ export {
   ScheduleTable,
   ScheduleTurnsTable,
   ScheduleHoursBox,
-  AddPermission
+  DateRange,
+  AddPermission,
 }

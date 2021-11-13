@@ -19,6 +19,7 @@ import { FaHome } from "react-icons/fa";
 import { FaBell } from "react-icons/fa";
 import { FaBars } from "react-icons/fa";
 import { FaPencilAlt } from "react-icons/fa";
+import { FaRegSave } from "react-icons/fa";
 import { FaChevronLeft } from "react-icons/fa";
 import { FaChevronRight } from "react-icons/fa";
 import { FaDownload } from "react-icons/fa";
@@ -32,7 +33,7 @@ import { FaCheck } from "react-icons/fa";
 
 
 /**   gr   **/
-import { GrSchedule } from 'react-icons/gr'
+// import { GrSchedule } from 'react-icons/gr'
 import { GrDocumentCsv } from 'react-icons/gr'
 // import { GrUserAdd } from 'react-icons/gr'
 
@@ -72,6 +73,7 @@ const iconComponents = {
   Bell: FaBell,
   Bars: FaBars,
   Pen: FaPencilAlt,
+  save: FaRegSave,
   ChevronLeft: FaChevronLeft,
   ChevronRight: FaChevronRight,
   CaretLeft: BsCaretLeftFill,

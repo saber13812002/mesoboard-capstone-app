@@ -1,5 +1,5 @@
-// import { useEffect, useContext } from 'react'
-// import { AuthContext } from '../../store'
+import { useEffect, useContext } from 'react'
+import { AuthContext } from '../../store'
 import './Layout.css'
 import {
   Navbar,
