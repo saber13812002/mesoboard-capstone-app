@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { MButton } from '../../../components'
 import { ScheduleTable, ScheduleTurnsTable } from '../..'
 import { turnArray, employeeWeekDatesArray } from '../../../constants/scheduleConstant'
+import { timeFromInt } from 'time-number';
 import {
   Icon,
   ICON_OPTIONS,
@@ -14,6 +15,8 @@ const ScheduleManager = () => {
   const [employeeWeekDates, setEmployeeWeekDates] = useState(employeeWeekDatesArray)
   const [turns, setTurns] = useState(turnArray)
   const [employeeToEdit, setEmployeeToEdit] = useState(null)
+  const [addingNewTurn, setAddingNewTurn] = useState(false)
+
 
   // useEffect fetching the data to initialize the states
 
@@ -25,9 +28,44 @@ const ScheduleManager = () => {
   const closeScheduleEdit = () => {
     setEmployeeToEdit(null)
   }
+  const onSaveTurn = (startHour,endHour,lunchHour) =>{
+    console.log(startHour,endHour,lunchHour)
+    setTurns(prev => {
+      let turnClone = [...prev]
+      const lastTurn= prev[prev.length-1]
+      lastTurn.id = prev.length
+      lastTurn.start =  timeFromInt(startHour, { format: 12,leadingZero: false })
+      lastTurn.end =  timeFromInt(endHour, { format: 12,leadingZero: false })
+      lastTurn.lunch =  timeFromInt(lunchHour, { format: 12,leadingZero: false })
+      turnClone = sortTurns(turnClone)
+      turnClone.forEach((turn,i)=>
+      turn.id=i+1
+      )
+      setAddingNewTurn(false)
+      
+    console.log(lastTurn, timeFromInt(startHour))
+      return turnClone
+    })
 
-  const addNewTurn = () =>
+    
+  }
+
+  
+  const sortTurns = (turn) =>{
+    console.log('--------------')
+    const res = turn.sort((a,b)=>{
+      console.log(a.start,b.start)
+      return ('' + a.start).localeCompare(b.start) 
+    })
+    console.log(res)
+    return res
+  }
+
+
+  const addNewTurn = () =>{
     setTurns(prev => [...prev, { id: null, start: null, end: null, lunch: null }])
+    setAddingNewTurn(true)
+  }
 
   const modifyWeekdayHoursByTurn = (weekdayIndex, turnIndex) => {
     if (turnIndex == null || turnIndex < 0 || turnIndex > turns.length - 1)
@@ -100,7 +138,7 @@ const ScheduleManager = () => {
       </section>
 
       {/* section for the ScheduleEditModal portal component */}
-      <ScheduleTurnsTable turns={turns} onAddNewTurn={addNewTurn} />
+      <ScheduleTurnsTable turns={turns} onAddNewTurn={addNewTurn} addingNewTurn ={addingNewTurn} onSaveTurn={onSaveTurn} />
 
       {employeeToEdit &&
         <ScheduleEdit

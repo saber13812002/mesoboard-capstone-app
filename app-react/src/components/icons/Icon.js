@@ -34,7 +34,7 @@ export const iconOptions = {
   trash: faTrashAlt
 }
 
-const Icon = ({ icon, size, color, isButtonIcon, className }) => {
+const Icon = ({ icon, size, color, isButtonIcon, className , onClick}) => {
   // viewBox = "min-x min-y width height"
   let minX = 0;
   let minY = 0;
@@ -76,6 +76,7 @@ const Icon = ({ icon, size, color, isButtonIcon, className }) => {
     color={color}
     className={className}
     style={{ cursor: 'pointer' }}
+    onClick={onClick}
   />
 }
 
