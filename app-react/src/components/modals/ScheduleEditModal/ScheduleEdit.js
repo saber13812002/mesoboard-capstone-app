@@ -3,7 +3,7 @@ import classes from './ScheduleEditModal.module.css'
 import { Modal } from '../..'
 import { MButton, Icon, ICON_OPTIONS } from '../..'
 import { WEEK_DAY_ENUM } from '../../../constants/scheduleConstant'
-import { ScheduleHoursBox } from '../../../content'
+import { ScheduleHoursBox } from '../../../contentView'
 
 const ScheduleEdit = ({ employee, onWeekdayAdd, onWeekdayHoursUpdate, onCloseScheduleEdit }) => {
   const { employeeName, weekdays } = employee;
