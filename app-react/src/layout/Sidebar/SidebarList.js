@@ -74,7 +74,7 @@ const SidebarList = () => {
                   IconComponent={IconComponent}
                   color='grey'
                   size='md'
-                  isSidebarItemActive={(activeItemName == name) || (hoveredItemName == name)}
+                  isSidebarItemActive={(activeItemName === name) || (hoveredItemName === name)}
                   className='mr-2'
                 />
                 <span>{name}</span>

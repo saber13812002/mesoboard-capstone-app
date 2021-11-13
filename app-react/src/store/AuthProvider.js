@@ -2,7 +2,7 @@ import { useReducer } from 'react'
 import AuthContext from './AuthContext'
 import AuthReducer from './AuthReducer'
 import axios from 'axios'
-import { logoutStorage, getToken } from '../services/authService'
+import { logoutStorage } from '../services/authService'
 
 const AuthProvider = ({ children }) => {
   const initState = {
@@ -21,10 +21,9 @@ const AuthProvider = ({ children }) => {
 
   const fetchUserDataByToken = async () => {
     const getUserData = async () => {
-      console.log('about to')
       axios.get('/protected/auth/userData')
         .then(res => {
-          console.log('res.data', res.data)
+          // console.log('res.data', res.data)
           dispatchAuthAction({
             type: 'SET_USER',
             payload: res.data,
@@ -41,7 +40,7 @@ const AuthProvider = ({ children }) => {
     const signin = async () => {
       axios.post('/api/auth/login', { email, password })
         .then(async res => {
-          console.log('res.data', res.data)
+          // console.log('res.data', res.data)
           const { user_id, token } = res.data
           console.log(user_id)
           return verifyTokenAndGetUserInfoFetch(user_id, token, setRedirect)
@@ -105,7 +104,6 @@ const AuthProvider = ({ children }) => {
       console.log('code', code)
       //Will be modified to search for already created users
       axios.post('/api/permissions/verify', { code }).then(res => {
-        console.log('res', res)
         dispatchAuthAction({
           type: 'VERIFY',
           payload: res.data
@@ -118,8 +116,6 @@ const AuthProvider = ({ children }) => {
 
   const logoutFetch = (setRedirect) => {
     const logout = async () => {
-      const token = getToken()
-      // return axios.get('/api/auth/logout', { headers: { 'token': 'Bearer ' + token})
       return axios.get('protected/auth/logout')
         .then(_ => {
           logoutStorage()

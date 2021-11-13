@@ -64,11 +64,8 @@ const AddPermission = ({ onBack }) => {
     e.preventDefault()
   }
 
-
-  const handleSelect = (id) => {
-    const permissionType = permissionTypes.find(r => r.id == id)
-    setSelectedPermissionType(permissionType)
-  }
+  const handleSelect = id =>
+    setSelectedPermissionType(permissionTypes.find(r => r.id === Number(id)))
 
   return (
     <>
@@ -110,7 +107,6 @@ const AddPermission = ({ onBack }) => {
               type='submit'
               text='Añadir Permiso'
               variant='primary'
-              type='submit'
             />
           </div>
         </Form>

@@ -19,17 +19,18 @@ const Authenticate = () => {
   // behaviours
   useEffect(() => {
     console.log('verificationFetch boolean', verificationFetch)
-    if (verificationFetch != undefined && verificationFetch) {
+    if (verificationFetch !== undefined && verificationFetch) {
       console.log('about to fetch with code: ', code)
       verifyPermission(code)
     }
-  }, [verificationFetch])
+  }, [verificationFetch, code, verifyPermission]) // quizas funciona sin tener que usar verificatoinFetch
+  // }, [verificationFetch, code])
 
   useEffect(() => {
     if (Object.keys(userInfo).length > 0) {
       signup(userInfo, code, setRedirectToApp)
     }
-  }, [userInfo])
+  }, [userInfo, code, signup])
 
 
   const handleCancel = (cachedCode) => {

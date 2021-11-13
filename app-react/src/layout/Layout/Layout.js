@@ -1,11 +1,11 @@
-import { useEffect, useContext } from 'react'
+// import { useEffect, useContext } from 'react'
+// import { AuthContext } from '../../store'
 import './Layout.css'
 import {
   Navbar,
   Sidebar,
   ContentView
 } from '..'
-import { AuthContext } from '../../store'
 
 
 const Layout = () => {

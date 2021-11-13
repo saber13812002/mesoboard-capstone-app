@@ -1,4 +1,4 @@
-import { useState, useContext, useEffect } from 'react'
+import { useState, useContext } from 'react'
 import './Sidebar.css'
 import { AuthContext } from '../../store'
 import { Redirect } from 'react-router-dom'
@@ -9,15 +9,8 @@ import { isLoggedOut } from '../../services/authService'
 
 const Sidebar = () => {
   const [redirectToSignin, setRedirectToSignin] = useState(isLoggedOut()) //temporary logout HERE
-  const [displayProfileCard, setDisplayProfileCard] = useState(false)
+  // const [displayProfileCard, setDisplayProfileCard] = useState(false)
   const { logout } = useContext(AuthContext)
-
-  console.log('sidebar', isLoggedOut())
-
-  // behaviours
-  useEffect(() => {
-    console.log('----redirectToSignin', redirectToSignin)
-  })
 
   /**
    * Display a card with at least the profile and logout items
@@ -25,7 +18,7 @@ const Sidebar = () => {
    */
   const handleProfileCard = () => {
     logout(setRedirectToSignin) //temporary logout
-    setDisplayProfileCard(true)
+    // setDisplayProfileCard(true)
   }
 
   return (
