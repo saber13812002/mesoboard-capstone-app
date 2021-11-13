@@ -1,83 +1,65 @@
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import './Icon.css'
-import {
-  faCaretDown,
-  faBell,
-  faBars,
-  faHome,
-  faClock,
-  faUser,
-  faMoneyBill,
-  faPencilRuler,
-  faStickyNote,
-  faDownload,
-  faUpload,
-  faCheck,
-  faPlus,
-  faTrashAlt
-} from '@fortawesome/free-solid-svg-icons'
+// import classes from './Icon.module.css'
+import { IconContext } from 'react-icons'
 
-export const iconOptions = {
-  caretDown: faCaretDown,
-  bell: faBell,
-  bars: faBars,
-  home: faHome,
-  clock: faClock,
-  user: faUser,
-  money: faMoneyBill,
-  pencil: faPencilRuler,
-  note: faStickyNote,
-  download: faDownload,
-  upload: faUpload,
-  check: faCheck,
-  plus: faPlus,
-  trash: faTrashAlt
-}
-
-const Icon = ({ icon, size, color, isButtonIcon, className, onClick }) => {
-  // viewBox = "min-x min-y width height"
-  let minX = 0;
-  let minY = 0;
-  // let color = '';
-
-  // let width = 248;
-  // let height = 312;
-  let width = 512;
-  let height = 512;
-  // 0 0 512 512
-
-  if (isButtonIcon) {
-    minX = 190;
-    minY = -80
-  }
-  else {
-    width = 420;
-    height = 420;
-    minX = 130;
-    minY = -100;
+// Icon Wrapper
+/** 
+ * - Icon:  Either of the icon component options in iconComponents.js file
+ * - size:  'sm', 'md', 'lg'
+ * - color: 'primary', 'secondary', 'white', 'grey', 'dark', 'red'
+ * - className
+ * - style
+ * - isSidebarItemActive: Should only be used by sidebar items. Determines if this icon should be colored with the primary color.
+ */
+const Icon = ({ IconComponent, size = 'md', color = 'dark', className, style, isSidebarItemActive, onClick }) => {
+  switch (size) {
+    case 'sm':
+      size = '14px'; break;
+    case 'lg':
+      size = '24px'; break;
+    case 'x-lg':
+      size = '32px'; break;
+    default:
+      size = '20px'; //'md'
   }
 
-  if (size === 'small') {
-    height = 612
+
+  switch (color) {
+    case 'primary':
+      color = '#287F4E'; break;
+    case 'secondary':
+      color = 'rgba(245, 212, 10, 0.5)'; break;
+    case 'white':
+      color = '#fff'; break;
+    case 'grey':
+      color = '#767676'; break;
+    case 'red':
+      color = '#BA302B'; break;
+    default:
+      color = '#3E3C3C'
   }
 
-  if (color && color.includes('primary')) {
+  if (isSidebarItemActive)
     color = '#287F4E'
-  }
 
-  if (color && color.includes('danger')) {
-    color = '#BA302B'
-  }
-
-  const viewBox = `${minX} ${minY} ${width} ${height}`
-  return <FontAwesomeIcon
-    icon={icon}
-    viewBox={viewBox}
-    color={color}
-    className={className}
-    style={{ cursor: 'pointer' }}
-    onClick={onClick}
-  />
+  return (
+    <IconContext.Provider value={{ color, size, className }}>
+      <IconComponent
+        color={color}
+        size={size}
+        className={`icon ${className}`}
+        style={style}
+        onClick={onClick}
+      />
+    </IconContext.Provider>
+  )
 }
+export default Icon;
 
-export default Icon
+/** IconContext's value property
+    color?: string;
+    size?: string;
+    className?: string;
+    style?: React.CSSProperties;
+    attr?: React.SVGAttributes<SVGElement>;
+ */
