@@ -1,7 +1,7 @@
 import './ScheduleTurnsTable.css'
 import { useState } from 'react'
 import { Table } from 'react-bootstrap'
-import { MButton, Icon, iconComponents } from '../../../components'
+import { MButton, Icon, iconComponents, IIcon } from '../../../components'
 import TimePicker from 'react-bootstrap-time-picker';
 import { timeFromInt } from 'time-number';
 
@@ -37,7 +37,6 @@ const ScheduleTurnsTable = ({ turns, onAddNewTurn, addingNewTurn, onSaveTurn }) 
             <td>Entrada</td>
             <td>Salidas</td>
             <td>Almuerzo</td>
-
           </tr>
         </thead>
         <tbody>
@@ -50,7 +49,7 @@ const ScheduleTurnsTable = ({ turns, onAddNewTurn, addingNewTurn, onSaveTurn }) 
                   <td>{start}</td>
                   <td>{end}</td>
                   <td>{lunch}</td>
-                  <td><Icon icon={iconComponents.Pen} /></td>
+                  {/* <td></td> */}
                 </tr>}
                 {addingNewTurn && !id && (
                   //<TimePicker start="10:00" end="21:00" step={30} />
@@ -59,14 +58,14 @@ const ScheduleTurnsTable = ({ turns, onAddNewTurn, addingNewTurn, onSaveTurn }) 
                     <td><TimePicker start="03:00" end="21:00" format="12" step={30} onChange={handleSelectHourStart} value={selectHourStart} /></td>
                     <td><TimePicker start={timeFromInt(selectHourStart)} end="21:00" step={30} onChange={handleSelectHourEnd} value={selectHourEnd} /></td>
                     <td><TimePicker start="03:00" end="21:00" step={30} onChange={handleSelectHourLunch} value={selectHourLunch} /></td>
-                    {addingNewTurn && <td><Icon icon={iconComponents.Check} className='mr-2' onClick={() => onSaveTurn(selectHourStart, selectHourEnd, selectHourLunch)} /></td>}
+                    <td className='text-center align-middle' >
+                      <IIcon name='checkmark' width={14} height={14} color='primary' />
+                    </td>
                   </tr>
-
                 )}
               </>
             )
-          }
-          )}
+          })}
           {/* 
           {addingNewTurn && !id && (
             //<TimePicker start="10:00" end="21:00" step={30} />
@@ -78,16 +77,7 @@ const ScheduleTurnsTable = ({ turns, onAddNewTurn, addingNewTurn, onSaveTurn }) 
           </tr>
           )} */}
         </tbody>
-
       </Table>
-      <MButton
-        onClick={onAddNewTurn}
-        text='Nuevo Turno'
-        variant='primary'
-        size='sm'
-        className='ml-1 pt-2'
-        style={{ marginTop: '-48px' }}
-      />
       {!addingNewTurn && <MButton
         onClick={onAddNewTurn}
         IconComponent={iconComponents.Plus}
@@ -99,12 +89,12 @@ const ScheduleTurnsTable = ({ turns, onAddNewTurn, addingNewTurn, onSaveTurn }) 
       // style={{ marginTop: '5px', marginLeft: '8px' }}
       />}
       {addingNewTurn && <MButton
-        onClick={onAddNewTurn}
-        IconComponent={iconComponents.Plus}
+        // onClick={onAddNewTurn}
         text='Cancel'
-        variant='secondary'
+        variant='light'
         size='sm'
         className='ml-1 pt-2'
+        style={{ marginTop: '-48px' }}
       // style={{ marginTop: '5px', marginLeft: '8px' }}
       />}
 

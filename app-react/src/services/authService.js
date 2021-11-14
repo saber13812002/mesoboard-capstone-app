@@ -18,18 +18,6 @@ export const logoutStorage = () => {
   localStorage.removeItem('sub')
 }
 
-export const verifyCredentialsToLogin = () => {
-  const isLogged = isLoggedIn()
-
-  if (isLogged) {
-
-  }
-  else {
-    // then logout
-  }
-  return isLogged
-}
-
 export const isLoggedIn = () => {
   return moment().isBefore(getExpiration())
 }

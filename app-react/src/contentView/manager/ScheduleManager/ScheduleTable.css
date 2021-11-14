@@ -1,13 +1,19 @@
 .responsiveTable {
   background: #FFFFFF;
     /* box-shadow: 1px 0px 10px 0px #888888; */
-  border: 1.5px solid #D8D8D8;
+  border: 1px solid #D8D8D8;
   box-shadow: rgba(50, 50, 93, 0.25) 0px 6px 12px -2px, rgba(0, 0, 0, 0.3) 0px 3px 7px -3px;
 }
 
 .responsiveTable > thead, .responsiveTable > Tbody {
-  border: 1.5px solid #D8D8D8;
+  /* border: 1.5px solid #D8D8D8; */
+  border-bottom: 1.5px solid #D8D8D8;
+  border-top: 1.5px solid #D8D8D8;
 }
+/* .responsiveTable > thead > tr:first-child(), .responsiveTable > Thead > tr:first-child() {
+  border-top: 0px solid #D8D8D8 !important;
+} */
+
 
 /* .responsiveTable > thead > tr > th:first-child() {
   white-space: pre-wrap
@@ -40,7 +46,8 @@ span {
 } */
 
 .responsiveTable > tbody > tr {
-  border: 1.5px solid #D8D8D8;
+  border-top: 1.5px solid #D8D8D8;
+  border-bottom: 1.5px solid #D8D8D8;
 }
 
 .responsiveTable > tbody > tr > td {

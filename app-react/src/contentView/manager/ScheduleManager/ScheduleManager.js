@@ -121,8 +121,6 @@ const ScheduleManager = () => {
       console.log(lastTurn, timeFromInt(hourStart))
       return turnClone
     })
-
-
   }
 
 
@@ -193,7 +191,7 @@ const ScheduleManager = () => {
             />
           )
         }
-        {/* <div className='d-flex align-items-start'>
+        <div className='d-flex align-items-start'>
           <MButton
             className='mr-2'
             text='Template CSV'
@@ -218,7 +216,7 @@ const ScheduleManager = () => {
             color='primary'
             className='mr-2'
           />
-        </div> */}
+        </div>
       </div >
 
 
@@ -228,18 +226,20 @@ const ScheduleManager = () => {
       </section>
 
       {/* section for the ScheduleEditModal portal component */}
-      <ScheduleTurnsTable turns={turns} onAddNewTurn={addNewTurn} addingNewTurn={addingNewTurn} onSaveTurn={onSaveTurn} />
-
-      {
-        employeeToEdit &&
+      <ScheduleTurnsTable
+        turns={turns}
+        onAddNewTurn={addNewTurn}
+        addingNewTurn={addingNewTurn}
+        onSaveTurn={onSaveTurn}
+      />
+      {employeeToEdit &&
         <ScheduleEdit
           employee={employeeToEdit}
           turns={turns}
           onWeekdayHoursUpdate={modifyWeekdayHoursByTurn}
           onWeekdayAdd={addWeekdayIntoList}
           onCloseScheduleEdit={closeScheduleEdit}
-        />
-      }
+        />}
     </div >
   )
 }

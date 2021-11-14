@@ -147,16 +147,16 @@ exports.getWeekSchedule = (req, res, next) => {
 
 
 //-------------------------------------------------------------------------------
-export const getDateId = d => {
-  const s = toISOString(d)
-  // const split = s.split('-');
-  console.log('-s', s.replaceAll('-', ''))
-  // const [nYear, nMonth, nDay] = split
+// const getDateId = d => {
+//   const s = toISOString(d)
+//   // const split = s.split('-');
+//   console.log('-s', s.replaceAll('-', ''))
+//   // const [nYear, nMonth, nDay] = split
 
-}
+// }
 
-/** Returns given date into ISO format string excluding the hour */
-export const toISOString = d => d.toISOString().slice(0, 10)
+// /** Returns given date into ISO format string excluding the hour */
+// const toISOString = d => d.toISOString().slice(0, 10)
 
 
 const isDateInstance = d => Object.prototype.toString.call(d) === '[object Date]'

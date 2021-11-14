@@ -67,6 +67,10 @@ input[type=number] {/* Firefox */
   box-shadow: 0 0 0 0.25rem rgb(40 127 78 / 25%) !important;
 }
 
+.dropdown-toggle:focus {
+  box-shadow: 0 0 0 0.25rem rgb(40 127 78 / 25%) !important;
+}
+
 
 /* dropdown button as design */
 .dropdown > button.dropdown-toggle.btn {
@@ -109,4 +113,8 @@ input[type=number] {/* Firefox */
   color: white !important;
   background: #287F4E !important;
   /* border-color: #287F4E !important; */
+}
+
+.btn-light:hover {
+  background: #e7e7e7 !important;
 }
