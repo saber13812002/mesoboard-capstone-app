@@ -30,6 +30,7 @@ import { FaMoneyCheckAlt } from "react-icons/fa";
 // import { FaMoneyBill } from "react-icons/fa";
 import { FaPencilRuler } from "react-icons/fa";
 import { FaCheck } from "react-icons/fa";
+import { FaCheckSquare } from "react-icons/fa";
 
 
 /**   gr   **/
@@ -41,6 +42,7 @@ import { GrDocumentCsv } from 'react-icons/gr'
 import { MdListAlt } from 'react-icons/md' //or MdFormatListBulleted
 import { MdClose } from 'react-icons/md'
 import { MdNote } from 'react-icons/md'
+import { MdOutlineCancel } from 'react-icons/md'
 
 /**   io   **/
 import { IoMdPersonAdd } from 'react-icons/io'
@@ -73,7 +75,8 @@ const iconComponents = {
   Bell: FaBell,
   Bars: FaBars,
   Pen: FaPencilAlt,
-  save: FaRegSave,
+  PenRuler: FaPencilRuler,
+  Save: FaRegSave,
   ChevronLeft: FaChevronLeft,
   ChevronRight: FaChevronRight,
   CaretLeft: BsCaretLeftFill,
@@ -87,7 +90,9 @@ const iconComponents = {
   Csv: GrDocumentCsv,
   Plus: FaPlus,
   Close: MdClose,
-  checkMark: FaCheck,
+  Cancel: MdOutlineCancel,
+  CheckMark: FaCheck,
+  CheckMarkSquared: FaCheckSquare,
   trash: FaRegTrashAlt,
 }
 export default iconComponents

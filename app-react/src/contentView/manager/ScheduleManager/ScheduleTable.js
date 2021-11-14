@@ -45,7 +45,7 @@ const ScheduleTable = ({ employeeWeekDates, onOpenScheduleEdit }) => {
           {employeeWeekDates.map((employeeWeekInfo, i) => (handleRow(employeeWeekInfo, i)))}
         </Tbody>
         <MButton
-          IconComponent={iconComponents.checkMark}
+          IconComponent={iconComponents.CheckMark}
           iconSize='sm'
           text='Approve'
           variant='primary'

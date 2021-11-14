@@ -1,6 +1,7 @@
 // components
-import Icon from './ui/Icon/Icon'
-import iconComponents from './ui/Icon/iconComponents'
+import Icon from './ui/Icons/Icon'
+import iconComponents from './ui/Icons/iconComponents'
+import IIcon from './ui/Icons/IIcon'
 import NavDrawer from "./modals/NavDrawerModal/NavDrawer";
 import ScheduleEdit from "./modals/ScheduleEditModal/ScheduleEdit";
 import Modal from './modals/Modal'
@@ -18,6 +19,7 @@ import MButton from './ui/Buttons/MButton'
 export {
   Icon,
   iconComponents,
+  IIcon,
   NavDrawer,
   ScheduleEdit,
   Modal,

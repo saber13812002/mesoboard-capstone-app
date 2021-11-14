@@ -31,7 +31,7 @@ const MButton = ({ type, text = '', variant = 'primary', size = 'md', IconCompon
       onMouseEnter={() => setIconColorState(onMouseEnterColor)}
       onMouseLeave={() => setIconColorState(originalIconColor)}
     >
-      <Button variant={variant} size={size} onClick={onClick} type={type}>
+      <Button variant={variant} size={size} onClick={onClick} type={type} style={{ zIndex: '100' }}>
         {
           IconComponent
             ? <div className='d-flex align-items-center'>
