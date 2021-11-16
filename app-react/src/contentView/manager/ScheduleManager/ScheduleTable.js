@@ -1,34 +1,33 @@
+import './ScheduleTable.css'
 import { Table, Thead, Tbody, Tr, Th, Td } from 'react-super-responsive-table';
 import 'react-super-responsive-table/dist/SuperResponsiveTableStyle.css';
 import { ScheduleHoursBox } from '../..';
-import './ScheduleTable.css'
 import { iconComponents, MButton } from '../../../components'
 
 const tableHeaders = ['Employee', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday', 'Monday', 'Total Hours']
 
-const ScheduleTable = ({ employeeWeekDates, onOpenScheduleEdit }) => {
+const ScheduleTable = ({ employeeSchedules, onOpenScheduleEdit }) => {
+  /** Displays the employee schedule hours for each day of the week within one row.
+   * @param scheduleInfo schedule information of a particular employee
+   */
+  const handleRow = (scheduleInfo, key) => {
+    const { employeeName, weekDates, totalHours } = scheduleInfo
 
-  const handleHourColumn = (weekday, key) => {
+    /** Array of weekDate objects where the indexes represent the day in number form. */
+    // let weekDatesArr = [0, 1, 2, 3, 4, 5, 6].map(day => weekDates[day] ? weekDates[day] : null)
+
     return (
-      <Td key={key} className='hours'>
-        <ScheduleHoursBox weekday={weekday} />
-      </Td>
-    )
-  }
-
-
-  const handleRow = (employeeWeekInfo, key) => {
-    // const { startHour, endHour, lunchHour, isHourLunch } = employeeWeekInfo.tuesday
-    return (
-      <Tr key={key} onClick={() => onOpenScheduleEdit(employeeWeekInfo)}>
-        <Td className='employeeName'>{employeeWeekInfo.employeeName}</Td>
-        {employeeWeekInfo.weekdays.map((weekday) => {
-          if (weekday) {
-            return handleHourColumn(weekday, key)
-          }
-          return <Td></Td>
-        })}
-        <Td className='totalHours'>{employeeWeekInfo.totalHours}</Td>
+      <Tr key={key} onClick={() => onOpenScheduleEdit(scheduleInfo)}>
+        <Td className='employeeName'>{employeeName}</Td>
+        {weekDates.map(weekDate => weekDate
+          ? (
+            <Td key={key} className='hours'>
+              <ScheduleHoursBox weekDate={weekDate} />
+            </Td>
+          )
+          : <Td key={key}></Td>
+        )}
+        <Td className='totalHours'>{totalHours}</Td>
       </Tr>
     )
   }
@@ -42,8 +41,23 @@ const ScheduleTable = ({ employeeWeekDates, onOpenScheduleEdit }) => {
           </Tr>
         </Thead>
         <Tbody>
-          {employeeWeekDates.map((employeeWeekInfo, i) => (handleRow(employeeWeekInfo, i)))}
+          {employeeSchedules.map((schedule, i) => handleRow(schedule, i))}
+          <Tr>
+            <Td>
+              <MButton
+                IconComponent={iconComponents.CheckMark}
+                iconSize='sm'
+                text='Approve'
+                variant='primary'
+                size='sm'
+                className='mt-3 mb-2'
+              />
+            </Td>
+            {/* {[0, 1, 2, 3, 4, 5, 6, 7, 8].map(i => <Td key={i}></Td>)} */}
+          </Tr>
         </Tbody>
+      </Table>
+      {/* <div className='ml-1 pt-2' style={{ marginTop: '-48px' }}>
         <MButton
           IconComponent={iconComponents.CheckMark}
           iconSize='sm'
@@ -52,7 +66,7 @@ const ScheduleTable = ({ employeeWeekDates, onOpenScheduleEdit }) => {
           className='mt-3 ml-1 mb-2'
           size='sm'
         />
-      </Table>
+      </div> */}
     </>
   )
 }

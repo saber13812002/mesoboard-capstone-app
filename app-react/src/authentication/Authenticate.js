@@ -23,14 +23,13 @@ const Authenticate = () => {
       console.log('about to fetch with code: ', code)
       verifyPermission(code)
     }
-  }, [verificationFetch, code, verifyPermission]) // quizas funciona sin tener que usar verificatoinFetch
-  // }, [verificationFetch, code])
+  }, [verificationFetch]) // quizas funciona sin tener que usar verificatoinFetch
 
   useEffect(() => {
     if (Object.keys(userInfo).length > 0) {
       signup(userInfo, code, setRedirectToApp)
     }
-  }, [userInfo, code, signup])
+  }, [userInfo])
 
 
   const handleCancel = (cachedCode) => {

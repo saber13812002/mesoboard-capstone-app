@@ -5,6 +5,7 @@ import { ContentHeader } from '../../components'
 import {
   HomeManager,
   ScheduleManager,
+  // Manager,
   CheckManager,
   ProfileManager,
   MemoManager,
@@ -19,6 +20,7 @@ const handleView = view => {
       return <HomeManager />
     case 'schedule':
       return <ScheduleManager />
+    // return <Manager />
     case 'checks':
       return <CheckManager />
     case 'profiles':

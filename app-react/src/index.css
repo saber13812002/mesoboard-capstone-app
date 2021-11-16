@@ -84,6 +84,7 @@ input[type=number] {/* Firefox */
 }
 
 /* bootstrap button theme */
+/* btn-primary */
 .btn-primary {
   background: #287F4E !important;
   border-color: #287F4E !important;
@@ -93,28 +94,36 @@ input[type=number] {/* Firefox */
   border-color: #287F4ECC !important;
 }
 
+/* btn-outline-primary */
+.btn-outline-primary:active {
+  background: #287f4e49 !important;
+}
+.btn-outline-primary:focus {
+  box-shadow: 0 0 0 0.25rem rgb(40 127 78 / 25%) !important;
+}
+
+/* btn-secondary */
 .btn-secondary {
   color: black !important;
   background: #F5D40A80 !important;
   border-color: #F5D40A80 !important;
 }
-
 .btn-secondary:hover {
   background: #F5D40A !important;
 }
 
+/* btn-outline-primary */
 .btn-outline-primary {
   color: black !important;
   /* background: #287F4E !important; */
   border-color: #287F4E !important;
 }
-
 .btn-outline-primary:hover {
   color: white !important;
   background: #287F4E !important;
-  /* border-color: #287F4E !important; */
 }
 
+/* btn-light */
 .btn-light:hover {
   background: #e7e7e7 !important;
 }

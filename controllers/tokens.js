@@ -72,7 +72,7 @@ exports.addToken = (req, res, next) => {
     else if (req.path == '/api/auth/signup') {
       console.log('added token on signup')
       res.status(200).json({
-        data,
+        ...data,
         status: 'success',
         messge: 'successfully added token'
       });

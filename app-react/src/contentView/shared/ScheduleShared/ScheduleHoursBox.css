@@ -2,3 +2,8 @@
   padding: 0 5px;
   text-align: center;
 }
+
+.scheduleHoursBox > span {
+  flex-wrap: nowrap;
+  white-space: nowrap;
+}
