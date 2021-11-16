@@ -21,7 +21,7 @@ const Layout = () => {
       if (process.env.NODE_ENV && process.env.NODE_ENV === 'production')
         fetchUserDataByToken()
       else //timeout to wait until node app restart on page reload or saved work
-        setTimeout(() => fetchUserDataByToken(), 5000)
+        setTimeout(() => fetchUserDataByToken(), 4000)
     }
   }, [])
 

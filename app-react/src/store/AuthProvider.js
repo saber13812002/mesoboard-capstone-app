@@ -116,7 +116,7 @@ const AuthProvider = ({ children }) => {
 
   const logoutFetch = (setRedirect) => {
     const logout = async () => {
-      return axios.get('protected/auth/logout')
+      return axios.get('/protected/auth/logout')
         .then(_ => {
           logoutStorage()
           resetState()

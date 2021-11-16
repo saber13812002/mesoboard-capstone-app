@@ -7,10 +7,12 @@ import RequestManager from "./manager/RequestManager/RequestManager";
 import MemoManager from "./manager/MemoManager/MemoManager";
 import UserPermissionsManager from './manager/UserPermissionsManager/UserPermissionsManager'
 import ScheduleTable from './manager/ScheduleManager/ScheduleTable'
-import ScheduleTurnsTable from './manager/ScheduleManager/ScheduleTurnsTable'
+import TurnsTable from './manager/ScheduleManager/TurnsTable'
 import AddPermission from './manager/UserPermissionsManager/AddPermission'
 import DateRange from './manager/ScheduleManager/DateRange'
 import ScheduleHoursBox from './shared/ScheduleShared/ScheduleHoursBox'
+
+
 
 export {
   HomeManager,
@@ -21,7 +23,7 @@ export {
   MemoManager,
   UserPermissionsManager,
   ScheduleTable,
-  ScheduleTurnsTable,
+  TurnsTable,
   ScheduleHoursBox,
   DateRange,
   AddPermission,
