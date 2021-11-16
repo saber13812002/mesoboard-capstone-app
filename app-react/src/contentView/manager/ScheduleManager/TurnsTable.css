@@ -1,5 +1,6 @@
 .scheduleTurns {
   width: 50%;
+  min-width: 400px;
 }
 
 .scheduleTurns > h5 {

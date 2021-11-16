@@ -15,6 +15,9 @@ module.exports = app => {
   app.route('/protected/schedule/week/all/:schedule_id')
     .get(schedule.getUserSchedules)
 
+  // app.route('/protected/schedule/turn/:turn_id/:user_id')
+  app.route('/protected/schedule/turn/all')
+    .post(schedule.createUserTurn)
 
   // app.route('/api/schedule/week') //for testing purposes
   //   .get(schedule.getWeekSchedule) //will not be used

@@ -1,12 +1,12 @@
 import './ScheduleHoursBox.css'
-import { getHourFormatOf } from '../../../services/scheduleService'
+import { get12HourFormatOfDate } from '../../../services/scheduleService'
 
 const ScheduleHoursBox = ({ weekDate, showLunchMins = true, className }) => {
   // console.log('weekDate', weekDate)
-  // console.log('getHourFormatOf', getHourFormatOf(weekDate.dateStart))
-  const hourStart = getHourFormatOf(weekDate.dateStart)
-  const hourEnd = getHourFormatOf(weekDate.dateEnd)
-  const hourLunch = getHourFormatOf(weekDate.dateStartLunch)
+  // console.log('get12HourFormatOfDate', get12HourFormatOfDate(weekDate.dateStart))
+  const hourStart = get12HourFormatOfDate(weekDate.dateStart)
+  const hourEnd = get12HourFormatOfDate(weekDate.dateEnd)
+  const hourLunch = get12HourFormatOfDate(weekDate.dateLunch)
 
   return (
     <div className={`scheduleHoursBox ${className}`}>

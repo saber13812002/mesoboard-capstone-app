@@ -32,6 +32,8 @@ const ScheduleTable = ({ employeeSchedules, onOpenScheduleEdit }) => {
     )
   }
 
+  console.log('---------------------------\n\n')
+  console.log('employeeSchedules', employeeSchedules)
   return (
     <>
       <Table>

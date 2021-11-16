@@ -5,7 +5,7 @@ exports.createUserSchedule = (req, res, next) => {
   console.log('createUserSchedule')
   const schedule_id = req.body.schedule_id;
   const user_id = req.body.user_id;
-  const hour_lunch = req.body.hour_lunch;
+  const is_hour_lunch = req.body.is_hour_lunch;
   const tuesday = req.body['1'];
   const wednesday = req.body['2'];
   const thursday = req.body['3'];
@@ -40,14 +40,14 @@ exports.createUserSchedule = (req, res, next) => {
 
   /*
     EXPECTED RESULTING q:
-    INSERT INTO user_schedule(user_id, schedule_id, date_start, date_end, date_start_lunch, hour_lunch)
+    INSERT INTO user_schedule(user_id, schedule_id, date_start, date_end, date_lunch, is_hour_lunch)
     VALUES 
       ($1,$2,$3,$4,$5,false),
       ($1,$2,$6,$7,$8,false),
       ($1,$2,$9,$10,$11,false) returning *;
     `
   */
-  let q = `INSERT INTO user_schedule(user_id, schedule_id, date_start, date_end, date_start_lunch, hour_lunch)
+  let q = `INSERT INTO user_schedule(user_id, schedule_id, date_start, date_end, date_lunch, is_hour_lunch)
   VALUES `
 
   const nDatesPerColumn = 3;
@@ -55,11 +55,11 @@ exports.createUserSchedule = (req, res, next) => {
     // to inject user_id and schedule_id
     q += '($1,$2,'
 
-    // creating injection indexes for date_start, date_end, and date_start_lunch
+    // creating injection indexes for date_start, date_end, and date_lunch
     for (let k = i; k < (i + nDatesPerColumn); k++)
       q += `$${k + 3},`
 
-    // set hour_lunch as false
+    // set is_hour_lunch as false
     q += 'false)'
     if (i <= dates.length / nDatesPerColumn)
       q += ','
@@ -85,7 +85,7 @@ exports.createUserSchedule = (req, res, next) => {
 
 
   /*
-    INSERT INTO user_schedule(user_id, schedule_id, date_start, date_end, date_start_lunch, hour_lunch)
+    INSERT INTO user_schedule(user_id, schedule_id, date_start, date_end, date_lunch, is_hour_lunch)
     VALUES
       (4, 20211109, '2021-11-10T06:30:00.776Z', '2021-11-10T15:00:00.776Z', '2021-11-10T11:00:00.776Z', false),
       (4, 20211109, '2021-11-11T13:00:00.776Z', '2021-11-11T21:30:00.776Z', '2021-11-11T17:00:00.776Z', false),
@@ -126,7 +126,7 @@ exports.getUserSchedules = (req, res, next) => {
   const q = `with sched as (select user_schedule.*, schedule.is_approved from schedule inner join user_schedule
     on schedule.schedule_id = user_schedule.schedule_id where user_schedule.schedule_id = $1)
     select first_name || ' ' || last_name AS name, sched.*, sched.date_start - interval '4 hours' AS date_start,
-    sched.date_end - interval '4 hours' AS date_end, sched.date_start_lunch - interval '4 hours' AS date_start_lunch
+    sched.date_end - interval '4 hours' AS date_end, sched.date_lunch - interval '4 hours' AS date_lunch
     from sched inner join users on sched.user_id=users.user_id ORDER BY name`;
 
   // const q = "select user_schedule.date_start - interval '4 hours' AS date_start, user_schedule.date_end - interval '4 hours' from user_schedule where schedule_id=20211109"
@@ -134,7 +134,7 @@ exports.getUserSchedules = (req, res, next) => {
   // const q = `with sched as (select user_schedule.*, schedule.is_approved from schedule inner join user_schedule
   //   on schedule.schedule_id = user_schedule.schedule_id where user_schedule.schedule_id = $1)
   //   select first_name || ' ' || last_name AS name, sched.*, sched.date_start - interval '4 hours' AS date_start,
-  //   sched.date_end - interval '4 hours' AS date_end, sched.date_start_lunch - interval '4 hours' AS date_start_lunch
+  //   sched.date_end - interval '4 hours' AS date_end, sched.date_lunch - interval '4 hours' AS date_lunch
   //   from sched inner join users on sched.user_id=users.user_id ORDER BY name`;
 
 
@@ -144,11 +144,11 @@ exports.getUserSchedules = (req, res, next) => {
     if (data.length === 0)
       res.status(200).json({ status: 'success', message: 'Did not find any schedule information for this week' })
     else {
-      console.log('schedule', data)
+      // console.log('schedule', data)
       /** key is the number that represents the day of the week. (0 -> tuesday, 1 -> wednesday, ...) */
       let weekDates = {
-        // 1: { dateStart: _, dateEnd: _, dateStartLunch: _ }
-        // 3: { dateStart: _, dateEnd: _, dateStartLunch: _ }
+        // 1: { dateStart: _, dateEnd: _, dateLunch: _ }
+        // 3: { dateStart: _, dateEnd: _, dateLunch: _ }
       }
 
       /** Array of employee information -> employeeName, isHourLunch, array of weekDate objects */
@@ -158,10 +158,10 @@ exports.getUserSchedules = (req, res, next) => {
       let dCurr = data[0]
       data.forEach(d => {
         if (dCurr.user_id !== d.user_id) {
-          console.log('dCurr', dCurr)
+          // console.log('dCurr', dCurr)
           schedules.push({
             employeeName: dCurr.name,
-            isHourLunch: dCurr.hour_lunch,
+            isHourLunch: dCurr.is_hour_lunch,
             weekDates
           })
           dCurr = d
@@ -172,15 +172,30 @@ exports.getUserSchedules = (req, res, next) => {
         weekDates[day] = {
           dateStart: d.date_start,
           dateEnd: d.date_end,
-          dateStartLunch: d.date_start_lunch
+          dateLunch: d.date_lunch
         }
       })
       schedules.push({
         employeeName: dCurr.name,
-        isHourLunch: dCurr.hour_lunch,
+        isHourLunch: dCurr.is_hour_lunch,
         weekDates
       })
-      console.log('schedules', schedules)
+
+      let totalHours;
+      schedules.forEach(sched => {
+        // convert weekDate obj to array containing each day as keys
+        sched.weekDates = [0, 1, 2, 3, 4, 5, 6].map(day => sched.weekDates[day] ? sched.weekDates[day] : null)
+
+        // calculate and set the total hours of a particular week
+        totalHours = 0
+        for (let dates of sched.weekDates) {
+          if (dates)
+            totalHours += Math.abs(new Date(dates.dateEnd) - new Date(dates.dateStart)) / 36e5
+        }
+        sched['totalHours'] = totalHours
+      })
+
+      // console.log('schedules', schedules)
       res.status(200).json({ schedules, status: 'success' })
     }
   })
@@ -188,6 +203,27 @@ exports.getUserSchedules = (req, res, next) => {
       console.log(err)
       next(err)
     })
+}
+
+exports.createUserTurn = (req, res, next) => {
+  const { turn_id, user_id, hour_start, hour_end, hour_lunch } = req.body
+  // const turn_id = req.body.turn_id;
+  // const user_id = req.body.user_id;
+  console.log('turn_id', turn_id);
+  console.log('user_id', user_id);
+  console.log('hour_start', hour_start);
+  console.log('hour_end', hour_end);
+  console.log('hour_lunch', hour_lunch);
+
+  const q = `INSERT INTO turn(turn_id, user_id, hour_start, hour_end, hour_lunch)
+    VALUES($1, $2, $3, $4, $5) returning *`;
+
+  // res.status(200).json({ status: 'success', message: 'Developing...' })
+  return db.one(q, [turn_id, user_id, hour_start, hour_end, hour_lunch])
+    // .then(data => {
+    //   res.status(200).json({ schedules, status: 'success' })
+    // })
+    .catch(err => next(err))
 }
 
 // // // const scheduleIds = req.body.schedule.split(',')
