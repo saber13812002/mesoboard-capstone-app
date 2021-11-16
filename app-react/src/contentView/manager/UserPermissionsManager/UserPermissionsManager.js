@@ -49,16 +49,17 @@ const UserPermissionsManager = () => {
     <>
       {!addingNewPermission && <div className='userPermissionsManager'>
         <BootstrapTable responsive bordered={false} keyField='dataField' data={profiles} columns={columns} />
-        <MButton
-          onClick={handleAddNewPermission}
-          IconComponent={iconComponents.Plus}
-          iconSize='sm'
-          text='Nuevo Permiso'
-          variant='primary'
-          size='sm'
-          className='ml-4 pt-2'
-          style={{ marginTop: '-48px' }}
-        />
+        <div style={{ marginTop: '-40px' }}>
+          <MButton
+            onClick={handleAddNewPermission}
+            IconComponent={iconComponents.Plus}
+            iconSize='sm'
+            text='Nuevo Permiso'
+            variant='primary'
+            size='sm'
+            className='ml-4'
+          />
+        </div>
       </div>}
       {addingNewPermission && <AddPermission onBack={handleBack} />}
     </>

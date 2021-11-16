@@ -1,0 +1,40 @@
+.scheduleTurns {
+  width: 50%;
+}
+
+.scheduleTurns > h5 {
+  position: relative;
+  padding: 6px 0 0 8px;
+  font-weight: 700
+}
+
+.table-responsive {
+  box-shadow: rgba(50, 50, 93, 0.25) 0px 6px 12px -2px, rgba(0, 0, 0, 0.3) 0px 3px 7px -3px;
+  background: white;
+  padding: 40px 0 55px;
+  margin-top: -40px;
+}
+
+table.scheduleTurns__table>:not(:first-child) {
+  border-top: none;
+}
+
+.scheduleTurns__table {
+  width: 95%;
+  margin: 0 auto;
+  border-collapse: initial !important;
+}
+
+.scheduleTurns__table > thead,
+.scheduleTurns__table > tbody {
+  border: 1.5px solid #d8d8d8;
+}
+
+.scheduleTurns__table > tbody > tr {
+  height: 33px;
+}
+
+.scheduleTurns__table > thead > tr > th:first-child,
+.scheduleTurns__table > tbody > tr > td:first-child {
+  padding-left: 10px
+}

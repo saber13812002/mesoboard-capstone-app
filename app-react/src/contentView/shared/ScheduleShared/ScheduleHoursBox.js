@@ -1,16 +1,22 @@
 import './ScheduleHoursBox.css'
+import { getHourFormatOf } from '../../../services/scheduleService'
 
-const ScheduleHoursBox = ({ weekday, showMealMins = true, className }) => {
-  const { startHour, endHour, lunchHour, isHourLunch } = weekday
+const ScheduleHoursBox = ({ weekDate, showLunchMins = true, className }) => {
+  // console.log('weekDate', weekDate)
+  // console.log('getHourFormatOf', getHourFormatOf(weekDate.dateStart))
+  const hourStart = getHourFormatOf(weekDate.dateStart)
+  const hourEnd = getHourFormatOf(weekDate.dateEnd)
+  const hourLunch = getHourFormatOf(weekDate.dateStartLunch)
+
   return (
     <div className={`scheduleHoursBox ${className}`}>
-      <span>{startHour}-{endHour}</span>
+      <span>{hourStart}-{hourEnd}</span>
       <br />
-      {showMealMins && (<>
-        <span>Meal:{isHourLunch ? '60' : '30'}Mins</span>
+      {showLunchMins && (<>
+        <span>Meal:{weekDate.isHourLunch ? '60' : '30'}Mins</span>
         <br />
       </>)}
-      <span>({lunchHour}-{lunchHour})</span>
+      <span>({hourLunch}-{hourLunch})</span>
     </div>
   )
 }

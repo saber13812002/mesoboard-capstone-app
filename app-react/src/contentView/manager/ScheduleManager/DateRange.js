@@ -5,9 +5,10 @@ import { toISOString, beautifyDate } from '../../../services/scheduleService'
 // const getDate = d => d.toISOString().slice(0, 10)
 
 
-const DateRange = ({ dateStart, dateEnd, onGoToNextWeek, onGoToPrevious }) => {
+const DateRange = ({ dateStart, dateEnd, disableNext, onGoToNextWeek, onGoToPrevious }) => {
   // cons
-  // console.log('DateRange', dateStart.toDate())
+  // console.log('DateRange', dateStart)
+  // console.log('dateObjToString', dateObjToString(dateStart))
   // console.log('weekStart', weekStart, typeof weekStart)
 
   // weekStart = beautifyDate(weekStart)
@@ -42,12 +43,21 @@ const DateRange = ({ dateStart, dateEnd, onGoToNextWeek, onGoToPrevious }) => {
         <p className='mr-1 ml-1'> - </p>
         <p> {beautifyDate(dateEnd)}</p>
       </time>
-      <Icon
-        IconComponent={iconComponents.CaretRight}
-        size='x-lg'
-        className='ml-2'
-        onClick={() => onGoToNextWeek()}
-      />
+      {disableNext ? (
+        <Icon
+          IconComponent={iconComponents.CaretRightOutline}
+          size='x-lg'
+          className='ml-2'
+          onClick={() => onGoToNextWeek()}
+        />
+      ) : (
+        <Icon
+          IconComponent={iconComponents.CaretRight}
+          size='x-lg'
+          className='ml-2'
+          onClick={() => onGoToNextWeek()}
+        />
+      )}
     </div>
   )
 }

@@ -1,72 +1,115 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useContext } from 'react'
+import { AuthContext } from '../../../store'
 import { MButton } from '../../../components'
-import { ScheduleTable, ScheduleTurnsTable } from '../..'
-import { turnArray, employeeWeekDatesArray } from '../../../constants/scheduleConstant'
+import { ScheduleTable, TurnsTable } from '../..'
+import { turnArray, employeeScheduleArray } from '../../../constants/scheduleConstant'
 import { Icon, iconComponents, ScheduleEdit } from '../../../components'
 import { timeFromInt } from 'time-number';
 import { DateRange } from '../..'
-import { getDateId } from '../../../services/scheduleService'
-// import axios from 'axios'
+import { getScheduleIdOfDate, getScheduleIdOfMoment } from '../../../services/scheduleService'
+import { ServerRoutes as server } from '../../../services/apiService'
+import axios from 'axios'
 import moment from 'moment'
 
+const m = moment()
+const sunday = m.clone().isoWeekday(0)
+const monday = m.clone().isoWeekday(1)
+// console.log('sunday', sunday)
+// console.log('monday', monday)
+
+const startOfThisWeek = moment().clone();
+const endOfThisWeek = moment().clone();
+
+// console.log('m.isSame(sunday)', m.isSame(sunday))
+// console.log('m.isSame(monday)', m.isSame(monday))
+if (m.isSame(sunday)) {
+  // console.log('decrementing...')
+  startOfThisWeek.add(-5, 'day') //tuesday
+  endOfThisWeek.add(1, 'day') //monday
+}
+else if (m.isSame(monday)) {
+  // console.log('MONDAY decrement')
+  startOfThisWeek.add(-6, 'day')
+}
+
+const mondayInTwoWeeks = endOfThisWeek.clone().add(7, 'day')
+// console.log('startOfThisWeek', startOfThisWeek)
+// console.log('endOfThisWeek', endOfThisWeek)
+// console.log('mondayInTwoWeeks', mondayInTwoWeeks)
+
 const ScheduleManager = () => {
-  // const [weekDateRange, setWeekDateRange] = useState({})
-  // <<<<<<< HEAD
-  //   const [employeeWeekDates] = useState(employeeWeekDatesArray)
-  //   const [turns, setTurns] = useState(turnArray)
-  //   const [employeeToEdit, setEmployeeToEdit] = useState(null)
-
-  //   // functions to handle schedule turns modification and schedule editing (handle state management)
-  //   const openScheduleEdit = employee => setEmployeeToEdit(employee)
-  //   const closeScheduleEdit = () => setEmployeeToEdit(null)
-
-
-  //   const addNewTurn = () =>
-  //     setTurns(prev => [...prev, { id: null, start: null, end: null, lunch: null }])
-  // =======
-  const [employeeWeekDates, setEmployeeWeekDates] = useState(employeeWeekDatesArray)
-  const [turns, setTurns] = useState(turnArray)
+  // const [employeeSchedules, setEmployeeSchedules] = useState(employeeScheduleArray)
+  // const [turns, setTurns] = useState(turnArray)
+  const [employeeSchedules, setEmployeeSchedules] = useState([])
+  const [turns, setTurns] = useState([])
   const [employeeToEdit, setEmployeeToEdit] = useState(null)
   const [addingNewTurn, setAddingNewTurn] = useState(false)
-  const [currentMoment, setCurrentMoment] = useState(moment())
   const [weekSchedule, setWeekSchedule] = useState([]) //array of json, at least containing id as desired
 
-  const weekStart = currentMoment.clone().startOf('week').add(2, 'day'); //tuesday
-  const weekEnd = currentMoment.clone().endOf('week').add(2, 'day'); //monday
+  // moments
+  const [mCurrent, setMCurrent] = useState(moment())
+  const [mWeekStart, setMWeekStart] = useState(startOfThisWeek.clone()) //always a tuesday
+  const [mWeekEnd, setMWeekEnd] = useState(endOfThisWeek.clone()) //always a monday
 
-  // console.log('moment().isoWeekday()', moment().isoWeekday())
-  // console.log('moment().calendar()', moment().calendar())
-
-  // useEffect fetching the data to initialize the states
-  // useEffect fetching the data to initialize the states
+  // initializing week schedule dates
   useEffect(() => {
-    const week = [];
-    let currentDay = weekStart.clone()
-    const nextTuesday = weekEnd.clone().add(1, 'day')
-    while (currentDay.isBefore(nextTuesday, 'day')) {
-      week.push(currentDay.clone())
-      currentDay.add(1, 'day')
+    if (mWeekStart) {
+      // console.log('mWeekStart', mWeekStart)
+      // console.log('mWeekEnd', mWeekEnd, '\n')
+      // console.log('toDate', mWeekStart.toDate())
+      const week = [];
+      let currentDay = mWeekStart.clone()
+      const nextTuesday = mWeekEnd.clone().add(1, 'day')
+      // console.log('nextTuesday', nextTuesday, '\n')
+      while (currentDay.isBefore(nextTuesday, 'day')) {
+        week.push(currentDay.clone())
+        currentDay.add(1, 'day')
+      }
+      console.log('week', week)
+
+      setWeekSchedule(week)
+      // // setWeekSchedule(prev => {
+      // //   console.log('week[0]', week[0])
+      // //   return week
+      // // })
+
+      // console.log('week', week)
+      // // console.log('week', week[0])
+      // // console.log('week', week[6])
+
+      console.log('the id', getScheduleIdOfMoment(mWeekStart))
+      const getWeekSchedule = async () => {
+        const schedule_id = getScheduleIdOfMoment(mWeekStart)
+        const url = server.getUserSchedule(schedule_id);
+        console.log('url', url)
+        axios.get(url).then(res => {
+          if (res) {
+            const schedules = res.data.schedules
+            console.log('schedules', schedules)
+
+            let totalHours;
+            schedules.forEach(sched => {
+              // convert weekDate obj to array containing each day as keys
+              sched.weekDates = [0, 1, 2, 3, 4, 5, 6].map(day => sched.weekDates[day] ? sched.weekDates[day] : null)
+
+              // calculate and set the total hours of a particular week
+              totalHours = 0
+              for (let dates of sched.weekDates) {
+                if (dates)
+                  totalHours += Math.abs(new Date(dates.dateEnd) - new Date(dates.dateStart)) / 36e5
+              }
+              sched['totalHours'] = totalHours
+            })
+
+            setEmployeeSchedules(schedules)
+          }
+        })
+          .catch(err => console.log(err))
+      }
+      setTimeout(() => getWeekSchedule(), 2000)
+      // getWeekSchedule()
     }
-
-
-
-    const m = week[0];
-    getDateId(m)
-    // console.log(getDateId(m))
-
-    console.log('week', week)
-    setWeekSchedule(week)
-    // const getWeekSchedule = async () => {
-    //   axios.get('/protected/schedule/week', { currentMoment }).then(res => {
-    //     const week = res.data
-    //     console.log('week schedule', week);
-    //     setWeekSchedule(week)
-    //   })
-    //     .catch(err => console.log(err))
-    // }
-    // getWeekSchedule()
-  }, [currentMoment])
-
+  }, [mCurrent])
 
   /*
     {
@@ -89,63 +132,91 @@ const ScheduleManager = () => {
   const openScheduleEdit = employee => setEmployeeToEdit(employee)
   const closeScheduleEdit = () => setEmployeeToEdit(null)
 
+
   const goToPrevious = () => {
-    console.log('-----', weekStart.clone().add(-7, 'day'))
-    setCurrentMoment(weekStart.clone().add(-7, 'day'))
+    setMCurrent(currMoment => {
+      const prevMoment = currMoment.clone().add(-7, 'day')
+      setMWeekStart(prevMoment.clone().startOf('week').add(2, 'day'));
+      setMWeekEnd(prevMoment.clone().endOf('week').add(2, 'day'))
+      return prevMoment
+    })
   }
 
+
   const goToNextWeek = () => {
-    const TuesdayInTwoWeeks = weekEnd.clone().add(8, 'day')
-    console.log('currentMoment', currentMoment)
-    console.log('currentMoment.isBefore(TuesdayInTwoWeeks)', currentMoment.isBefore(TuesdayInTwoWeeks))
-    if (currentMoment.isBefore(TuesdayInTwoWeeks)) {
-      setCurrentMoment(weekEnd.clone().add(1, 'day'))
+    // console.log('')
+    // console.log('')
+    // console.log('')
+
+    // console.log('-mWeekStart', mWeekStart)
+    // console.log('mWeekEnd', mWeekEnd)
+    // console.log('mWeekEnd.isBefore(mondayInTwoWeeks)', mWeekEnd.isBefore(mondayInTwoWeeks))
+    if (mWeekEnd.isBefore(mondayInTwoWeeks)) {
+      setMCurrent(currMoment => {
+        console.log('mMoment', currMoment)
+        const nextMoment = mWeekEnd.clone().add(1, 'day')
+        console.log('nextMoment', nextMoment)
+        setMWeekStart(nextMoment.clone().startOf('week').add(2, 'day'));
+        setMWeekEnd(nextMoment.clone().endOf('week').add(2, 'day'))
+        return nextMoment
+      })
     }
   }
 
-  const onSaveTurn = (hourStart, hourEnd, lunchHour) => {
-    console.log(hourStart, hourEnd, lunchHour)
+
+  const saveTurn = (hourStart, hourEnd, lunchHour) => {
+    console.log('saveTurn', hourStart, hourEnd, lunchHour)
     setTurns(prev => {
       let turnClone = [...prev]
       const lastTurn = prev[prev.length - 1]
-      lastTurn.id = prev.length
       lastTurn.start = timeFromInt(hourStart, { format: 12, leadingZero: false })
       lastTurn.end = timeFromInt(hourEnd, { format: 12, leadingZero: false })
       lastTurn.lunch = timeFromInt(lunchHour, { format: 12, leadingZero: false })
-      turnClone = sortTurns(turnClone)
-      turnClone.forEach((turn, i) =>
-        turn.id = i + 1
-      )
-      setAddingNewTurn(false)
 
-      console.log(lastTurn, timeFromInt(hourStart))
+      // console.log('formatted', lastTurn.start)
+
+      // sort by date start
+      turnClone = turnClone.sort((a, b) => {
+        console.log('\n\n')
+        const is_a_am = a.start.includes('AM')
+        const is_b_am = a.start.includes('AM')
+        const is_a_pm = b.start.includes('PM')
+        const is_b_pm = b.start.includes('PM')
+
+        // do algorithm to determine order depending on AM or PM
+        if (is_a_pm && is_b_am) {
+          return -1
+        }
+        // 3 more conditions maybe
+        return a.start.localeCompare(b.start)
+      })
+
+      // enumerate in desc order
+      turnClone.forEach((turn, i) => turn.id = i + 1)
+
+      setAddingNewTurn(false)
       return turnClone
     })
   }
 
 
-  const sortTurns = (turn) => {
-    console.log('--------------')
-    const res = turn.sort((a, b) => {
-      console.log(a.start, b.start)
-      return ('' + a.start).localeCompare(b.start)
-    })
-    console.log(res)
-    return res
-  }
-
   const addNewTurn = () => {
     setTurns(prev => [...prev, { id: null, start: null, end: null, lunch: null }])
     setAddingNewTurn(true)
   }
-  // >>>>>>> 64dd3c7498388095f28a3881ea8c9433a1aa68bc
 
-  const modifyWeekdayHoursByTurn = (weekdayIndex, turnIndex) => {
+
+  /** TO BE WORKED ON
+   *  update weekDate hours of the schedule edit component
+   */
+  const modifyWeekDateHoursByTurn = (day, turnIndex) => {
+    console.log('day', day)
+    console.log('turnIndex', turnIndex)
     if (turnIndex == null || turnIndex < 0 || turnIndex > turns.length - 1)
       return
 
     const { id, start, end, lunch } = turns[turnIndex]
-    const newWeekday = {
+    const newWeekDate = {
       turn: id,
       hourStart: start,
       hourEnd: end,
@@ -154,38 +225,40 @@ const ScheduleManager = () => {
 
     setEmployeeToEdit(emp => {
       const newEmployee = { ...emp }
-      newEmployee.weekdays[weekdayIndex] = newWeekday
+      newEmployee.weekDates[day] = newWeekDate
       return newEmployee
     })
   }
 
-  const addWeekdayIntoList = (weekdayIndex) => {
-    const newWeekday = {
-      turn: 1,
-      hourStart: turns[1].start,
-      hourEnd: turns[1].end,
-      hourLunch: turns[1].lunch
+  /** TO BE WORKED ON */
+  const addWeekDateIntoList = (day) => {
+    if (turns.length > 0) {
+      const newWeekDate = {
+        turn: 1,
+        hourStart: turns[turns.length - 1].start,
+        hourEnd: turns[turns.length - 1].end,
+        hourLunch: turns[turns.length - 1].lunch
+      }
+
+      setEmployeeToEdit(emp => {
+        const newEmployee = { ...emp }
+        newEmployee.weekDates[day] = newWeekDate
+        return newEmployee
+      })
     }
-
-    setEmployeeToEdit(emp => {
-      const newEmployee = { ...emp }
-
-      newEmployee.weekdays[weekdayIndex] = newWeekday
-      return newEmployee
-    })
   }
 
+  // console.log('weekSchedule', weekSchedule)
   return (
     <div>
       {/* section for the weekDateRange component and the buttons */}
       <div className='d-flex justify-content-between mb-3'>
-
         {
-          weekSchedule.length > 0 && (
-            // <DateRange dateStart={'Nov. 9, 2021'} dateEnd={'Nov. 16, 2021'} />
+          (weekSchedule.length > 0) && (
             <DateRange
               dateStart={weekSchedule[0].toDate()}
               dateEnd={weekSchedule[6].toDate()}
+              disableNext={!mWeekEnd.isBefore(mondayInTwoWeeks)}
               onGoToNextWeek={goToNextWeek}
               onGoToPrevious={goToPrevious}
             />
@@ -214,30 +287,33 @@ const ScheduleManager = () => {
             IconComponent={iconComponents.Download}
             size='lg'
             color='primary'
-            className='mr-2'
+            className='mt-1'
           />
         </div>
       </div >
 
-
       {/* section for the scheduleTable and approve button */}
-      <section className='mb-4'>
-        <ScheduleTable onOpenScheduleEdit={openScheduleEdit} employeeWeekDates={employeeWeekDates} />
-      </section>
+      {employeeSchedules.length > 0 && (
+        <section className='mb-4'>
+          <ScheduleTable onOpenScheduleEdit={openScheduleEdit} employeeSchedules={employeeSchedules} />
+        </section>
+      )}
 
       {/* section for the ScheduleEditModal portal component */}
-      <ScheduleTurnsTable
+      <TurnsTable
         turns={turns}
         onAddNewTurn={addNewTurn}
         addingNewTurn={addingNewTurn}
-        onSaveTurn={onSaveTurn}
+        onSaveTurn={saveTurn}
       />
       {employeeToEdit &&
         <ScheduleEdit
           employee={employeeToEdit}
           turns={turns}
-          onWeekdayHoursUpdate={modifyWeekdayHoursByTurn}
-          onWeekdayAdd={addWeekdayIntoList}
+          dateStart={mWeekStart.toDate()}
+          dateEnd={mWeekEnd.toDate()}
+          onWeekDateHoursUpdate={modifyWeekDateHoursByTurn}
+          onWeekDateAdd={addWeekDateIntoList}
           onCloseScheduleEdit={closeScheduleEdit}
         />}
     </div >

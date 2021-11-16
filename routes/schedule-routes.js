@@ -9,14 +9,16 @@ module.exports = app => {
     // .get(schedule.getWeekSchedule)
     .get(security.verifyJWT)
 
-  app.route('/api/schedule/week') //for testing purposes
-    .get(schedule.getWeekSchedule) //will not be used
-
   app.route('/protected/schedule/week')
     .post(schedule.createUserSchedule)
 
-  app.route('/protected/schedule/week')
-    .get(schedule.getUserSchedule)
+  app.route('/protected/schedule/week/all/:schedule_id')
+    .get(schedule.getUserSchedules)
+
+
+  // app.route('/api/schedule/week') //for testing purposes
+  //   .get(schedule.getWeekSchedule) //will not be used
+
 };
 
 // module.exports = app => {

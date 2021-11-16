@@ -108,9 +108,9 @@ exports.confirmEmail = (req, res, next) => {
 exports.createUser = (req, res, next) => {
   console.log('createUser')
   const { code, email, password, first_name, last_name, gender } = req.body;
-  console.log('password', password)
+  // console.log('password', password)
   console.log('code', code)
-  console.log('first_name', first_name)
+  // console.log('first_name', first_name)
 
   let user_type = "";
   const error = new Error();

@@ -3,11 +3,94 @@ const db = require('../config/postgres')();
 // no funcionaria con  "times": "630,1500,110|1300,2130,1700",
 exports.createUserSchedule = (req, res, next) => {
   console.log('createUserSchedule')
+  const schedule_id = req.body.schedule_id;
   const user_id = req.body.user_id;
   const hour_lunch = req.body.hour_lunch;
-  const dates = req.body.dates;
+  const tuesday = req.body['1'];
+  const wednesday = req.body['2'];
+  const thursday = req.body['3'];
+  const friday = req.body['4'];
+  const saturday = req.body['5'];
+  const sunday = req.body['6'];
+  const monday = req.body['7'];
+
+  const dateArrays = [tuesday, wednesday, thursday, friday, saturday, sunday, monday]
+  let dates = []
+  dateArrays.forEach(datesStr => {
+    console.log(datesStr)
+    if (datesStr)
+      dates.push(...datesStr.split(','))
+  })
+
+  /**    RESULT
+   arr [
+   '2021-11-10T06:30:00.776Z',
+   '2021-11-10T15:00:00.776Z',
+   '2021-11-10T11:00:00.776Z',
+   '2021-11-11T13:00:00.776Z',
+   '2021-11-11T21:30:00.776Z',
+   '2021-11-11T17:00:00.776Z',
+   '2021-11-13T14:00:00.776Z',
+   '2021-11-13T22:30:00.776Z',
+   '2021-11-13T18:00:00.776Z'
+ ]
+  */
 
 
+
+  /*
+    EXPECTED RESULTING q:
+    INSERT INTO user_schedule(user_id, schedule_id, date_start, date_end, date_start_lunch, hour_lunch)
+    VALUES 
+      ($1,$2,$3,$4,$5,false),
+      ($1,$2,$6,$7,$8,false),
+      ($1,$2,$9,$10,$11,false) returning *;
+    `
+  */
+  let q = `INSERT INTO user_schedule(user_id, schedule_id, date_start, date_end, date_start_lunch, hour_lunch)
+  VALUES `
+
+  const nDatesPerColumn = 3;
+  for (let i = 0; i < dates.length; i += nDatesPerColumn) {
+    // to inject user_id and schedule_id
+    q += '($1,$2,'
+
+    // creating injection indexes for date_start, date_end, and date_start_lunch
+    for (let k = i; k < (i + nDatesPerColumn); k++)
+      q += `$${k + 3},`
+
+    // set hour_lunch as false
+    q += 'false)'
+    if (i <= dates.length / nDatesPerColumn)
+      q += ','
+  }
+  q += ' returning *'
+  // console.log(q)
+
+  console.log(' ')
+  console.log(' ')
+  console.log(' ')
+  console.log(' ')
+  // console.log(...dates)
+
+  // res.status(200).json({ status: 'Developing...' })
+  return db.any(q, [user_id, schedule_id, ...dates]).then(data => {
+    console.log('data', data)
+    res.status(200).json({ status: 'Developing...' })
+  })
+    .catch(err => {
+      console.log(err)
+      res.status(400).json({ message: `Failed to create/update weeh schedule` })
+    })
+
+
+  /*
+    INSERT INTO user_schedule(user_id, schedule_id, date_start, date_end, date_start_lunch, hour_lunch)
+    VALUES
+      (4, 20211109, '2021-11-10T06:30:00.776Z', '2021-11-10T15:00:00.776Z', '2021-11-10T11:00:00.776Z', false),
+      (4, 20211109, '2021-11-11T13:00:00.776Z', '2021-11-11T21:30:00.776Z', '2021-11-11T17:00:00.776Z', false),
+      (4, 20211109, '2021-11-13T14:00:00.776Z', '2021-11-13T22:30:00.776Z', '2021-11-13T18:00:00.776Z', false);
+  */
 
   // let currentDate = latestTuesday;
   // for (let i = 0; i < 7; i++) {
@@ -15,81 +98,111 @@ exports.createUserSchedule = (req, res, next) => {
   // currentDate = getNextDateOf(currentDate)
   // }
 
-  // for (let i = 0; i < 7; i++) {
-  //   timeIdsBySchedule.push('day_times_id=' + getDateId(currentDate))
-  //   currentDate = getNextDateOf(currentDate)
-  // }
-
   // queries
-  const query = `select schedule_id, date, date_format from schedule
-    where ${pScheduleIds.join(' OR ')};`;
-
-  // SELECT day_times_id, hour, minute, time_format, is_am
-
-  const query1 = `select * from day_times;`
-
-  res.status(200).json({ status: 'Developing...' })
-
-  // return db.task(t => {
-  //   return t.any(query).then(data => {
-  //     // console.log('data', data)
-  //     // const d = new Date()
-  //     // console.log(d)
-  //     // d.setHours(7, 15, 47)
-  //     // console.log(d, '\n')
-
-  //     // for (let i = 0; i < 7; i++) {
-  //     //   timeIdsBySchedule.push('day_times_id=' + getDateId(currentDate))
-  //     //   currentDate = getNextDateOf(currentDate)
-  //     // }
-
-  //     // const d1 = new Date()
-  //     // console.log(d1)
-  //     // setHoursOf(d1, 7, 15)
-  //     // console.log(d1)
-  //     res.status(200).json({ status: 'Developing...' })
-  //   })
-  //     .catch(err => {
-  //       console.log(err)
-  //       res.status(400).json({ status: 'FAILED' })
-  //     })
-  // })
+  // const q = `select schedule_id, date, date_format from schedule
+  //   where ${pScheduleIds.join(' OR ')};`;
 }
 
-// // // const scheduleIds = req.body.schedule.split(',')
-// // // const timeIdsBySchedule = req.body.times.split('|')
-// // console.log('timeIdsBySchedule', timeIdsBySchedule)
-// // const pScheduleIds = [] //schedule ids to inject into query
-// // scheduleIds.forEach(id => pScheduleIds.push('schedule_id=' + id))
-// // const pTimeIds = [] //schedule ids to inject into query
-// // timeIdsBySchedule.forEach((id, i) => {
-// //   const [timeStart, timeEnd, timeLunchStart] = id.split(',');
-// //   console.log(timeStart, timeEnd, timeLunchStart)
-// // })
 
 
-exports.getUserSchedule = (req, res, next) => {
-  console.log('getUserSchedule')
-  // const schedule_id = req.body.schedule_id;
-  const date = new Date(); //current date
+exports.getUserSchedules = (req, res, next) => {
+  console.log('getUserSchedule', req.params)
+  // const date = new Date(); //current date
+  // const user_id = req.body.user_id;
+  const schedule_id = req.params.schedule_id;
 
-  // get the date of the latest tuesday  
-  const latestTuesday = getLatestTuesdayDate(date)
+  // console.log(';user_id', user_id)
+  console.log('schedule_id', schedule_id)
+  //   const q = `select schedule_id, date_format, num_day_in_week, name_day_en from schedule
+  //     where ${predicateIds.join(' OR ')};`;
 
-  const query = `select schedule_id, date_format, num_day_in_week, name_day_en from schedule
-    where ${predicateIds.join(' OR ')};`;
+  /*
+   const q = `with sched as (select user_schedule.*, schedule.is_approved from schedule inner join user_schedule
+    on schedule.schedule_id = user_schedule.schedule_id where user_schedule.schedule_id = $1)
+    select first_name || ' ' || last_name AS name, sched.*
+    from sched inner join users on sched.user_id=users.user_id ORDER BY name`;
+   */
+  /**** applying (date - interval '4 hours') because for some reason its returning the date with 4 hours added. ¯\_(ツ)_/¯ ****/
+  const q = `with sched as (select user_schedule.*, schedule.is_approved from schedule inner join user_schedule
+    on schedule.schedule_id = user_schedule.schedule_id where user_schedule.schedule_id = $1)
+    select first_name || ' ' || last_name AS name, sched.*, sched.date_start - interval '4 hours' AS date_start,
+    sched.date_end - interval '4 hours' AS date_end, sched.date_start_lunch - interval '4 hours' AS date_start_lunch
+    from sched inner join users on sched.user_id=users.user_id ORDER BY name`;
 
-  console.log('query', query)
+  // const q = "select user_schedule.date_start - interval '4 hours' AS date_start, user_schedule.date_end - interval '4 hours' from user_schedule where schedule_id=20211109"
+  // const q = "select user_schedule.date_start - interval '4 hours' AS date_start, user_schedule.date_end - interval '4 hours' AS date_end from user_schedule where schedule_id=20211109"
+  // const q = `with sched as (select user_schedule.*, schedule.is_approved from schedule inner join user_schedule
+  //   on schedule.schedule_id = user_schedule.schedule_id where user_schedule.schedule_id = $1)
+  //   select first_name || ' ' || last_name AS name, sched.*, sched.date_start - interval '4 hours' AS date_start,
+  //   sched.date_end - interval '4 hours' AS date_end, sched.date_start_lunch - interval '4 hours' AS date_start_lunch
+  //   from sched inner join users on sched.user_id=users.user_id ORDER BY name`;
 
-  return db.any(query, predicateIds).then(data => {
-    console.log('schedule', data)
-    res.status(200).json({ data, status: 'success' })
+
+  // console.log('q', q)
+  // res.status(200).json({ status: 'success' })
+  return db.any(q, schedule_id).then(data => {
+    if (data.length === 0)
+      res.status(200).json({ status: 'success', message: 'Did not find any schedule information for this week' })
+    else {
+      console.log('schedule', data)
+      /** key is the number that represents the day of the week. (0 -> tuesday, 1 -> wednesday, ...) */
+      let weekDates = {
+        // 1: { dateStart: _, dateEnd: _, dateStartLunch: _ }
+        // 3: { dateStart: _, dateEnd: _, dateStartLunch: _ }
+      }
+
+      /** Array of employee information -> employeeName, isHourLunch, array of weekDate objects */
+      const schedules = []
+
+      // construct schedule of each employee with array of objects
+      let dCurr = data[0]
+      data.forEach(d => {
+        if (dCurr.user_id !== d.user_id) {
+          console.log('dCurr', dCurr)
+          schedules.push({
+            employeeName: dCurr.name,
+            isHourLunch: dCurr.hour_lunch,
+            weekDates
+          })
+          dCurr = d
+        }
+
+        // create weekDate information of a particular day
+        const day = d.date_start.getDay() - 2
+        weekDates[day] = {
+          dateStart: d.date_start,
+          dateEnd: d.date_end,
+          dateStartLunch: d.date_start_lunch
+        }
+      })
+      schedules.push({
+        employeeName: dCurr.name,
+        isHourLunch: dCurr.hour_lunch,
+        weekDates
+      })
+      console.log('schedules', schedules)
+      res.status(200).json({ schedules, status: 'success' })
+    }
   })
     .catch(err => {
       console.log(err)
       next(err)
     })
 }
+
+// // // const scheduleIds = req.body.schedule.split(',')
+// // // const timeIdsBySchedule = req.body.times.split('|')
+// // console.log('timeIdsBySchedule', timeIdsBySchedule)
+// // const pScheduleIds = [] //schedule ids to inject into q
+// // scheduleIds.forEach(id => pScheduleIds.push('schedule_id=' + id))
+// // const pTimeIds = [] //schedule ids to inject into q
+// // timeIdsBySchedule.forEach((id, i) => {
+// //   const [timeStart, timeEnd, timeLunchStart] = id.split(',');
+// //   console.log(timeStart, timeEnd, timeLunchStart)
+// // })
+
+
+
 
 
 /**************  FOR TESTING PURPOSES  **************/
@@ -109,7 +222,7 @@ exports.getWeekSchedule = (req, res, next) => {
   // get the date of the latest tuesday  
   const latestTuesday = getLatestTuesdayDate(date)
 
-  // populate query params with schedule ids
+  // populate q params with schedule ids
   const predicateIds = []
   let currentDate = latestTuesday;
   for (let i = 0; i < 7; i++) {
@@ -118,11 +231,11 @@ exports.getWeekSchedule = (req, res, next) => {
   }
   // console.log('\n\n' + idParams.join(' AND '))
 
-  const query = `select schedule_id, date, date_format, num_day_in_week, day_name from schedule
-    where ${predicateIds.join(' OR ')};`;
+  const q = `select schedule_id, date, date_format, num_day_in_week, day_name from schedule
+    where ${predicateIds.join(' OR ')}; `;
 
   // res.status(200).json({ status: 'success' })
-  return db.any(query).then(data => {
+  return db.any(q).then(data => {
     console.log('data', data)
 
     res.status(200).json(data)
@@ -246,7 +359,7 @@ const convertDateToJson = d => {
 //   // get the date of the latest tuesday  
 //   const latestTuesday = getLatestTuesdayDate(date)
 
-//   // populate query params with schedule ids
+//   // populate q params with schedule ids
 //   const predicateIds = []
 //   let currentDate = latestTuesday;
 //   for (let i = 0; i < 7; i++) {
@@ -254,12 +367,12 @@ const convertDateToJson = d => {
 //     currentDate = getNextDateOf(currentDate)
 //   }
 
-//   const query = `select schedule_id, date_format, num_day_in_week, name_day_en from schedule
+//   const q = `select schedule_id, date_format, num_day_in_week, name_day_en from schedule
 //     where ${predicateIds.join(' OR ')};`;
 
-//   console.log('query', query)
+//   console.log('q', q)
 
-//   return db.any(query, predicateIds).then(data => {
+//   return db.any(q, predicateIds).then(data => {
 //     console.log('schedule', data)
 //     res.status(200).json({ data, status: 'success' })
 //   })
@@ -286,7 +399,7 @@ const convertDateToJson = d => {
 //   // get the date of the latest tuesday  
 //   const latestTuesday = getLatestTuesdayDate(date)
 
-//   // populate query params with schedule ids
+//   // populate q params with schedule ids
 //   const paramIds = []
 //   let currentDate = latestTuesday;
 //   for (let i = 0; i < 7; i++) {
@@ -295,11 +408,11 @@ const convertDateToJson = d => {
 //   }
 //   // console.log('\n\n' + idParams.join(' AND '))
 
-//   const query = `select schedule_id, date, date_format, num_day_in_week, day_name from schedule
+//   const q = `select schedule_id, date, date_format, num_day_in_week, day_name from schedule
 //     where ${paramIds.join(' OR ')};`;
 
 //   // res.status(200).json({ status: 'success' })
-//   return db.any(query, paramIds).then(data => {
+//   return db.any(q, paramIds).then(data => {
 //     console.log('data', data)
 
 //     res.status(200).json(data)

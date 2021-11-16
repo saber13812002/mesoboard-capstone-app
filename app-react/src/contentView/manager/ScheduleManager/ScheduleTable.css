@@ -1,28 +1,17 @@
 .responsiveTable {
   background: #FFFFFF;
-    /* box-shadow: 1px 0px 10px 0px #888888; */
   border: 1px solid #D8D8D8;
   box-shadow: rgba(50, 50, 93, 0.25) 0px 6px 12px -2px, rgba(0, 0, 0, 0.3) 0px 3px 7px -3px;
 }
 
-.responsiveTable > thead, .responsiveTable > Tbody {
-  /* border: 1.5px solid #D8D8D8; */
-  border-bottom: 1.5px solid #D8D8D8;
-  border-top: 1.5px solid #D8D8D8;
-}
-/* .responsiveTable > thead > tr:first-child(), .responsiveTable > Thead > tr:first-child() {
-  border-top: 0px solid #D8D8D8 !important;
-} */
+.responsiveTable > tbody > tr {
+  border-top: 0.5px solid #D8D8D8;
+} 
 
 
 /* .responsiveTable > thead > tr > th:first-child() {
   white-space: pre-wrap
 } */
-
-span {
-  flex-wrap: nowrap;
-  white-space: nowrap;
-}
 
 
 .responsiveTable > thead > tr {
@@ -41,16 +30,12 @@ span {
   padding-right: 8px
 }
 
-/* .responsiveTable > tbody > tr {
-  padding: 5px
-} */
 
-.responsiveTable > tbody > tr {
-  border-top: 1.5px solid #D8D8D8;
-  border-bottom: 1.5px solid #D8D8D8;
+
+.responsiveTable > tbody > tr > td:first-child {
+  padding-left: 8px
 }
-
-.responsiveTable > tbody > tr > td {
+.responsiveTable > tbody > tr > td:not(:first-child) {
   text-align: center;
   padding: 5px 0;
 }
@@ -93,7 +78,6 @@ span {
 
   .responsiveTable tbody tr {
     border: 1px solid #000;
-    padding: .25em;
   }
 
   .responsiveTable td.pivoted {
