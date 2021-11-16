@@ -7,7 +7,6 @@ import CheckMark from './CheckMark'
  *  *Tip: you can get the svg tag of a particular icon by exporting it from figma. 
  */
 const IIcon = (props) => {
-  console.log('props', props)
   let TheIcon = <div />
 
   switch (props.name.toLowerCase()) {

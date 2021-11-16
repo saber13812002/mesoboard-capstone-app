@@ -2,6 +2,13 @@
   margin: 20px;
 }
 
+.scheduleEdit > h3 {
+  color: #287F4E;
+  font-weight: 900;
+  margin: 0;
+}
+
+/* widths avoided if we change it to 'display: grid' */
 .scheduleEdit__data {
   width: 150px;
 }
