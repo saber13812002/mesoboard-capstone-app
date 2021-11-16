@@ -17,8 +17,8 @@ const monday = m.clone().isoWeekday(1)
 // console.log('sunday', sunday)
 // console.log('monday', monday)
 
-const startOfThisWeek = moment().clone();
-const endOfThisWeek = moment().clone();
+let startOfThisWeek = moment().clone();
+let endOfThisWeek = moment().clone();
 
 // console.log('m.isSame(sunday)', m.isSame(sunday))
 // console.log('m.isSame(monday)', m.isSame(monday))
@@ -30,6 +30,10 @@ if (m.isSame(sunday)) {
 else if (m.isSame(monday)) {
   // console.log('MONDAY decrement')
   startOfThisWeek.add(-6, 'day')
+}
+else {
+  startOfThisWeek = moment().clone().startOf('week').add(2, 'day');
+  endOfThisWeek = moment().clone().endOf('week').add(2, 'day')
 }
 
 const mondayInTwoWeeks = endOfThisWeek.clone().add(7, 'day')
@@ -56,7 +60,6 @@ const ScheduleManager = () => {
     if (mWeekStart) {
       // console.log('mWeekStart', mWeekStart)
       // console.log('mWeekEnd', mWeekEnd, '\n')
-      // console.log('toDate', mWeekStart.toDate())
       const week = [];
       let currentDay = mWeekStart.clone()
       const nextTuesday = mWeekEnd.clone().add(1, 'day')
@@ -65,19 +68,9 @@ const ScheduleManager = () => {
         week.push(currentDay.clone())
         currentDay.add(1, 'day')
       }
-      console.log('week', week)
-
-      setWeekSchedule(week)
-      // // setWeekSchedule(prev => {
-      // //   console.log('week[0]', week[0])
-      // //   return week
-      // // })
-
       // console.log('week', week)
-      // // console.log('week', week[0])
-      // // console.log('week', week[6])
+      setWeekSchedule(week)
 
-      console.log('the id', getScheduleIdOfMoment(mWeekStart))
       const getWeekSchedule = async () => {
         const schedule_id = getScheduleIdOfMoment(mWeekStart)
         const url = server.getUserSchedule(schedule_id);
