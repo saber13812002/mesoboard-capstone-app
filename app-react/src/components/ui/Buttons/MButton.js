@@ -15,39 +15,67 @@ import './MButton.css'
  * - onClick
  */
 const MButton = ({ type, text = '', variant = 'primary', size = 'md', IconComponent, iconColor = 'white', className, style, onClick }) => {
-  const originalIconColor = iconColor;
-  const [iconColorState, setIconColorState] = useState(iconColor)
+  let onMouseEnterIconColor = 'white'
+  let onMouseEnterTextColor = ''
+  let textColor = ''
 
-  let onMouseEnterColor = 'white'
+
+  if (variant.includes('outline')) {
+    if (variant.includes('primary')) {
+      textColor = '#287F4E'
+      iconColor = 'primary'
+      onMouseEnterTextColor = 'white'
+    }
+  }
   if (variant === 'secondary') {
-    onMouseEnterColor = 'dark'
+    onMouseEnterIconColor = 'dark'
   }
 
+  const originalIconColor = iconColor;
+  const originalTextColor = textColor;
+  const [iconColorState, setIconColorState] = useState(iconColor)
+  const [textColorState, setTextColorState] = useState(textColor)
+
+
+  const handleMouseEnter = (onMouseEnterIconColor, onMouseEnterTextColor) => {
+    setIconColorState(onMouseEnterIconColor)
+    setTextColorState(onMouseEnterTextColor)
+  }
+
+  const handleMouseLeave = () => {
+    setIconColorState(originalIconColor)
+    setTextColorState(originalTextColor)
+  }
 
   return (
-    <div
+    <Button
+      style={{ zIndex: '100' }}
+      variant={variant}
+      size={size}
+      onClick={onClick}
+      type={type}
       className={className}
       style={style}
-      onMouseEnter={() => setIconColorState(onMouseEnterColor)}
-      onMouseLeave={() => setIconColorState(originalIconColor)}
+      onMouseEnter={() => handleMouseEnter(onMouseEnterIconColor, onMouseEnterTextColor)}
+      // onMouseEnter={() => setIconColorState(onMouseEnterIconColor)}
+      // onMouseLeave={() => setIconColorState(originalIconColor)}
+      onMouseLeave={() => handleMouseLeave()}
     >
-      <Button variant={variant} size={size} onClick={onClick} type={type} style={{ zIndex: '100' }}>
-        {
-          IconComponent
-            ? <div className='d-flex align-items-center'>
-              <Icon
-                IconComponent={IconComponent}
-                size='sm'
-                color={iconColorState}
-                isButtonIcon={true}
-                className='mr-1'
-              />
-              <span>{text}</span>
-            </div>
-            : <>{text}</>
-        }
-      </Button>
-    </div>
+      {
+        IconComponent
+          ? <div className='d-flex align-items-center text-nowrap'>
+            <Icon
+              IconComponent={IconComponent}
+              size='sm'
+              color={iconColorState}
+              isButtonIcon={true}
+              className='mr-1'
+            />
+            <span style={{ color: textColorState }}>{text}</span>
+          </div>
+          : <>{text}</>
+      }
+    </Button>
   )
 }
 
