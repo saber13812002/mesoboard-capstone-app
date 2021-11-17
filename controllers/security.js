@@ -12,6 +12,7 @@ exports.verifyJWT = (req, res, next) => {
     try {
       const payload = jwt.verify(tokenParts[1], PUB_KEY, { algorithms: ['RS256'] });
       req.jwt = payload; //store token's payload on request object
+      // console.log('payload', payload)
       next();
     } catch (err) {
       console.log(err)

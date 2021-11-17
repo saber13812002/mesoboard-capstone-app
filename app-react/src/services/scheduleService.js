@@ -30,6 +30,10 @@ export const DAY_NAME = {
  */
 export const getDayName = n => DAY_NAME[n]
 
+// export const shortenFull24HoursOf = h => {
+
+// }
+
 /** Returns the given hour string with the hour period ('AM' or 'PM').
  *  @param {string} d string representing the time of a day
  *  @param {boolean} spaceBeforePeriod true to add a space between the hour and the hour period
@@ -54,7 +58,7 @@ export const get12HourFormatOfDate = (d, spaceBeforePeriod) => {
 /** Returns the given hour string without the hour period.
  *  @param {string} h string representing the time of a day
  */
-export const get24HourFormatOf = h => {
+export const get24HourFormatOfHour = h => {
   h = String(h)
   const split = h.split(':')
 
@@ -66,7 +70,7 @@ export const get24HourFormatOf = h => {
   if (h.includes('AM'))
     return h.substr(0, h.length - 2)
   if (Number(split[0]) > 12)
-    return Number(split[0]) + 12 + split[1]
+    return Number(split[0]) - 12 + split[1]
   else
     return h
 }
@@ -85,19 +89,15 @@ export const getScheduleIdOfDate = d => toISOString(d).replace('-', '')
 /** Returns a string representing the id of a schedule turn.
  *  @param {string} h string representing the time of a day
  */
-export const getTurnIdOfHour = h => get24HourFormatOf(h).replace(':', '')
+export const getTurnIdOfHour = h => {
+  console.log('h', h, typeof h)
+  return get24HourFormatOfHour(h).replace(':', '')
+}
 // export const getTurnIdOfHour = h => {
 //   h = String(h)
 //   // console.log('h', h)
 //   // console.log('res', h.substr(0, h.length - 2))
 //   return h.substr(0, h.length - 2).replace(':', '')
-// }
-
-// export const getDateId = d => {
-//   const s = toISOString(d)
-//   // const split = s.split('-');
-//   console.log('-s', s.replaceAll('-', ''))
-//   // const [nYear, nMonth, nDay] = split
 // }
 
 /** Returns given date into ISO format string excluding the hour. 
@@ -124,13 +124,6 @@ export const toISOString = obj => {
  *  @param {*} d date to be beautify
  */
 export const beautifyDate = d => beautifyDateStr(toISOString(d))
-//   // console.log('m', m)
-//   console.log(d)
-//   const s = toISOString(d)
-
-//   // return 'in progress...'
-//   return beautifyDateStr(s)
-// }
 
 /** Returns a string format describing the given date in string string form (i.e. Nov. 16, 2021).
  *  @param {string} s iso date formatted string (i.e. 2021-11-16).  
@@ -150,4 +143,11 @@ const addLeadingZeros = d => {
 // const get12HourFormat = (h, withPeriod) => {
 //   h = String(h)
 //   return h.substr(0, h.length - 2).replace(':', '')
+// }
+
+// export const getDateId = d => {
+//   const s = toISOString(d)
+//   // const split = s.split('-');
+//   console.log('-s', s.replaceAll('-', ''))
+//   // const [nYear, nMonth, nDay] = split
 // }

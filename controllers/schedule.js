@@ -75,7 +75,7 @@ exports.createUserSchedule = (req, res, next) => {
 
   // res.status(200).json({ status: 'Developing...' })
   return db.any(q, [user_id, schedule_id, ...dates]).then(data => {
-    console.log('data', data)
+    // console.log('data', data)
     res.status(200).json({ status: 'Developing...' })
   })
     .catch(err => {
@@ -108,10 +108,8 @@ exports.createUserSchedule = (req, res, next) => {
 exports.getUserSchedules = (req, res, next) => {
   console.log('getUserSchedule', req.params)
   // const date = new Date(); //current date
-  // const user_id = req.body.user_id;
   const schedule_id = req.params.schedule_id;
 
-  // console.log(';user_id', user_id)
   console.log('schedule_id', schedule_id)
   //   const q = `select schedule_id, date_format, num_day_in_week, name_day_en from schedule
   //     where ${predicateIds.join(' OR ')};`;
@@ -205,7 +203,7 @@ exports.getUserSchedules = (req, res, next) => {
     })
 }
 
-exports.createUserTurn = (req, res, next) => {
+exports.insertUserTurn = (req, res, next) => {
   const { turn_id, user_id, hour_start, hour_end, hour_lunch } = req.body
   // const turn_id = req.body.turn_id;
   // const user_id = req.body.user_id;
@@ -220,23 +218,30 @@ exports.createUserTurn = (req, res, next) => {
 
   // res.status(200).json({ status: 'success', message: 'Developing...' })
   return db.one(q, [turn_id, user_id, hour_start, hour_end, hour_lunch])
-    // .then(data => {
-    //   res.status(200).json({ schedules, status: 'success' })
-    // })
-    .catch(err => next(err))
+  // .then(_ => res.status(200)
+  // .catch(err => next(err))
 }
 
-// // // const scheduleIds = req.body.schedule.split(',')
-// // // const timeIdsBySchedule = req.body.times.split('|')
-// // console.log('timeIdsBySchedule', timeIdsBySchedule)
-// // const pScheduleIds = [] //schedule ids to inject into q
-// // scheduleIds.forEach(id => pScheduleIds.push('schedule_id=' + id))
-// // const pTimeIds = [] //schedule ids to inject into q
-// // timeIdsBySchedule.forEach((id, i) => {
-// //   const [timeStart, timeEnd, timeLunchStart] = id.split(',');
-// //   console.log(timeStart, timeEnd, timeLunchStart)
-// // })
+exports.getUserTurns = (req, res, next) => {
+  const user_id = req.params.user_id
 
+  const q = `SELECT * FROM turn where user_id=$1 ORDER BY hour_start`;
+
+  // res.status(200).json({ status: 'success', message: 'Developing...' })
+  return db.any(q, user_id).then(data => {
+    console.log('data', data)
+    const turns = data.map((d, i) => {
+      return {
+        turnId: i,
+        hourStart: shortenFull24HoursTo12(d.hour_start),
+        hourEnd: shortenFull24HoursTo12(d.hour_end),
+        hourLunch: shortenFull24HoursTo12(d.hour_lunch)
+      }
+    })
+    res.status(200).json({ turns, status: 'success' })
+  })
+    .catch(err => next(err))
+}
 
 
 
@@ -307,6 +312,18 @@ exports.getWeekSchedule = (req, res, next) => {
 // /** Returns given date into ISO format string excluding the hour */
 // const toISOString = d => d.toISOString().slice(0, 10)
 
+const shortenFull24HoursTo12 = h => {
+  const split = h.split(':')
+  let hour = Number(split[0])
+  const minute = split[1]
+  let period = 'AM'
+  if (hour > 12) {
+    hour -= 12;
+    period = 'PM'
+  }
+
+  return hour + ':' + minute + ' ' + period
+}
 
 const isDateInstance = d => Object.prototype.toString.call(d) === '[object Date]'
 

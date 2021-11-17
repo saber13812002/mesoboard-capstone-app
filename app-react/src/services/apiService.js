@@ -12,11 +12,13 @@ class UrlConstants {
 }
 
 export class ServerRoutes {
-  static getUserSchedule(scheduleId) {
-    return UrlConstants.PROTECTED + UrlConstants.ALL_USER_SCHEDULES.replace('<schedule_id>', scheduleId);
+  static getUserSchedule(schedule_id) {
+    return UrlConstants.PROTECTED + UrlConstants.ALL_USER_SCHEDULES.replace('<schedule_id>', schedule_id);
   }
-  static getTurns(userId) {
-    return UrlConstants.PROTECTED + UrlConstants.GET_TURNS.replace('<user_id>', userId);
+  static getUserTurns(user_id) {
+    console.log('\n\nuser_id', user_id)
+
+    return UrlConstants.PROTECTED + UrlConstants.GET_TURNS.replace('<user_id>', user_id);
   }
   static setTurn() {
     return UrlConstants.PROTECTED + UrlConstants.SET_TURN

@@ -6,7 +6,7 @@ import { turnArray, employeeScheduleArray } from '../../../constants/scheduleCon
 import { Icon, iconComponents, ScheduleEdit } from '../../../components'
 import { timeFromInt } from 'time-number';
 import { DateRange } from '../..'
-import { getScheduleIdOfMoment, getTurnIdOfHour, get24HourFormatOf } from '../../../services/scheduleService'
+import { getScheduleIdOfMoment, getTurnIdOfHour, get24HourFormatOfHour } from '../../../services/scheduleService'
 import { ServerRoutes as server } from '../../../services/apiService'
 import axios from 'axios'
 import moment from 'moment'
@@ -60,11 +60,7 @@ const ScheduleManager = () => {
 
   // context
   const { authState } = useContext(AuthContext)
-  const { userId } = authState
-
-  useEffect(() => {
-    // here fetch the schedule turns once
-  }, [])
+  const { userId } = authState;
 
   // initializing week schedule dates
   useEffect(() => {
@@ -73,40 +69,60 @@ const ScheduleManager = () => {
       // console.log('mWeekEnd', mWeekEnd, '\n')
       // set the schedule of the week starting with mWeekStart
       const week = [];
-      let currentDay = mWeekStart.clone()
+      let currentDay = mWeekStart.clone();
       const nextTuesday = mWeekEnd.clone().add(1, 'day')
       // console.log('nextTuesday', nextTuesday, '\n')
       while (currentDay.isBefore(nextTuesday, 'day')) {
         week.push(currentDay.clone())
         currentDay.add(1, 'day')
       }
-      console.log('week', week)
+      // console.log('week', week)
       setWeekSchedule(week)
 
       const getWeekSchedule = async () => {
-        const schedule_id = getScheduleIdOfMoment(mWeekStart)
-        const url = server.getUserSchedule(schedule_id);
+        const scheduleId = getScheduleIdOfMoment(mWeekStart)
+        const url = server.getUserSchedule(scheduleId);
         console.log('url', url)
         axios.get(url).then(res => {
-          console.log('res.data.schedules', res.data.schedules)
+          // console.log('res.data.schedules', res.data.schedules)
           if (res.data.schedules) {
             const schedules = res.data.schedules
-            console.log('schedules', schedules)
+            // console.log('schedules', schedules)
             setEmployeeSchedules(schedules)
           }
           else setEmployeeSchedules([])
         })
           .catch(err => console.log(err))
       }
-      setTimeout(() => getWeekSchedule(), 2000)
-      // getWeekSchedule()
+      // setTimeout(() => getWeekSchedule(), 2000)
+      getWeekSchedule()
     }
   }, [mCurrent])
 
+
   useEffect(() => {
-    console.log('newTurn.hourStart', newTurn.hourStart)
-    // if (turns.length === addingNewTurn) {
-    // if (!addingNewTurn && newTurn.turnId !== -1) {
+    if (userId) {
+      // here fetch the schedule turns once
+      const getUserTurns = async () => {
+        // console.log('authState', authState)
+        console.log('-userId', userId)
+        const url = server.getUserTurns(userId);
+        console.log('url', url)
+        axios.get(url)
+          .then(res => {
+            console.log('res.data.turns', res.data.turns)
+
+            setTurns(res.data.turns)
+          })
+          .catch(err => console.log(err))
+      }
+      // setTimeout(() => getUserTurns(), 6000)
+      getUserTurns()
+    }
+  }, [userId])
+
+
+  useEffect(() => {
     if (!addingNewTurn && newTurn.hourStart) {
       // fetch create or update turn table
       const saveTurns = async () => {
@@ -116,25 +132,26 @@ const ScheduleManager = () => {
         console.log('userId', userId)
         const url = server.setTurn();
         console.log('url', url)
-        console.log('get24HourFormatOf(hourStart)', get24HourFormatOf(hourStart))
+        // console.log('get24HourFormatOfHour(hourStart)', get24HourFormatOfHour(hourStart))
         axios.post(url, {
           user_id: userId,
           turn_id: turnId,
-          hour_start: get24HourFormatOf(hourStart),
-          hour_end: get24HourFormatOf(hourEnd),
-          hour_lunch: get24HourFormatOf(hourLunch)
+          hour_start: get24HourFormatOfHour(hourStart),
+          hour_end: get24HourFormatOfHour(hourEnd),
+          hour_lunch: get24HourFormatOfHour(hourLunch)
         })
-          .then(res => {
-            console.log('res', res)
-            // console.log('res.data', res.data)
+        setNewTurn({ turnId: -1 })
+        // .then(res => {
+        //   console.log('reseting turn with setNewTurn')
 
-            setNewTurn({ turnId: -1 })
-          })
-          .catch(err => console.log(err))
+        //   // setNewTurn({ turnId: -1 })
+        // })
+        // .catch(err => console.log(err))
       }
       saveTurns()
     }
   }, [turns])
+
 
   // functions to handle schedule turns modification and schedule editing (handle state management)
   const openScheduleEdit = employee => setEmployeeToEdit(employee)
@@ -152,15 +169,15 @@ const ScheduleManager = () => {
 
 
   const goToNextWeek = () => {
-
+    console.log('newTurn', newTurn)
     // console.log('-mWeekStart', mWeekStart)
     // console.log('mWeekEnd', mWeekEnd)
     // console.log('mWeekEnd.isBefore(mondayInTwoWeeks)', mWeekEnd.isBefore(mondayInTwoWeeks))
     if (mWeekEnd.isBefore(mondayInTwoWeeks)) {
       setMCurrent(currMoment => {
-        console.log('mMoment', currMoment)
+        // console.log('mMoment', currMoment)
         const nextMoment = mWeekEnd.clone().add(1, 'day')
-        console.log('nextMoment', nextMoment)
+        // console.log('nextMoment', nextMoment)
         setMWeekStart(nextMoment.clone().startOf('week').add(2, 'day'));
         setMWeekEnd(nextMoment.clone().endOf('week').add(2, 'day'))
         return nextMoment
@@ -170,7 +187,7 @@ const ScheduleManager = () => {
 
 
   const saveTurn = (hourStart, hourEnd, lunchHour) => {
-    console.log('saveTurn', hourStart, hourEnd, lunchHour)
+    // console.log('saveTurn', hourStart, hourEnd, lunchHour)
     setTurns(prev => {
       let turnClone = [...prev]
       const lastTurn = prev[prev.length - 1]
@@ -179,11 +196,12 @@ const ScheduleManager = () => {
       // console.log('hourEnd', hourEnd)
       // console.log('lunchHour', lunchHour)
 
-      lastTurn.start = timeFromInt(hourStart, { format: 12, leadingZero: false })
-      lastTurn.end = timeFromInt(hourEnd, { format: 12, leadingZero: false })
-      lastTurn.lunch = timeFromInt(lunchHour, { format: 12, leadingZero: false })
 
-      // console.log('lastTurn.start', lastTurn.start)
+      lastTurn.hourStart = timeFromInt(hourStart, { format: 12, leadingZero: false })
+      lastTurn.hourEnd = timeFromInt(hourEnd, { format: 12, leadingZero: false })
+      lastTurn.hourLunch = timeFromInt(lunchHour, { format: 12, leadingZero: false })
+
+      // console.log('lastTurn.start', lastTurn.hourStart)
       // console.log('lastTurn.end', lastTurn.end)
       // console.log('lastTurn.lunch', lastTurn.lunch)
 
@@ -194,51 +212,45 @@ const ScheduleManager = () => {
       // sort by date start
       turnClone = turnClone.sort((a, b) => {
         // console.log('\n\n')
-        const is_a_am = a.start.includes('AM')
-        const is_b_am = a.start.includes('AM')
-        const is_a_pm = b.start.includes('PM')
-        const is_b_pm = b.start.includes('PM')
+        const is_a_am = a.hourStart.includes('AM')
+        const is_b_am = a.hourStart.includes('AM')
+        const is_a_pm = b.hourStart.includes('PM')
+        const is_b_pm = b.hourStart.includes('PM')
 
         // do algorithm to determine order depending on AM or PM
         if (is_a_pm && is_b_am) {
           return -1
         }
         // 3 more conditions maybe
-        return a.start.localeCompare(b.start)
+        return a.hourStart.localeCompare(b.hourStart)
       })
 
       // enumerate in desc order
-      turnClone.forEach((turn, i) => turn.id = i + 1)
-      setAddingNewTurn(false)
+      turnClone.forEach((turn, i) => turn.turnId = i + 1)
 
-      // set new turn id
-      const turnId = getTurnIdOfHour(lastTurn.start)
-      // setNewTurn(turnId)
+      // store new turn id for fetch insert on useEffect
+      const turnId = getTurnIdOfHour(lastTurn.hourStart)
+      console.log('turnId', turnId)
       setNewTurn({
         turnId,
-        hourStart: lastTurn.start,
-        hourEnd: lastTurn.end,
-        hourLunch: lastTurn.lunch
+        hourStart: lastTurn.hourStart,
+        hourEnd: lastTurn.hourEnd,
+        hourLunch: lastTurn.hourLunch
       })
 
-
-      console.log('turnId', turnId)
-      // const turnId = getTurnIdOfHour()
-      // console.log('turnId', turnId)
-      // setNewTurn(getTurnIdOfHour())
-
-
+      setAddingNewTurn(false)
       return turnClone
     })
   }
 
 
   const addNewTurn = () => {
-    // setTurns(prev => {
-    //   setAddingNewTurn(prev.length)
-    //   return [...prev, { id: null, start: null, end: null, lunch: null }]
-    // })
-    setTurns(prev => [...prev, { id: null, start: null, end: null, lunch: null }])
+    setTurns(prev => {
+      const res = [...prev, { turnId: -1, hourStart: undefined, hourEnd: undefined, hourLunch: undefined }];
+      setAddingNewTurn(true)
+      return res
+    })
+    // setTurns(prev => [...prev, { turnId: -1, hourStart: undefined, hourEnd: undefined, hourLunch: undefined }])
     setAddingNewTurn(true)
   }
 
@@ -330,12 +342,12 @@ const ScheduleManager = () => {
       </div >
 
       {/* section for the scheduleTable and approve button */}
-      {/* <section className='mb-4'>
+      <section className='mb-4'>
         <ScheduleTable
           employeeSchedules={employeeSchedules}
           onOpenScheduleEdit={openScheduleEdit}
         />
-      </section> */}
+      </section>
 
       {/* section for the ScheduleEditModal portal component */}
       <TurnsTable
