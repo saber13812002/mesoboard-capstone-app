@@ -30,45 +30,63 @@ export const DAY_NAME = {
  */
 export const getDayName = n => DAY_NAME[n]
 
-// export const shortenFull24HoursOf = h => {
+export const get24HourFormatOf12HourDate = d => {
+  const split = get24HourFormatOfDate(d).split(':');
+  // console.log('split', split)
+  return get24HourFormatOfDate(d)
+}
 
-// }
+/** Returns the hours of the given date in a 24 hour format.
+ *  @param {string} d a date object
+ */
+export const get24HourFormatOfDate = d => {
+  const date = new Date(d);
+  let hour = date.getUTCHours();
+  const minute = addLeadingZeros(date.getUTCMinutes());
+  return hour + ':' + minute;
+}
 
 /** Returns the given hour string with the hour period ('AM' or 'PM').
- *  @param {string} d string representing the time of a day
+ *  @param {string} d a date object
  *  @param {boolean} spaceBeforePeriod true to add a space between the hour and the hour period
  */
 export const get12HourFormatOfDate = (d, spaceBeforePeriod) => {
-  const date = new Date(d)
+  const split = get24HourFormatOfDate(d).split(':')
+  // console.log('split', split)
   // console.log('-', d.getHours())
-  let hour = date.getUTCHours()
+  let hour = Number(split[0])
   let period = 'AM'
   if (hour > 12) {
     hour -= 12
     period = 'PM'
   }
-  const minute = addLeadingZeros(date.getUTCMinutes()) + (spaceBeforePeriod ? ' ' : '')
+  // console.log('hour', hour)
+  const minute = split[1] + (spaceBeforePeriod ? ' ' : '')
+  // const minute = addLeadingZeros(date.getUTCMinutes()) + (spaceBeforePeriod ? ' ' : '')
 
   return hour + ':' + minute + period
-
-  // var date = new Date();
-  // console.log(date.toLocaleString('en-GB'));
 }
 
-/** Returns the given hour string without the hour period.
- *  @param {string} h string representing the time of a day
+/** Returns the given hour in 24 hour format string.
+ *  @param {string} h string representing the time of a day in 12 hour format
  */
 export const get24HourFormatOfHour = h => {
   h = String(h)
   const split = h.split(':')
 
+  // console.log('h', h)
+  // console.log('split', split)
+
   if (h.includes('PM')) {
-    const hour = Number(split[0]) + 12
-    // console.log('ret', hour + split[1])
+    const hour = Number(split[0])
+    if (hour > 12)
+      hour += 12
     return (hour + ':' + split[1]).substr(0, h.length - 2)
   }
+
   if (h.includes('AM'))
     return h.substr(0, h.length - 2)
+
   if (Number(split[0]) > 12)
     return Number(split[0]) - 12 + split[1]
   else

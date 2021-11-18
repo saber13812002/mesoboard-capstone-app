@@ -6,7 +6,7 @@ import TimePicker from 'react-bootstrap-time-picker';
 import { timeFromInt } from 'time-number';
 
 
-const TurnsTable = ({ turns, onAddNewTurn, addingNewTurn, onSaveTurn }) => {
+const TurnsTable = ({ turns, onAddNewTurn, addingNewTurn, onSaveTurn, onCancel }) => {
   const [selectHourStart, setSelectHourStart] = useState(14400) //represents 4:00 AM
   // const [selectHourEnd, setSelectHourEnd] = useState(14400)
   // const [selectHourLunch, setSelectHourLunch] = useState(14400)
@@ -61,7 +61,7 @@ const TurnsTable = ({ turns, onAddNewTurn, addingNewTurn, onSaveTurn }) => {
                 {addingNewTurn && !isValidId && (
                   //<TimePicker start="10:00" end="21:00" step={30} />
                   <tr style={{ fontWeight: '500' }}>
-                    {isValidId && <td><strong>{turnId}</strong></td>}
+                    {isValidId ? <td><strong>{turnId}</strong></td> : <td></td>}
                     <td><TimePicker start="04:00" end="18:00" format="12" step={30} onChange={handleSelectHourStart} value={selectHourStart} /></td>
                     <td><TimePicker start={timeFromInt(selectHourStart)} end="24:00" step={30} onChange={handleSelectHourEnd} value={selectHourEnd} /></td>
                     <td><TimePicker start="03:00" end="22:00" step={30} onChange={handleSelectHourLunch} value={selectHourLunch} /></td>
@@ -103,7 +103,7 @@ const TurnsTable = ({ turns, onAddNewTurn, addingNewTurn, onSaveTurn }) => {
       </div>}
       {addingNewTurn && <div className='ml-1 pt-2' style={{ marginTop: '-48px' }}>
         <MButton
-          // onClick={onAddNewTurn}
+          onClick={onCancel}
           text='Cancel'
           variant='light'
           size='sm'
