@@ -1,12 +1,12 @@
+import { useState, Fragment } from 'react'
 import './TurnsTable.css'
-import { useState } from 'react'
 import { Table } from 'react-bootstrap'
 import { MButton, Icon, iconComponents, IIcon } from '../../../components'
 import TimePicker from 'react-bootstrap-time-picker';
 import { timeFromInt } from 'time-number';
 
 
-const TurnsTable = ({ turns, onAddNewTurn, addingNewTurn, onSaveTurn }) => {
+const TurnsTable = ({ turns, onAddNewTurn, addingNewTurn, onSaveTurn, onCancel }) => {
   const [selectHourStart, setSelectHourStart] = useState(14400) //represents 4:00 AM
   // const [selectHourEnd, setSelectHourEnd] = useState(14400)
   // const [selectHourLunch, setSelectHourLunch] = useState(14400)
@@ -29,6 +29,7 @@ const TurnsTable = ({ turns, onAddNewTurn, addingNewTurn, onSaveTurn }) => {
     // console.log(e, hour)
   }
 
+  console.log('<turns>', turns)
   return (
     <div className='scheduleTurns'>
       <h5>TURNOS</h5>
@@ -43,20 +44,24 @@ const TurnsTable = ({ turns, onAddNewTurn, addingNewTurn, onSaveTurn }) => {
         </thead>
         <tbody>
           {turns.map((turn) => {
-            const { id, start, end, lunch } = turn
+            const { turnId, hourStart, hourEnd, hourLunch } = turn
+            // console.log('turnId, hourStart, hourEnd, hourLunch\n\n')
+            // console.log(turnId, hourStart, hourEnd, hourLunch)
+            // console.log(typeof turnId, typeof hourStart, turnId)
+            const isValidId = turnId >= 0
             return (
-              <>
-                {id && <tr style={{ fontWeight: '500' }}>
-                  <td><strong>{id}</strong></td>
-                  <td>{start}</td>
-                  <td>{end}</td>
-                  <td>{lunch}</td>
+              <Fragment key={turnId}>
+                {isValidId && <tr style={{ fontWeight: '500' }}>
+                  <td><strong>{turnId}</strong></td>
+                  <td>{hourStart}</td>
+                  <td>{hourEnd}</td>
+                  <td>{hourLunch}</td>
                   {/* <td></td> */}
                 </tr>}
-                {addingNewTurn && !id && (
+                {addingNewTurn && !isValidId && (
                   //<TimePicker start="10:00" end="21:00" step={30} />
                   <tr style={{ fontWeight: '500' }}>
-                    <td><strong>{id}</strong></td>
+                    {isValidId ? <td><strong>{turnId}</strong></td> : <td></td>}
                     <td><TimePicker start="04:00" end="18:00" format="12" step={30} onChange={handleSelectHourStart} value={selectHourStart} /></td>
                     <td><TimePicker start={timeFromInt(selectHourStart)} end="24:00" step={30} onChange={handleSelectHourEnd} value={selectHourEnd} /></td>
                     <td><TimePicker start="03:00" end="22:00" step={30} onChange={handleSelectHourLunch} value={selectHourLunch} /></td>
@@ -71,14 +76,14 @@ const TurnsTable = ({ turns, onAddNewTurn, addingNewTurn, onSaveTurn }) => {
                     </td>
                   </tr>
                 )}
-              </>
+              </Fragment>
             )
           })}
           {/* 
-          {addingNewTurn && !id && (
+          {addingNewTurn && !turnId && (
             //<TimePicker start="10:00" end="21:00" step={30} />
             <tr style={{ fontWeight: '500' }}>
-            <td><strong>{id}</strong></td>
+            <td><strong>{turnId}</strong></td>
             <td><TimePicker start="10:00" end="21:00" step={30} /></td>
             <td><TimePicker start="10:00" end="21:00" step={30} /></td>
             <td><TimePicker start="10:00" end="21:00" step={30} /></td>
@@ -98,7 +103,7 @@ const TurnsTable = ({ turns, onAddNewTurn, addingNewTurn, onSaveTurn }) => {
       </div>}
       {addingNewTurn && <div className='ml-1 pt-2' style={{ marginTop: '-48px' }}>
         <MButton
-          // onClick={onAddNewTurn}
+          onClick={onCancel}
           text='Cancel'
           variant='light'
           size='sm'

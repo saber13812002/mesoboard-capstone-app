@@ -10,12 +10,17 @@ module.exports = app => {
     .get(security.verifyJWT)
 
   app.route('/protected/schedule/week')
-    .post(schedule.createUserSchedule)
+    .post(schedule.setUserSchedule)
 
   app.route('/protected/schedule/week/all/:schedule_id')
     .get(schedule.getUserSchedules)
 
+  // app.route('/protected/schedule/turn/:turn_id/:user_id')
+  app.route('/protected/schedule/turn/all')
+    .post(schedule.insertUserTurn)
 
+  app.route('/protected/schedule/turn/:user_id')
+    .get(schedule.getUserTurns)
   // app.route('/api/schedule/week') //for testing purposes
   //   .get(schedule.getWeekSchedule) //will not be used
 

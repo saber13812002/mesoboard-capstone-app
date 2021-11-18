@@ -1,4 +1,4 @@
-// import './Icon.css'
+import './Icon.css'
 import { IconContext } from 'react-icons'
 
 // Icon Wrapper
@@ -46,7 +46,7 @@ const Icon = ({ IconComponent, size = 'md', color = 'dark', className, style, is
       <IconComponent
         color={color}
         size={size}
-        className={className}
+        className={`icons ${className}`}
         style={style}
         onClick={onClick}
       />

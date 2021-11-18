@@ -18,10 +18,10 @@ const Layout = () => {
     // console.log('LAYOUT uType', userType)
     if (!userType) {
       console.log('fetching credentials')
-      if (process.env.NODE_ENV && process.env.NODE_ENV === 'production')
-        fetchUserDataByToken()
-      else //timeout to wait until node app restart on page reload or saved work
-        setTimeout(() => fetchUserDataByToken(), 4000)
+      // if (process.env.NODE_ENV && process.env.NODE_ENV === 'production')
+      fetchUserDataByToken()
+      // else //timeout to wait until node app restart on page reload or saved work
+      //   setTimeout(() => fetchUserDataByToken(), 7000)
     }
   }, [])
 

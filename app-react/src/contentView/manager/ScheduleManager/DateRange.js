@@ -5,39 +5,23 @@ import { toISOString, beautifyDate } from '../../../services/scheduleService'
 // const getDate = d => d.toISOString().slice(0, 10)
 
 
-const DateRange = ({ dateStart, dateEnd, disableNext, onGoToNextWeek, onGoToPrevious }) => {
-  // cons
-  // console.log('DateRange', dateStart)
-  // console.log('dateObjToString', dateObjToString(dateStart))
-  // console.log('weekStart', weekStart, typeof weekStart)
-
-  // weekStart = beautifyDate(weekStart)
-  // weekEnd = beautifyDate(weekEnd)
-
-  // console.log('dateStart', dateStart.format())
-  // console.log('dateEnd', dateEnd.format())
-
-
-  // console.log('toISOString', dateEnd.toISOString().slice(0, 10))
-  // console.log('toISOString', toISOString(dateEnd))
-  // console.log('beautifyDate', beautifyDate(dateEnd))
-
-
-
-  // console.log(dateStart.format('YYYY-MM-DD'))
-
-  // new Date().toISOString().slice(0, 10);
-  // console.log('------\n')
-  // console.log('weekEnd.toDate()', weekEnd.toDate(), typeof weekEnd.toDate())
-
+const DateRange = ({ dateStart, dateEnd, disablePrev, disableNext, onGoToNextWeek, onGoToPrevious }) => {
   return (
     <div className='dateRange d-flex align-items-start'>
-      <Icon
-        IconComponent={iconComponents.CaretLeft}
-        size='x-lg'
-        className='mr-2'
-        onClick={onGoToPrevious}
-      />
+      {disablePrev ? (
+        <Icon
+          IconComponent={iconComponents.CaretLeftOutline}
+          size='x-lg'
+          className='mr-2'
+        />
+      ) : (
+        <Icon
+          IconComponent={iconComponents.CaretLeft}
+          size='x-lg'
+          className='mr-2'
+          onClick={onGoToPrevious}
+        />
+      )}
       <time className='d-flex align-items-start'>
         <p>{beautifyDate(dateStart)}</p>
         <p className='mr-1 ml-1'> - </p>
@@ -48,7 +32,6 @@ const DateRange = ({ dateStart, dateEnd, disableNext, onGoToNextWeek, onGoToPrev
           IconComponent={iconComponents.CaretRightOutline}
           size='x-lg'
           className='ml-2'
-          onClick={() => onGoToNextWeek()}
         />
       ) : (
         <Icon
