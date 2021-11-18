@@ -1,5 +1,5 @@
+import { useState, Fragment } from 'react'
 import './TurnsTable.css'
-import { useState } from 'react'
 import { Table } from 'react-bootstrap'
 import { MButton, Icon, iconComponents, IIcon } from '../../../components'
 import TimePicker from 'react-bootstrap-time-picker';
@@ -50,7 +50,7 @@ const TurnsTable = ({ turns, onAddNewTurn, addingNewTurn, onSaveTurn, onCancel }
             // console.log(typeof turnId, typeof hourStart, turnId)
             const isValidId = turnId >= 0
             return (
-              <>
+              <Fragment key={turnId}>
                 {isValidId && <tr style={{ fontWeight: '500' }}>
                   <td><strong>{turnId}</strong></td>
                   <td>{hourStart}</td>
@@ -76,7 +76,7 @@ const TurnsTable = ({ turns, onAddNewTurn, addingNewTurn, onSaveTurn, onCancel }
                     </td>
                   </tr>
                 )}
-              </>
+              </Fragment>
             )
           })}
           {/* 

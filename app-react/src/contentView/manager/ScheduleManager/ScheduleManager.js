@@ -49,67 +49,29 @@ const momentDisablePrevious = moment(new Date('2021-11-17'))
 // console.log('mondayInTwoWeeks', mondayInTwoWeeks)
 
 const ScheduleManager = () => {
-  // const [employeeSchedules, setEmployeeSchedules] = useState(employeeScheduleArray)
-  // const [turns, setTurns] = useState(turnArray)
-  const [employeeSchedules, setEmployeeSchedules] = useState([])
-  const [turns, setTurns] = useState([])
-  const [employeeToEdit, setEmployeeToEdit] = useState(undefined)
-  const [weekSchedule, setWeekSchedule] = useState([]) //array of json, at least containing id as desired
-
-  // turns
-  const [addingNewTurn, setAddingNewTurn] = useState(false)
-  const [newTurn, setNewTurn] = useState({ turnId: -1, hourStart: undefined })
-
-  // moments
-  const [mCurrent, setMCurrent] = useState(moment())
+  // moment.js
+  const [weekSchedule, setWeekSchedule] = useState([]); // array of moments of the current week
+  const [mCurrent, setMCurrent] = useState(moment()) // the current moment
   const [mWeekStart, setMWeekStart] = useState(startOfThisWeek.clone()) //always a tuesday
   const [mWeekEnd, setMWeekEnd] = useState(endOfThisWeek.clone()) //always a monday
 
+  // employee
+  const [employeeSchedules, setEmployeeSchedules] = useState([]); // array of employee with their week date schedules
+  const [editingEmployee, setEditingEmployee] = useState(false); // determines if an employee is being modified
+  const [editedEmployee, setEditedEmployee] = useState(undefined); // the employee with schedule to be modified
+
+  // turns
+  const [turns, setTurns] = useState([]); // the turns of this manager entity 
+  const [addingNewTurn, setAddingNewTurn] = useState(false) // determines if a turn is being added
+  const [newTurn, setNewTurn] = useState({ turnId: -1, hourStart: undefined }) // the new turn being created
+
   // context
   const { authState } = useContext(AuthContext)
-  const { userId } = authState;
 
-  // initializing week schedule dates
-  useEffect(() => {
-    if (mWeekStart) {
-      // console.log('mWeekStart', mWeekStart)
-      // console.log('mWeekEnd', mWeekEnd, '\n')
-      // set the schedule of the week starting with mWeekStart
-      const week = [];
-      let currentDay = mWeekStart.clone();
-      const nextTuesday = mWeekEnd.clone().add(1, 'day')
-      // console.log('nextTuesday', nextTuesday, '\n')
-      while (currentDay.isBefore(nextTuesday, 'day')) {
-        week.push(currentDay.clone())
-        currentDay.add(1, 'day')
-      }
-      // console.log('week', week)
-      setWeekSchedule(week)
-
-      const getWeekSchedule = async () => {
-        const scheduleId = getScheduleIdOfMoment(mWeekStart)
-        const url = server.getUserSchedule(scheduleId);
-        console.log('url', url)
-        axios.get(url).then(res => {
-          // console.log('res.data.schedules', res.data.schedules)
-          if (res.data.schedules) {
-            const schedules = res.data.schedules
-            // console.log('schedules', schedules)
-            setEmployeeSchedules(schedules)
-          }
-          else setEmployeeSchedules([])
-        })
-          .catch(err => console.log(err))
-      }
-      // setTimeout(() => getWeekSchedule(), 2000)
-      getWeekSchedule()
-    }
-  }, [mCurrent])
-
-
+  /** Initializing the manager's turns once. */
+  const userId = authState.userId;
   useEffect(() => {
     if (userId) {
-      // here fetch the schedule turns once
       const getUserTurns = async () => {
         // console.log('authState', authState)
         console.log('-userId', userId)
@@ -129,6 +91,43 @@ const ScheduleManager = () => {
   }, [userId])
 
 
+  /** Initializing array of all employee schedules for the current week. */
+  useEffect(() => {
+    if (mWeekStart) {
+      // console.log('mWeekStart', mWeekStart)
+      // console.log('mWeekEnd', mWeekEnd, '\n')
+      // set the schedule of the week starting with mWeekStart
+      const week = [];
+      let currentDay = mWeekStart.clone();
+      const nextTuesday = mWeekEnd.clone().add(1, 'day')
+      while (currentDay.isBefore(nextTuesday, 'day')) {
+        week.push(currentDay.clone())
+        currentDay.add(1, 'day')
+      }
+      // console.log('week', week)
+      setWeekSchedule(week)
+
+      const getWeekSchedule = async () => {
+        const scheduleId = getScheduleIdOfMoment(mWeekStart)
+        const url = server.getUserSchedule(scheduleId);
+        console.log('url', url)
+        axios.get(url).then(res => {
+          if (res.data.schedules) {
+            const schedules = res.data.schedules
+            // console.log('schedules', schedules)
+            setEmployeeSchedules(schedules)
+          }
+          else setEmployeeSchedules([])
+        })
+          .catch(err => console.log(err))
+      }
+      // setTimeout(() => getWeekSchedule(), 2000)
+      getWeekSchedule()
+    }
+  }, [mCurrent])
+
+
+  /** Applied when a turn has been created. */
   useEffect(() => {
     if (!addingNewTurn && newTurn.hourStart) {
       // fetch create or update turn table
@@ -160,27 +159,48 @@ const ScheduleManager = () => {
   }, [turns])
 
 
+  /** Applied when saving the changes made to the schedule of a particular employee. */
   useEffect(() => {
-    if (employeeToEdit) {
-      console.log('employeeToEdit', employeeToEdit)
-      const employeeIndex = employeeSchedules.findIndex(emp => emp.userId === employeeToEdit.userId);
-      employeeSchedules[employeeIndex].weekDates = employeeToEdit.weekDates
+    if (!editingEmployee && editedEmployee) {
+      console.log('editedEmployee', editedEmployee)
+      const employee = employeeSchedules.find(emp => emp.userId === editedEmployee.userId);
+      employee.weekDates = editedEmployee.weekDates
 
       console.log('Now update the schedule of this employee on the database')
+      const setUserSchedule = async () => {
+        console.log('weekDates', employee.weekDates);
+        // const schedule_id = getScheduleIdOfDate(employeeSchedules[employeeIndex].weekDates[0]);
+        const schedule_id = getScheduleIdOfMoment(mWeekStart);
+        const user_id = employee.userId;
+        const is_hour_lunch = false;
+
+        console.log('schedule_id', schedule_id);
+        console.log('user_id', user_id);
+        const url = server.setUserSchedule(); ///protected/schedule/week
+        console.log('url', url);
+        // console.log('employee.weekDates', employee.weekDates)
+
+        axios.post(url, {
+          user_id,
+          schedule_id,
+          is_hour_lunch,
+          ...employee.weekDates
+        })
+          .then(res => {
+            console.log('res', res)
+            // setEditedEmployee(undefined)
+          })
+        //   .catch(err => console.log(err))
+        setEditedEmployee(undefined)
+      }
+      setUserSchedule()
     }
-  }, [employeeToEdit])
+  }, [editedEmployee])
 
 
-  // functions to handle schedule turns modification and schedule editing (handle state management)
-  const openScheduleEdit = employee => {
-    console.log('turns.length', turns.length)
-    if (turns[turns.length - 1].turnId === -1)
-      removeAddedTurn()
-    setEmployeeToEdit(employee)
-  }
-
-  const closeScheduleEdit = () => setEmployeeToEdit(null)
-
+  /************************************************/
+  /*              General Functions               */
+  /************************************************/
 
   const goToPrevious = () => {
     setMCurrent(currMoment => {
@@ -190,7 +210,6 @@ const ScheduleManager = () => {
       return prevMoment
     })
   }
-
 
   const goToNextWeek = () => {
     // console.log('-mWeekStart', mWeekStart)
@@ -206,6 +225,10 @@ const ScheduleManager = () => {
     }
   }
 
+
+  /************************************************/
+  /*           Schedule Turns Functions           */
+  /************************************************/
 
   const saveTurn = (hourStart, hourEnd, lunchHour) => {
     // console.log('saveTurn', hourStart, hourEnd, lunchHour)
@@ -263,11 +286,13 @@ const ScheduleManager = () => {
     })
   }
 
+
   const removeAddedTurn = () => {
     turns.pop();
     setTurns(turns)
     setAddingNewTurn(false)
   }
+
 
   const addNewTurn = () => {
     // setTurns(prev => {
@@ -280,8 +305,31 @@ const ScheduleManager = () => {
   }
 
 
+  /************************************************/
+  /*           Schedule Edit Functions            */
+  /************************************************/
 
-  /** TO BE WORKED ON */
+  const openScheduleEdit = employee => {
+    console.log('turns.length', turns.length)
+    if (turns[turns.length - 1].turnId === -1)
+      removeAddedTurn()
+    setEditedEmployee(employee)
+    setEditingEmployee(true)
+  }
+
+
+  const closeScheduleEdit = () => {
+    setEditedEmployee(undefined);
+    setEditingEmployee(false)
+  }
+
+
+  const saveScheduleOfEmployee = emp => {
+    setEditingEmployee(false)
+    setEditedEmployee(emp)
+  }
+
+
   const addWeekDateIntoList = (day) => {
     if (turns.length > 0) {
       const newWeekDate = {
@@ -291,7 +339,7 @@ const ScheduleManager = () => {
         hourLunch: turns[turns.length - 1].lunch
       }
 
-      setEmployeeToEdit(emp => {
+      setEditedEmployee(emp => {
         const newEmployee = { ...emp }
         newEmployee.weekDates[day] = newWeekDate
         return newEmployee
@@ -360,14 +408,14 @@ const ScheduleManager = () => {
         onSaveTurn={saveTurn}
         onCancel={removeAddedTurn}
       />
-      {employeeToEdit &&
+      {editingEmployee &&
         <ScheduleEdit
-          employee={employeeToEdit}
+          employee={editedEmployee}
           turns={turns}
           dateStart={mWeekStart.toDate()}
           dateEnd={mWeekEnd.toDate()}
           onWeekDateAdd={addWeekDateIntoList}
-          onSaveChanges={emp => setEmployeeToEdit(emp)}
+          onSaveChanges={modifiedEmp => saveScheduleOfEmployee(modifiedEmp)}
           onCloseScheduleEdit={closeScheduleEdit}
         />}
     </div >

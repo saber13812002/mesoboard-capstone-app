@@ -43,9 +43,13 @@ const ScheduleEdit = ({ employee, turns, dateStart, dateEnd, onWeekDateAdd, onWe
       // console.log('newDateEnd', newDateEnd)
       // console.log('newDateLunch', newDateLunch)
 
-      newEmployee.weekDates[day].dateStart = newDateStart.toUTCString();
-      newEmployee.weekDates[day].dateEnd = newDateEnd.toUTCString();
-      newEmployee.weekDates[day].dateLunch = newDateLunch.toUTCString();
+      newEmployee.weekDates[day].dateStart = newDateStart.toISOString();
+      newEmployee.weekDates[day].dateEnd = newDateEnd.toISOString();
+      newEmployee.weekDates[day].dateLunch = newDateLunch.toISOString();
+
+      // console.log('newEmployee.weekDates[day].dateStart', newEmployee.weekDates[day].dateStart)
+      // console.log('newEmployee.weekDates[day].dateEnd', newEmployee.weekDates[day].dateEnd)
+      // console.log('newDateLunch', newDateLunch)
 
       console.log('newEmployee', newEmployee)
       return newEmployee

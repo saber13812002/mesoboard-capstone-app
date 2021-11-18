@@ -6,12 +6,16 @@ class UrlConstants {
   static PROTECTED = '/protected/';
 
   // exports
+  static SET_USER_SCHEDULES = 'schedule/week';
   static ALL_USER_SCHEDULES = 'schedule/week/all/<schedule_id>';
   static GET_TURNS = 'schedule/turn/<user_id>';
   static SET_TURN = 'schedule/turn/all';
 }
 
 export class ServerRoutes {
+  static setUserSchedule() {
+    return UrlConstants.PROTECTED + UrlConstants.SET_USER_SCHEDULES;
+  }
   static getUserSchedule(schedule_id) {
     return UrlConstants.PROTECTED + UrlConstants.ALL_USER_SCHEDULES.replace('<schedule_id>', schedule_id);
   }

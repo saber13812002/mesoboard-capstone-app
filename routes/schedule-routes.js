@@ -10,7 +10,7 @@ module.exports = app => {
     .get(security.verifyJWT)
 
   app.route('/protected/schedule/week')
-    .post(schedule.createUserSchedule)
+    .post(schedule.setUserSchedule)
 
   app.route('/protected/schedule/week/all/:schedule_id')
     .get(schedule.getUserSchedules)

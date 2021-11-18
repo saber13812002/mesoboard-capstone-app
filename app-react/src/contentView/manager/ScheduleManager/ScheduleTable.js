@@ -17,8 +17,8 @@ const ScheduleTable = ({ employeeSchedules, onOpenScheduleEdit }) => {
     // let weekDatesArr = [0, 1, 2, 3, 4, 5, 6].map(day => weekDates[day] ? weekDates[day] : null)
 
     return (
-      <Tr>
-        <Td className='employeeNameTd' key={key} onClick={() => onOpenScheduleEdit(scheduleInfo)}>
+      <Tr key={key}>
+        <Td className='employeeNameTd' onClick={() => onOpenScheduleEdit(scheduleInfo)}>
           <p className='employeeName'>
             {employeeName}
           </p>

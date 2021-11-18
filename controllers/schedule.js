@@ -3,7 +3,7 @@ const { any } = require('bluebird');
 const db = require('../config/postgres')();
 
 // no funcionaria con  "times": "630,1500,110|1300,2130,1700",
-exports.createUserSchedule = (req, res, next) => {
+exports.setUserSchedule = (req, res, next) => {
   console.log('createUserSchedule')
   const schedule_id = req.body.schedule_id;
   const user_id = req.body.user_id;
@@ -16,8 +16,8 @@ exports.createUserSchedule = (req, res, next) => {
   const sunday = req.body['5'];
   const monday = req.body['6'];
 
-  const dateArrays = [tuesday, wednesday, thursday, friday, saturday, sunday, monday]
-
+  const datesArray = [tuesday, wednesday, thursday, friday, saturday, sunday, monday]
+  console.log('datesArray', datesArray)
   /**   
     EXPECTED RESULT:
     dates = [
@@ -33,11 +33,17 @@ exports.createUserSchedule = (req, res, next) => {
     ]
   */
   let dates = []
-  dateArrays.forEach(datesStr => {
-    console.log(datesStr)
-    if (datesStr)
-      dates.push(...datesStr.split(','))
+  datesArray.forEach(datesObj => {
+    console.log('datesObj', datesObj)
+
+    if (datesObj) {
+      console.log('')
+      console.log('datesObj values', Object.values(datesObj))
+      console.log('...Object.values(datesObj)', ...Object.values(datesObj))
+      dates.push(...Object.values(datesObj));
+    }
   })
+  console.log(...dates)
 
   /*
     EXPECTED RESULT:
@@ -68,12 +74,6 @@ exports.createUserSchedule = (req, res, next) => {
   }
   q += ' returning *'
   // console.log(q)
-
-  console.log(' ')
-  console.log(' ')
-  console.log(' ')
-  console.log(' ')
-  // console.log(...dates)
 
   // res.status(200).json({ status: 'Developing...' })
   return db.any(q, [user_id, schedule_id, ...dates])
