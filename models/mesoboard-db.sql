@@ -1,45 +1,58 @@
--- CREATE DATABASE mesodb;
+-- /* create db  */
+-- CREATE DATABASE IF NOT EXISTS mesodb;
+
+-- function
+CREATE OR REPLACE FUNCTION get_week_schedule_primary_key(ts timestamp) RETURNS integer AS $$
+BEGIN
+	RETURN 10000 * EXTRACT(YEAR FROM ts) +
+		100 * EXTRACT(MONTH FROM ts) +
+		EXTRACT(DAY FROM ts);
+END;
+$$ LANGUAGE plpgsql;
+
 
 CREATE TABLE users (
   user_id         SERIAL PRIMARY KEY,
   first_name      TEXT,
   last_name       TEXT,
   email           TEXT,
-  password        TEXT,
   creation_date   DATE,
   is_deleted      BOOLEAN,
   user_type       TEXT,
+--   code        BOOLEAN,
   gender          TEXT,
+  password        TEXT,
   salt            TEXT
 );
-
  -- /* tokens */
 CREATE TABLE tokens (
   token_id        SERIAL PRIMARY KEY,
   token           TEXT UNIQUE NOT NULL,
   user_id         INTEGER REFERENCES users(user_id) NOT NULL,
   expiration_date TIMESTAMP,
-  -- user_type       TEXT
+  user_type       TEXT
+  -- UNIQUE uniqueTokens (token)
 );
 
--- /* administrators */
--- CREATE TABLE admins (
+-- -- /* admin */
+-- CREATE TABLE admin (
 --   admin_id        SERIAL PRIMARY KEY,
 --   user_id         INTEGER REFERENCES users(user_id),
+--   admin_type      TEXT
+-- );
+--
+-- -- /* manager */
+-- CREATE TABLE manager (
+--   manager_id      SERIAL PRIMARY KEY,
+--   user_id         INTEGER REFERENCES users(user_id),
+--   is_assistant    BOOLEAN
 -- );
 
--- /* managers */
-CREATE TABLE managers (
-  manager_id      SERIAL PRIMARY KEY,
-  user_id         INTEGER REFERENCES users(user_id),
-  is_assistant    BOOLEAN,
-);
-
--- -- /* employees */
--- CREATE TABLE employees (
---   employee_id    SERIAL PRIMARY KEY,
---   user_id         INTEGER REFERENCES users(user_id),
---   phone           TEXT
+-- -- /* employee */
+-- CREATE TABLE employee (
+--   employee_id      SERIAL PRIMARY KEY,
+--   user_id         INTEGER REFERENCES users(user_id)
+-- --   employee_code       TEXT
 -- );
 
 CREATE TABLE reset_password (
@@ -48,28 +61,13 @@ CREATE TABLE reset_password (
   request_date      TIMESTAMP
 );
 
+
 CREATE TABLE permissions (
   permission_id     SERIAL PRIMARY KEY,
   email             TEXT,
   code              TEXT UNIQUE,
   last_update       TIMESTAMP,
   permission_type   TEXT
-);
-
-CREATE TABLE notifications (
-  notification_id   SERIAL PRIMARY KEY,
-  title             TEXT,
-  body              TEXT,
-  sent_date         TIMESTAMP,
-  type              TEXT
-);
-
-create table user_notifications (
-  user_id         INTEGER REFERENCES users(user_id),
-  notification_id INTEGER REFERENCES notifications(notification_id),
-  seen            BOOLEAN,
-  seen_date       TIMESTAMP,
-  PRIMARY KEY (user_id, notification_id)
 );
 
 -- CREATE TABLE activity_logs (
@@ -80,32 +78,56 @@ create table user_notifications (
 -- );
 
 
--- CREATE EXTENSION IF NOT EXISTS "pgcrypto";
+CREATE TABLE schedule (
+--     schedule_id    INTEGER PRIMARY KEY,
+	schedule_id    SERIAL PRIMARY KEY,
+    week_start          DATE NOT NULL,
+    week_end            DATE NOT NULL,
+    is_approved         BOOLEAN
+);
 
-insert into permissions (email, code, permission_type) values('kevin.ramirez3@upr.edu', 'provi_123456', 'admin');
+create table user_schedule (
+--     user_schedule_id        INTEGER REFERENCES schedule(schedule_id),
+    user_schedule_id        SERIAL PRIMARY KEY,
+    user_id                 INTEGER REFERENCES users(user_id),
+    schedule_id             INTEGER REFERENCES schedule(schedule_id),
+    date_start              TIMESTAMP,
+    date_end                TIMESTAMP,
+    date_lunch              TIMESTAMP,
+    is_hour_lunch           BOOLEAN,
+    num_day_in_week         INTEGER
+);
 
+WITH date1 AS (
+	SELECT generate_series('2021-11-09'::timestamp, '2021-12-29'::timestamp, '7 day') AS ts
+)
+, date2 AS (
+	SELECT
+	    get_week_schedule_primary_key(ts) AS schedule_id,
+        ts AS week_start,
+	    ts + INTERVAL '6 DAY' AS week_end,
+	    FALSE AS is_approved
+	FROM date1
+)
+INSERT INTO schedule
+	SELECT
+        schedule_id,
+        week_start,
+        week_end,
+        is_approved
+	FROM date2;
 
+CREATE TABLE turn (
+--     turn_id         SERIAL PRIMARY KEY,
+    turn_id         INTEGER NOT NULL, -- specified through the frontend
+--     turn_id         INTEGER NOT NULL UNIQUE, -- specified through the frontend
+    user_id         INTEGER REFERENCES users(user_id),
+    hour_start      TIME,
+    hour_end        TIME,
+    hour_lunch      TIME
+);
 
+CREATE EXTENSION IF NOT EXISTS "pgcrypto";
 
+insert into permissions (email, code, permission_type) values('kevin.ramirez3@upr.edu', '123456', 'admin');
 
-
-
-
-
-
-
-
--- create table users(
---   user_id serial not null primary key, 
---   code integer not null, 
---   first_name varchar(20),
---   last_name varchar(30), 
---   phone varchar(14),
---   email varchar(30) unique, 
---   password varchar(130), 
---   restaurant varchar(40),
---   user_type varchar(10)
--- );
-
--- insert into users(code, first_name, last_name, phone, email, password, restaurant, user_type)
--- values(1234, 'first', 'last', '7874307478', 'test@gmail.com', 'password', 'hatillo', 'manager');

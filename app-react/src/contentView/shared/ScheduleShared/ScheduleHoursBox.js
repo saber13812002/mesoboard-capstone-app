@@ -2,21 +2,28 @@ import './ScheduleHoursBox.css'
 import { get12HourFormatOfDate } from '../../../services/scheduleService'
 
 const ScheduleHoursBox = ({ weekDate, showLunchMins = true, className }) => {
-  // console.log('weekDate', weekDate)
-  // console.log('get12HourFormatOfDate', get12HourFormatOfDate(weekDate.dateStart))
-  const hourStart = get12HourFormatOfDate(weekDate.dateStart)
-  const hourEnd = get12HourFormatOfDate(weekDate.dateEnd)
-  const hourLunch = get12HourFormatOfDate(weekDate.dateLunch)
+  // console.log('weekDate', weekDate);
+  const { dateStart, dateEnd, dateLunch, isHourLunch } = weekDate;
+
+  // start and end of work schedule
+  const hourStart = get12HourFormatOfDate(dateStart);
+  const hourEnd = get12HourFormatOfDate(dateEnd);
+
+  // start and end of lunch time
+  const hourLunchStart = get12HourFormatOfDate(dateLunch);
+  const lunchEndDate = new Date(dateLunch);
+  lunchEndDate.setMinutes(lunchEndDate.getMinutes() + (isHourLunch ? 60 : 30))
+  const hourLunchEnd = get12HourFormatOfDate(lunchEndDate);
 
   return (
     <div className={`scheduleHoursBox ${className}`}>
       <span>{hourStart}-{hourEnd}</span>
       <br />
       {showLunchMins && (<>
-        <span>Meal:{weekDate.isHourLunch ? '60' : '30'}Mins</span>
+        <span>Meal:{isHourLunch ? 60 : 30}Mins</span>
         <br />
       </>)}
-      <span>({hourLunch}-{hourLunch})</span>
+      <span>({hourLunchStart}-{hourLunchEnd})</span>
     </div>
   )
 }

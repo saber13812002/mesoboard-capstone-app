@@ -210,7 +210,7 @@ exports.getUserTurns = (req, res, next) => {
 
   // res.status(200).json({ status: 'success', message: 'Developing...' })
   return db.any(q, user_id).then(data => {
-    console.log('data', data)
+    console.log('turns data', data)
     const turns = data.map((d, i) => {
       return {
         turnId: i + 1,
@@ -219,6 +219,7 @@ exports.getUserTurns = (req, res, next) => {
         hourLunch: shortenFull24HoursTo12(d.hour_lunch)
       }
     })
+    console.log('turns', turns)
     res.status(200).json({ turns, status: 'success' })
   })
     .catch(err => next(err))
@@ -236,7 +237,7 @@ exports.getWeekSchedule = (req, res, next) => {
   // const latestTuesday = getLatestTuesdayDate(date)
   // console.log('latestTuesday', latestTuesday)
 
-  // date.setDate(date.getDate() - 1)
+  // date.setDate(date.getUTCDate() - 1)
   // const latestTuesday = getLatestTuesdayDate(date)
   // console.log('latestTuesdayMoment', latestTuesday)
   // console.log('getNextDateOf', getNextDateOf(latestTuesday))
@@ -294,24 +295,22 @@ exports.getWeekSchedule = (req, res, next) => {
 // const toISOString = d => d.toISOString().slice(0, 10)
 
 const shortenFull24HoursTo12 = h => {
-  const split = h.split(':')
-  let hour = Number(split[0])
-  const minute = split[1]
-  let period = 'AM'
-  if (hour > 12) {
-    hour -= 12;
-    period = 'PM'
-  }
+  const split = h.split(':');
+  let hour = Number(split[0]);
+  let period = 'AM';
+  if (hour >= 12) period = 'PM';
+  if (hour > 12) hour -= 12;
 
+  const minute = split[1];
   return hour + ':' + minute + ' ' + period
 }
 
-const isDateInstance = d => Object.prototype.toString.call(d) === '[object Date]'
+const isDateInstance = d => Object.prototype.toString.call(d) === '[object Date]';
 
-const setHoursOf = (d, h, m, s) => {
-  console.log('h - 4', h - 4)
-  d.setHours(h - 4, m, s || 0)
-}
+// const setHoursOf = (d, h, m, s) => {
+//   console.log('h - 4', h - 4)
+//   d.setHours(h - 4, m, s || 0)
+// }
 
 const getDateId = d => {
   // console.log('isDateInstance(date)', isDateInstance(date), isDateInstance({ n: 1 }))
@@ -324,24 +323,24 @@ const getDateId = d => {
 
 const getPrevDateOf = d => {
   let date = new Date(d.valueOf())
-  date.setDate(date.getDate() - 1);
+  date.setDate(date.getUTCDate() - 1);
   return date;
 }
 
 const getNextDateOf = d => {
   let date = new Date(d.valueOf())
-  date.setDate(date.getDate() + 1);
+  date.setDate(date.getUTCDate() + 1);
   return date;
 }
 
 const getLatestTuesdayDate = d => {
-  // d.setDate(d.getDate() - 1);
+  // d.setDate(d.getUTCDate() - 1);
   // console.log('d', d)
   // console.log('d.getDay', d.getDay())
   let currDate = d;
   console.log('dude', currDate)
   while (currDate.getDay() != 2) {
-    currDate.setDate(currDate.getDate() - 1);
+    currDate.setDate(currDate.getUTCDate() - 1);
     // console.log('currDate', currDate)
   }
   // console.log('res', currDate)
@@ -351,7 +350,7 @@ const getLatestTuesdayDate = d => {
 
 
 // const getFollowingTuesdayDate = d => {
-//   const followingTuesday = d.getDate() + (3 - d.getDay() + 1) + 5;
+//   const followingTuesday = d.getUTCDate() + (3 - d.getDay() + 1) + 5;
 //   d.setDate(followingTuesday)
 //   return d
 // }
@@ -376,7 +375,7 @@ const convertDateToJson = d => {
   return {
     year: parsed.getUTCFullYear(),
     month: addLeadingZeros(parsed.getMonth() + 1),
-    day: addLeadingZeros(parsed.getDate()),
+    day: addLeadingZeros(parsed.getUTCDate()),
     // hour: addLeadingZeros(parsed.getHours()),
     // minute: addLeadingZeros(parsed.getMinutes()),
     // second: addLeadingZeros(parsed.getSeconds())

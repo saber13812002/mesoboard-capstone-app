@@ -68,19 +68,18 @@ const ScheduleManager = () => {
   // context
   const { authState } = useContext(AuthContext)
 
-  /** Initializing the manager's turns once. */
+  /** Initializing the manager TURNS once. */
   const userId = authState.userId;
   useEffect(() => {
     if (userId) {
       const getUserTurns = async () => {
         // console.log('authState', authState)
-        console.log('-userId', userId)
+        // console.log('-userId', userId)
         const url = server.getUserTurns(userId);
-        console.log('url', url)
+        // console.log('url', url)
         axios.get(url)
           .then(res => {
             console.log('res.data.turns', res.data.turns)
-
             setTurns(res.data.turns)
           })
           .catch(err => console.log(err))
@@ -91,7 +90,7 @@ const ScheduleManager = () => {
   }, [userId])
 
 
-  /** Initializing array of all employee schedules for the current week. */
+  /** Initializing array of EMPLOYEE schedules for the current week. */
   useEffect(() => {
     if (mWeekStart) {
       // console.log('mWeekStart', mWeekStart)
@@ -110,7 +109,7 @@ const ScheduleManager = () => {
       const getWeekSchedule = async () => {
         const scheduleId = getScheduleIdOfMoment(mWeekStart)
         const url = server.getUserSchedule(scheduleId);
-        console.log('url', url)
+        // console.log('url', url)
         axios.get(url).then(res => {
           if (res.data.schedules) {
             const schedules = res.data.schedules
@@ -127,17 +126,17 @@ const ScheduleManager = () => {
   }, [mCurrent])
 
 
-  /** Applied when a turn has been created. */
+  /** TURN has been created. */
   useEffect(() => {
     if (!addingNewTurn && newTurn.hourStart) {
       // fetch create or update turn table
       const saveTurns = async () => {
         const turnId = getTurnIdOfHour(newTurn.hourStart)
         const { hourStart, hourEnd, hourLunch } = newTurn
-        console.log('turnId', turnId)
-        console.log('userId', userId)
+        // console.log('newTurn.hourStart', newTurn.hourStart)
+        // console.log('userId', userId)
         const url = server.setTurn();
-        console.log('url', url)
+        // console.log('url', url)
         // console.log('get24HourFormatOfHour(hourStart)', get24HourFormatOfHour(hourStart))
         axios.post(url, {
           user_id: userId,
@@ -159,25 +158,25 @@ const ScheduleManager = () => {
   }, [turns])
 
 
-  /** Applied when saving the changes made to the schedule of a particular employee. */
+  /** Saving the changes made to the schedule of a particular employee. */
   useEffect(() => {
     if (!editingEmployee && editedEmployee) {
-      console.log('editedEmployee', editedEmployee)
+      // console.log('editedEmployee', editedEmployee)
       const employee = employeeSchedules.find(emp => emp.userId === editedEmployee.userId);
       employee.weekDates = editedEmployee.weekDates
 
-      console.log('Now update the schedule of this employee on the database')
+      // console.log('Now update the schedule of this employee on the database')
       const setUserSchedule = async () => {
-        console.log('weekDates', employee.weekDates);
+        // console.log('weekDates', employee.weekDates);
         // const schedule_id = getScheduleIdOfDate(employeeSchedules[employeeIndex].weekDates[0]);
         const schedule_id = getScheduleIdOfMoment(mWeekStart);
         const user_id = employee.userId;
         const is_hour_lunch = false;
 
-        console.log('schedule_id', schedule_id);
-        console.log('user_id', user_id);
+        // console.log('schedule_id', schedule_id);
+        // console.log('user_id', user_id);
         const url = server.setUserSchedule(); ///protected/schedule/week
-        console.log('url', url);
+        // console.log('url', url);
         // console.log('employee.weekDates', employee.weekDates)
 
         axios.post(url, {
@@ -187,7 +186,7 @@ const ScheduleManager = () => {
           ...employee.weekDates
         })
           .then(res => {
-            console.log('res', res)
+            // console.log('res', res)
             // setEditedEmployee(undefined)
           })
         //   .catch(err => console.log(err))
@@ -256,8 +255,8 @@ const ScheduleManager = () => {
       turnClone = turnClone.sort((a, b) => {
         // console.log('\n\n')
         const is_a_am = a.hourStart.includes('AM')
-        const is_b_am = a.hourStart.includes('AM')
-        const is_a_pm = b.hourStart.includes('PM')
+        const is_a_pm = a.hourStart.includes('PM')
+        const is_b_am = b.hourStart.includes('AM')
         const is_b_pm = b.hourStart.includes('PM')
 
         // do algorithm to determine order depending on AM or PM
@@ -273,7 +272,9 @@ const ScheduleManager = () => {
 
       // store new turn id for fetch insert on useEffect
       const turnId = getTurnIdOfHour(lastTurn.hourStart)
-      console.log('turnId', turnId)
+
+      console.log('lastTurn', lastTurn)
+      // console.log('turnId', turnId)
       setNewTurn({
         turnId,
         hourStart: lastTurn.hourStart,
@@ -286,13 +287,11 @@ const ScheduleManager = () => {
     })
   }
 
-
   const removeAddedTurn = () => {
     turns.pop();
     setTurns(turns)
     setAddingNewTurn(false)
   }
-
 
   const addNewTurn = () => {
     // setTurns(prev => {
@@ -310,8 +309,8 @@ const ScheduleManager = () => {
   /************************************************/
 
   const openScheduleEdit = employee => {
-    console.log('turns.length', turns.length)
-    if (turns[turns.length - 1].turnId === -1)
+    // console.log('turns.length', turns.length)
+    if (turns.length > 0 && turns[turns.length - 1].turnId === -1)
       removeAddedTurn()
     setEditedEmployee(employee)
     setEditingEmployee(true)
@@ -347,7 +346,7 @@ const ScheduleManager = () => {
     }
   }
 
-  console.log('weekSchedule', weekSchedule)
+  // console.log('weekSchedule', weekSchedule)
   return (
     <div>
       {/* section for the weekDateRange component and the buttons */}
