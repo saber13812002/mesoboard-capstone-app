@@ -9,7 +9,6 @@ import ContentView from './ContentView/ContentView'
 // sidebar
 import Sidebar from './Sidebar/Sidebar'
 import SidebarList from './Sidebar/SidebarList'
-import SidebarListItem from './Sidebar/SidebarListItem'
 import SidebarProfileSection from './Sidebar/SidebarProfileSection'
 
-export { Layout, Navbar, ContentView, Sidebar, SidebarList, SidebarListItem, SidebarProfileSection }
+export { Layout, Navbar, ContentView, Sidebar, SidebarList, SidebarProfileSection }
