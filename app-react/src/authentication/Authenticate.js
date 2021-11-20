@@ -22,6 +22,7 @@ const Authenticate = () => {
     if (verificationFetch !== undefined && verificationFetch) {
       console.log('about to fetch with code: ', code)
       verifyPermission(code)
+      setVerificationFetch(false)
     }
   }, [verificationFetch]) // quizas funciona sin tener que usar verificatoinFetch
 
@@ -60,6 +61,7 @@ const Authenticate = () => {
 
   const handleRegistration = (e) => {
     console.log('handleRegistration')
+    // to register a manager - hardcoded
     // const userForm = {
     //   email: 'kevin.ramirez3@upr.edu',
     //   password: 'meso2021',
@@ -67,6 +69,8 @@ const Authenticate = () => {
     //   first_name: 'Kevin',
     //   last_name: 'Ramirez',
     // }
+
+    // to register an employee - hardcoded
     const userForm = {
       email: 'employee@gmail.com',
       password: 'meso2021',

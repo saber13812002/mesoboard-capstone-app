@@ -19,13 +19,15 @@ const profiles = [{
 
 const columns = [{
   dataField: 'employeeName',
-  text: 'Employee'
+  text: 'Employee',
+  sort: true
 }, {
   dataField: 'email',
   text: 'Email'
 }, {
   dataField: 'creationDate',
-  text: 'Fecha de creación'
+  text: 'Fecha de creación',
+  sort: true
 }, {
   dataField: 'userType',
   text: 'Tipo de usuario'
@@ -48,7 +50,7 @@ const UserPermissionsManager = () => {
   return (
     <>
       {!addingNewPermission && <div className='userPermissionsManager'>
-        <BootstrapTable responsive bordered={false} keyField='dataField' data={profiles} columns={columns} />
+        <BootstrapTable responsive bootstrap4 bordered={false} keyField='email' data={profiles} columns={columns} />
         <div style={{ marginTop: '-40px' }}>
           <MButton
             onClick={handleAddNewPermission}
