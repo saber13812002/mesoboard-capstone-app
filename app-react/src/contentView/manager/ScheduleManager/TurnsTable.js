@@ -29,7 +29,7 @@ const TurnsTable = ({ turns, onAddNewTurn, addingNewTurn, onSaveTurn, onCancel }
     // console.log(e, hour)
   }
 
-  console.log('<turns>', turns)
+  // console.log('<turns>', turns)
   return (
     <div className='scheduleTurns'>
       <h5>TURNOS</h5>
@@ -91,7 +91,7 @@ const TurnsTable = ({ turns, onAddNewTurn, addingNewTurn, onSaveTurn, onCancel }
           )} */}
         </tbody>
       </Table>
-      {!addingNewTurn && <div className='ml-1 pt-2' style={{ marginTop: '-48px' }}>
+      {!addingNewTurn && <div className='ml-2 pt-2' style={{ marginTop: '-48px' }}>
         <MButton
           onClick={onAddNewTurn}
           IconComponent={iconComponents.Plus}
@@ -101,7 +101,7 @@ const TurnsTable = ({ turns, onAddNewTurn, addingNewTurn, onSaveTurn, onCancel }
         // style={{ marginTop: '5px', marginLeft: '8px' }}
         />
       </div>}
-      {addingNewTurn && <div className='ml-1 pt-2' style={{ marginTop: '-48px' }}>
+      {addingNewTurn && <div className='ml-2 pt-2' style={{ marginTop: '-48px' }}>
         <MButton
           onClick={onCancel}
           text='Cancel'

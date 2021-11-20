@@ -1,78 +1,69 @@
 import './ScheduleTable.css'
-import { Table, Thead, Tbody, Tr, Th, Td } from 'react-super-responsive-table';
-import 'react-super-responsive-table/dist/SuperResponsiveTableStyle.css';
+import { Table } from 'react-bootstrap'
 import { ScheduleHoursBox } from '../..';
 import { iconComponents, MButton } from '../../../components'
 
 const tableHeaders = ['Employee', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday', 'Monday', 'Total Hours']
 
 const ScheduleTable = ({ employeeSchedules, onOpenScheduleEdit }) => {
+  console.log('employeeSchedules', employeeSchedules)
   /** Displays the employee schedule hours for each day of the week within one row.
    * @param scheduleInfo schedule information of a particular employee
    */
   const handleRow = (scheduleInfo, key) => {
-    const { employeeName, weekDates, totalHours } = scheduleInfo
+    const { employeeName, weekDates, totalHours } = scheduleInfo;
 
     /** Array of weekDate objects where the indexes represent the day in number form. */
     // let weekDatesArr = [0, 1, 2, 3, 4, 5, 6].map(day => weekDates[day] ? weekDates[day] : null)
 
     return (
-      <Tr key={key}>
-        <Td className='employeeNameTd' onClick={() => onOpenScheduleEdit(scheduleInfo)}>
-          <p className='employeeName'>
+      <tr key={employeeName}>
+        <td className='employeeNameTd'>
+          <p className='employeeName' onClick={() => onOpenScheduleEdit(scheduleInfo)}>
             {employeeName}
           </p>
-        </Td>
-        {weekDates.map(weekDate => weekDate
+        </td>
+        {weekDates.map((weekDate, i) => weekDate
           ? (
-            <Td key={key} className='hours'>
+            <td key={key + i} className='hours'>
               <ScheduleHoursBox weekDate={weekDate} />
-            </Td>
+            </td>
           )
-          : <Td key={key}></Td>
+          : <td key={i}></td>
         )}
-        <Td className='totalHours'>{totalHours}</Td>
-      </Tr>
+        {(weekDates.length === 0) && [0, 1, 2, 3, 4, 5, 6].map(i => <td key={i}></td>)}
+        <td className='totalHours'>{totalHours}</td>
+      </tr>
     )
   }
 
   // console.log('employeeSchedules', employeeSchedules)
   return (
-    <>
-      <Table>
-        <Thead>
-          <Tr>
-            {tableHeaders.map((header, i) => (<Th key={i}>{header}</Th>))}
-          </Tr>
-        </Thead>
-        <Tbody>
+    <div className='scheduleTable'>
+      <Table responsive size="sm" className='scheduleTable__table'>
+        <thead>
+          <tr>
+            {tableHeaders.map(header => (<th key={header}>{header}</th>))}
+          </tr>
+        </thead>
+        <tbody>
           {employeeSchedules.map((schedule, i) => handleRow(schedule, i))}
-          <Tr>
-            <Td>
+          <tr>
+            <td>
               <MButton
                 IconComponent={iconComponents.CheckMark}
                 iconSize='sm'
                 text='Approve'
                 variant='primary'
                 size='sm'
-                className='mt-3 mb-2'
+                className='ml-2 mt-3 mb-2'
               />
-            </Td>
-            {/* {[0, 1, 2, 3, 4, 5, 6, 7, 8].map(i => <Td key={i}></Td>)} */}
-          </Tr>
-        </Tbody>
+            </td>
+            {/* {[0, 1, 2, 3, 4, 5, 6, 7, 8].map(i => <td key={i}></td>)} */}
+          </tr>
+        </tbody>
       </Table>
-      {/* <div className='ml-1 pt-2' style={{ marginTop: '-48px' }}>
-        <MButton
-          IconComponent={iconComponents.CheckMark}
-          iconSize='sm'
-          text='Approve'
-          variant='primary'
-          className='mt-3 ml-1 mb-2'
-          size='sm'
-        />
-      </div> */}
-    </>
+    </div>
   )
 }
 

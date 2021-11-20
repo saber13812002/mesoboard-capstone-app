@@ -1,142 +1,89 @@
-.responsiveTable > tbody {
+.scheduleTable > .table-responsive {
+  box-shadow: rgba(50, 50, 93, 0.25) 0px 6px 12px -2px, rgba(0, 0, 0, 0.3) 0px 3px 7px -3px;
+  background: white;
+  /* padding: 40px 0 55px; */
+  /* margin-top: -40px; */
+}
+
+.table-responsive > .scheduleTable__table {
+  margin: 0;
+}
+
+.table-responsive > .scheduleTable__table > tbody {
   user-select: none;
 }
 
-.responsiveTable {
+/* .table-responsive {
   background: #FFFFFF;
   border: 1px solid #D8D8D8;
   box-shadow: rgba(50, 50, 93, 0.25) 0px 6px 12px -2px, rgba(0, 0, 0, 0.3) 0px 3px 7px -3px;
-}
+} */
 
-.responsiveTable > tbody > tr {
-  border-top: 0.5px solid #D8D8D8;
-} 
+.scheduleTable__table>:not(:first-child) {
+  border-top: none;
+}
 
 
 /* .responsiveTable > thead > tr > th:first-child() {
   white-space: pre-wrap
 } */
 
+.scheduleTable__table > thead,
+.scheduleTable__table > tbody {
+  border: 1.5px solid #d8d8d8;
+}
 
-.responsiveTable > thead > tr {
+/* .scheduleTable__table > thead > tr {
   height: 40px
-}
+} */
 
-.responsiveTable > thead > tr > th:not(:first-child) {
+.scheduleTable__table > thead > tr > th:first-child {
+  padding-left: 16px;
+}
+.scheduleTable__table > thead > tr > th:not(:first-child) {
   text-align: center;
 }
 
-.responsiveTable > thead > tr > th:first-child {
-  /* padding-left: 7px; */
-  text-align: center;
-}
-
-.responsiveTable > thead > tr > th:last-child {
+.scheduleTable__table > thead > tr > th:last-child {
   padding-right: 8px
 }
 
-
-.responsiveTable > tbody > tr {
+.scheduleTable__table > tbody > tr {
   height: 60px;
 }
-.responsiveTable > tbody > tr > td:first-child {
-  padding-left: 8px;
+.scheduleTable__table > tbody > tr > td {
+  /* padding-left: 0; */
+  white-space: nowrap;
 }
-.responsiveTable > tbody > tr > td:not(:first-child) {
+.scheduleTable__table > tbody > tr > td:not(:first-child) {
   text-align: center;
-  padding: 5px 0;
+  padding: 4px 0;
 }
 
-.responsiveTable > tbody > tr > td.hours {
+.scheduleTable__table > tbody > tr > td.hours {
   font-size: 11px;
 }
 
-.responsiveTable > tbody > tr > td.totalHours {
+.scheduleTable__table > tbody > tr > td.totalHours {
   font-size: 14px;
 }
 
-/* .employeeNameTd {
-  padding-left: 8px;
-  width: 140px;
+.scheduleTable__table > tbody > tr > td {
+  vertical-align: middle;
 }
 
-.employeeName {
-  background-color: #287f4e1e;
-  font-size: 14px;
-  text-align: center;
-  border-radius: 30px;
-  padding: 4px;
-  margin: auto;
-  cursor: pointer;
-} */
-
-.employeeNameTd {
-  padding-left: 8px;
-  width: 140px;
-  text-align: center;
+td.employeeNameTd {
+  width: 160px;
+  padding-left: 16px !important;
 }
 
-.employeeName {
+td.employeeNameTd > .employeeName {
   display: inline-block;
   font-size: 14px;
   font-weight: 500;
   background-color: #287f4e1e;
   border-radius: 30px;
-  padding: 6px 0;
-  padding-left: 12px;
-  padding-right: 12px;
-  margin-bottom: auto;
+  padding: 6px 12px;
   cursor: pointer;
-}
-
-
-@media screen and (max-width: 1200px) {
-  /*
-    Force table elements to not behave like tables anymore
-    Hide table headers (but not display: none;, for accessibility)
-  */
-
-  .responsiveTable table,
-  .responsiveTable thead,
-  .responsiveTable tbody,
-  .responsiveTable th,
-  .responsiveTable td,
-  .responsiveTable tr {
-    display: block;
-  }
-
-  .responsiveTable thead tr {
-    position: absolute;
-    top: -9999px;
-    left: -9999px;
-    border-bottom: 2px solid #333;
-  }
-
-  .responsiveTable tbody tr {
-    border: 1px solid #000;
-  }
-
-  .responsiveTable td.pivoted {
-    /* Behave like a "row" */
-    border: none !important;
-    position: relative;
-    padding-left: calc(50% + 10px) !important;
-    text-align: left !important;
-    white-space: pre-wrap;
-    overflow-wrap: break-word;
-  }
-
-  .responsiveTable td .tdBefore {
-    /* Now like a table header */
-    position: absolute;
-    display: block;
-
-    /* Top/left values mimic padding */
-    left: 1rem;
-    width: calc(50% - 20px);
-    white-space: pre-wrap;
-    overflow-wrap: break-word;
-    text-align: left !important;
-    font-weight: 600;
-  }
+  margin-bottom: auto;
 }
