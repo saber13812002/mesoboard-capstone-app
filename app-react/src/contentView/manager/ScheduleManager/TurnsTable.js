@@ -7,26 +7,26 @@ import { timeFromInt } from 'time-number';
 
 
 const TurnsTable = ({ turns, onAddNewTurn, addingNewTurn, onSaveTurn, onCancel }) => {
-  const [selectHourStart, setSelectHourStart] = useState(14400) //represents 4:00 AM
-  // const [selectHourEnd, setSelectHourEnd] = useState(14400)
-  // const [selectHourLunch, setSelectHourLunch] = useState(14400)
-  const [selectHourEnd, setSelectHourEnd] = useState(43200)  //represents 12:00 PM
-  const [selectHourLunch, setSelectHourLunch] = useState(36000) //represents 10:AM
+  const [selectTimeStart, setSelectTimeStart] = useState(14400) //represents 4:00 AM
+  // const [selectTimeEnd, setSelectTimeEnd] = useState(14400)
+  // const [selectTimeLunch, setSelectTimeLunch] = useState(14400)
+  const [selectTimeEnd, setSelectTimeEnd] = useState(43200)  //represents 12:00 PM
+  const [selectTimeLunch, setSelectTimeLunch] = useState(36000) //represents 10:AM
 
-  const handleSelectHourStart = (e) => {
-    const hour = e / (3600)
-    setSelectHourStart(e)
-    // console.log(e, hour)
+  const handleSelectTimeStart = (e) => {
+    const time = e / (3600)
+    setSelectTimeStart(e)
+    // console.log(e, time)
   }
-  const handleSelectHourEnd = (e) => {
-    // const hour = e / (3600)
-    setSelectHourEnd(e)
-    // console.log(e, hour)
+  const handleSelectTimeEnd = (e) => {
+    // const time = e / (3600)
+    setSelectTimeEnd(e)
+    // console.log(e, time)
   }
-  const handleSelectHourLunch = (e) => {
-    // const hour = e / (3600)
-    setSelectHourLunch(e)
-    // console.log(e, hour)
+  const handleSelectTimeLunch = (e) => {
+    // const time = e / (3600)
+    setSelectTimeLunch(e)
+    // console.log(e, time)
   }
 
   // console.log('<turns>', turns)
@@ -44,34 +44,35 @@ const TurnsTable = ({ turns, onAddNewTurn, addingNewTurn, onSaveTurn, onCancel }
         </thead>
         <tbody>
           {turns.map((turn) => {
-            const { turnId, hourStart, hourEnd, hourLunch } = turn
-            // console.log('turnId, hourStart, hourEnd, hourLunch\n\n')
-            // console.log(turnId, hourStart, hourEnd, hourLunch)
-            // console.log(typeof turnId, typeof hourStart, turnId)
+            // console.log('-------', turn)
+            const { turnId, timeStart, timeEnd, timeLunch } = turn
+            // console.log('turnId, timeLunch, timeEnd, timeLunch\n\n')
+            // console.log(turnId, timeLunch, timeEnd, timeLunch)
+            // console.log(typeof turnId, typeof timeLunch, turnId)
             const isValidId = turnId >= 0
             return (
               <Fragment key={turnId}>
                 {isValidId && <tr style={{ fontWeight: '500' }}>
                   <td><strong>{turnId}</strong></td>
-                  <td>{hourStart}</td>
-                  <td>{hourEnd}</td>
-                  <td>{hourLunch}</td>
+                  <td>{timeStart}</td>
+                  <td>{timeEnd}</td>
+                  <td>{timeLunch}</td>
                   {/* <td></td> */}
                 </tr>}
                 {addingNewTurn && !isValidId && (
                   //<TimePicker start="10:00" end="21:00" step={30} />
                   <tr style={{ fontWeight: '500' }}>
                     {isValidId ? <td><strong>{turnId}</strong></td> : <td></td>}
-                    <td><TimePicker start="04:00" end="18:00" format="12" step={30} onChange={handleSelectHourStart} value={selectHourStart} /></td>
-                    <td><TimePicker start={timeFromInt(selectHourStart)} end="24:00" step={30} onChange={handleSelectHourEnd} value={selectHourEnd} /></td>
-                    <td><TimePicker start="03:00" end="22:00" step={30} onChange={handleSelectHourLunch} value={selectHourLunch} /></td>
-                    <td className='text-center align-middle' onClick={() => onSaveTurn(selectHourStart, selectHourEnd, selectHourLunch)}>
+                    <td><TimePicker start="04:00" end="18:00" format="12" step={30} onChange={handleSelectTimeStart} value={selectTimeStart} /></td>
+                    <td><TimePicker start={timeFromInt(selectTimeStart)} end="24:00" step={30} onChange={handleSelectTimeEnd} value={selectTimeEnd} /></td>
+                    <td><TimePicker start="03:00" end="22:00" step={30} onChange={handleSelectTimeLunch} value={selectTimeLunch} /></td>
+                    <td className='text-center align-middle' onClick={() => onSaveTurn(selectTimeStart, selectTimeEnd, selectTimeLunch)}>
                       <IIcon
                         name='checkmark'
                         width={14}
                         height={14}
                         color='primary'
-                      // onClick={() => onSaveTurn(selectHourStart, selectHourEnd, selectHourLunch)}
+                      // onClick={() => onSaveTurn(selectTimeStart, selectTimeEnd, selectTimeLunch)}
                       />
                     </td>
                   </tr>
