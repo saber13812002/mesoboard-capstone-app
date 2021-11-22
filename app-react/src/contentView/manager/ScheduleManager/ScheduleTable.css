@@ -60,7 +60,7 @@
   padding: 4px 0;
 }
 
-.scheduleTable__table > tbody > tr > td.hours {
+.scheduleTable__table > tbody > tr > td.hoursBox {
   font-size: 11px;
 }
 
@@ -86,4 +86,15 @@ td.employeeNameTd > .employeeName {
   padding: 6px 12px;
   cursor: pointer;
   margin-bottom: auto;
+}
+
+
+@media only screen and (max-width: 1080px) {
+  td.employeeNameTd {
+    width: initial !important;
+  }
+  .scheduleTable {
+    width: 36%;
+    min-width: 400px;
+  }
 }

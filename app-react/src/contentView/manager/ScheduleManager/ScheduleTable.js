@@ -5,8 +5,8 @@ import { iconComponents, MButton } from '../../../components'
 
 const tableHeaders = ['Employee', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday', 'Monday', 'Total Hours']
 
-const ScheduleTable = ({ employeeSchedules, onOpenScheduleEdit }) => {
-  console.log('employeeSchedules', employeeSchedules)
+const ScheduleTable = ({ employees, onOpenScheduleEdit }) => {
+  // console.log('employees', employees)
   /** Displays the employee schedule hours for each day of the week within one row.
    * @param scheduleInfo schedule information of a particular employee
    */
@@ -23,9 +23,9 @@ const ScheduleTable = ({ employeeSchedules, onOpenScheduleEdit }) => {
             {employeeName}
           </p>
         </td>
-        {weekDates.map((weekDate, i) => weekDate
+        {(window.innerWidth > 1080) && weekDates.map((weekDate, i) => weekDate
           ? (
-            <td key={key + i} className='hours'>
+            <td key={key + i} className='hoursBox'>
               <ScheduleHoursBox weekDate={weekDate} />
             </td>
           )
@@ -37,18 +37,23 @@ const ScheduleTable = ({ employeeSchedules, onOpenScheduleEdit }) => {
     )
   }
 
-  // console.log('employeeSchedules', employeeSchedules)
+  // console.log('employees', employees)
   return (
     <div className='scheduleTable'>
       <Table responsive size="sm" className='scheduleTable__table'>
         <thead>
           <tr>
-            {tableHeaders.map(header => (<th key={header}>{header}</th>))}
+            {(window.innerWidth > 1080) ? (
+              tableHeaders.map(header => (<th key={header}>{header}</th>))
+            ) : <>
+              <th>{tableHeaders[0]}</th>
+              <th>{tableHeaders[tableHeaders.length - 1]}</th>
+            </>}
           </tr>
         </thead>
         <tbody>
-          {employeeSchedules.map((schedule, i) => handleRow(schedule, i))}
-          <tr>
+          {employees.map((schedule, i) => handleRow(schedule, i))}
+          {/* <tr>
             <td>
               <MButton
                 IconComponent={iconComponents.CheckMark}
@@ -59,8 +64,7 @@ const ScheduleTable = ({ employeeSchedules, onOpenScheduleEdit }) => {
                 className='ml-2 mt-3 mb-2'
               />
             </td>
-            {/* {[0, 1, 2, 3, 4, 5, 6, 7, 8].map(i => <td key={i}></td>)} */}
-          </tr>
+          </tr> */}
         </tbody>
       </Table>
     </div>

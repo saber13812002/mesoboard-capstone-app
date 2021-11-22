@@ -1,9 +1,6 @@
 import './DateRange.css'
 import { Icon, iconComponents } from "../../../components"
-import { toISOString, beautifyDate } from '../../../services/scheduleService'
-
-// const getDate = d => d.toISOString().slice(0, 10)
-
+import { beautifyDate } from '../../../services/scheduleService'
 
 const DateRange = ({ dateStart, dateEnd, disablePrev, disableNext, onGoToNextWeek, onGoToPrevious }) => {
   return (

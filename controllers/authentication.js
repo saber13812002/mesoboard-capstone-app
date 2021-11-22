@@ -228,7 +228,7 @@ exports.getUserData = function (req, res, next) {
   console.log('\n\nuser_id', user_id)
   const query = `select user_id, first_name, last_name, email, user_type, gender from users where user_id=$1`;
   return db.one(query, user_id).then(data => {
-    console.log('data', data)
+    // console.log('data', data)
     res.status(200).json({
       // data,
       ...data,
