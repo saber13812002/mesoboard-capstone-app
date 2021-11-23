@@ -11,7 +11,7 @@ import TurnsTable from './manager/ScheduleManager/TurnsTable';
 import AddPermission from './manager/UserPermissionsManager/AddPermission';
 import DateRange from './manager/ScheduleManager/DateRange';
 import ScheduleHoursBox from './shared/ScheduleShared/ScheduleHoursBox';
-
+import ProfileScheduleDetails from './shared/ProfileScheduleDetails';
 
 
 export {
@@ -27,4 +27,5 @@ export {
   ScheduleHoursBox,
   DateRange,
   AddPermission,
+  ProfileScheduleDetails,
 }

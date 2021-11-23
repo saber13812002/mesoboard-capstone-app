@@ -40,7 +40,8 @@
 .scheduleTable__table > thead > tr > th:first-child {
   padding-left: 16px;
 }
-.scheduleTable__table > thead > tr > th:not(:first-child) {
+/* .scheduleTable__table > thead > tr > th:not(:first-child) { */
+.scheduleTable__table > thead > tr > th:nth-child(1) {
   text-align: center;
 }
 
@@ -55,7 +56,18 @@
   /* padding-left: 0; */
   white-space: nowrap;
 }
-.scheduleTable__table > tbody > tr > td:not(:first-child) {
+
+.scheduleTable__table > tbody > tr > td:first-child {
+  /* padding-left: 16px !important; */
+  /* padding: 0 16px !important; */
+  /* padding: 0 16px 0 0 !important; */
+  padding: 0 8px 0 12px !important;
+  /* padding-right: 4px !important; */
+
+  text-align: center;
+}
+/* .scheduleTable__table > tbody > tr > td:not(:first-child) { */
+.scheduleTable__table > tbody > tr > td:not(:nth-child(2)) {
   text-align: center;
   padding: 4px 0;
 }
@@ -74,7 +86,8 @@
 
 td.employeeNameTd {
   width: 160px;
-  padding-left: 16px !important;
+  /* padding-left: 16px !important; */
+  text-align: left;
 }
 
 td.employeeNameTd > .employeeName {

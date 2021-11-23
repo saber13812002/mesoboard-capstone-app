@@ -49,20 +49,21 @@ const TurnsTable = ({ turns, onAddNewTurn, addingNewTurn, onSaveTurn, onCancel }
             // console.log('turnId, timeLunch, timeEnd, timeLunch\n\n')
             // console.log(turnId, timeLunch, timeEnd, timeLunch)
             // console.log(typeof turnId, typeof timeLunch, turnId)
-            const isValidId = turnIndex >= 0
+            const isValidIndex = turnIndex >= 0
+            console.log('turnIndex', turnIndex)
             return (
               <Fragment key={turnIndex}>
-                {isValidId && <tr style={{ fontWeight: '500' }}>
+                {isValidIndex && <tr style={{ fontWeight: '500' }}>
                   <td><strong>{turnIndex}</strong></td>
                   <td>{timeStart}</td>
                   <td>{timeEnd}</td>
                   <td>{timeLunch}</td>
                   {/* <td></td> */}
                 </tr>}
-                {addingNewTurn && !isValidId && (
+                {addingNewTurn && !isValidIndex && (
                   //<TimePicker start="10:00" end="21:00" step={30} />
                   <tr style={{ fontWeight: '500' }}>
-                    {isValidId ? <td><strong>{turnIndex}</strong></td> : <td></td>}
+                    {isValidIndex ? <td><strong>{turnIndex}</strong></td> : <td></td>}
                     <td><TimePicker start="04:00" end="18:00" format="12" step={30} onChange={handleSelectTimeStart} value={selectTimeStart} /></td>
                     <td><TimePicker start={timeFromInt(selectTimeStart)} end="24:00" step={30} onChange={handleSelectTimeEnd} value={selectTimeEnd} /></td>
                     <td><TimePicker start="03:00" end="22:00" step={30} onChange={handleSelectTimeLunch} value={selectTimeLunch} /></td>

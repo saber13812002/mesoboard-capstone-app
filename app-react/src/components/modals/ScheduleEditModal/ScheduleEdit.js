@@ -5,7 +5,7 @@ import classes from './ScheduleEditModal.module.css'
 import { Modal } from '../..'
 import { Icon, iconComponents, MButton } from '../..'
 import { ScheduleHoursBox } from '../../../contentView'
-import { getDayName, beautifyDate, get24HourFormatOfTime, toISOYearFormat, get12HourFormatByTurnId } from '../../../services/scheduleService'
+import { getDayName, beautifyDate, get24HourFormatOfTime, toISOYearFormat } from '../../../services/scheduleService'
 
 
 const ScheduleEdit = ({ employee, turns, dateStart, dateEnd, mCurrent, onSaveChanges, onCloseScheduleEdit }) => {

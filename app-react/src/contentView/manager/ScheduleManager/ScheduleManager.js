@@ -3,8 +3,7 @@ import axios from 'axios'
 import moment from 'moment'
 import { AuthContext } from '../../../store'
 import { MButton } from '../../../components'
-import { ScheduleTable, TurnsTable } from '../..'
-import { turnArray, employeeScheduleArray } from '../../../constants/scheduleConstant'
+import { ProfileScheduleDetails, ScheduleTable, TurnsTable } from '../..'
 import { Icon, iconComponents, ScheduleEdit } from '../../../components'
 import { timeFromInt } from 'time-number';
 import { DateRange } from '../..'
@@ -57,6 +56,7 @@ const ScheduleManager = () => {
 
   // employee
   const [employees, setEmployees] = useState([]); // array of employee with their week date schedules
+  const [employeeDetails, setEmployeeDetails] = useState(undefined); // the employee to show schedule details
   const [editingEmployee, setEditingEmployee] = useState(false); // determines if an employee is being modified
   const [employeeToEdit, setEmployeeToEdit] = useState(undefined); // the employee with schedule to be modified
 
@@ -306,7 +306,7 @@ const ScheduleManager = () => {
     //   setAddingNewTurn(true)
     //   return res
     // })
-    setTurns(prev => [...prev, { turnId: -1, timeStart: undefined, timeEnd: undefined, timeLunch: undefined }])
+    setTurns(prev => [...prev, { turnIndex: -1, timeStart: undefined, timeEnd: undefined, timeLunch: undefined }])
     setAddingNewTurn(true)
   }
 
@@ -314,6 +314,11 @@ const ScheduleManager = () => {
   /************************************************/
   /*           Schedule Edit Functions            */
   /************************************************/
+
+  const openScheduleDetails = employee => {
+    setEmployeeDetails(employee)
+    // setShowEmployeeDetails(true)
+  }
 
   const openScheduleEdit = employee => {
     // console.log('turns.length', turns.length)
@@ -335,76 +340,84 @@ const ScheduleManager = () => {
 
   // console.log('mCurrent', mCurrent)
   return (
-    <div>
-      {/* section for the weekDateRange component and the buttons */}
-      <div className='d-flex justify-content-between mb-3'>
-        {
-          (weekSchedule.length > 0) && (
-            <DateRange
-              dateStart={weekSchedule[0].toDate()}
-              dateEnd={weekSchedule[6].toDate()}
-              disableNext={!mWeekEnd.isBefore(mondayInTwoWeeks)}
-              disablePrev={mWeekStart.isBefore(momentDisablePrevious)}
-              onGoToNextWeek={goToNextWeek}
-              onGoToPrevious={goToPrevious}
-            />
-          )
-        }
-        <div className='d-flex align-items-start'>
-          <MButton
-            className='mr-2'
-            text='Template CSV'
-            variant='outline-primary'
-            size='sm'
-            IconComponent={iconComponents.Download}
-            iconSize='sm'
-            iconColor='dark'
-          />
-          <MButton
-            className='mr-2'
-            text='Import CSV'
-            variant='secondary'
-            size='sm'
-            IconComponent={iconComponents.Upload}
-            iconSize='sm'
-            iconColor='dark'
-          />
-          <Icon
-            IconComponent={iconComponents.Download}
-            size='lg'
-            color='primary'
-            className='mt-1'
-          />
-        </div>
-      </div>
-
-      <section className='mb-4'>
-        <ScheduleTable
-          employees={employees}
-          onOpenScheduleEdit={openScheduleEdit}
+    <>
+      {employeeDetails && (
+        <ProfileScheduleDetails
+          employee={employeeDetails}
+          onBack={() => setEmployeeDetails(undefined)}
         />
-      </section>
+      )}
+      {!employeeDetails && <>
+        <div className='d-flex justify-content-between mb-3'>
+          {
+            (weekSchedule.length > 0) && (
+              <DateRange
+                dateStart={weekSchedule[0].toDate()}
+                dateEnd={weekSchedule[6].toDate()}
+                disableNext={!mWeekEnd.isBefore(mondayInTwoWeeks)}
+                disablePrev={mWeekStart.isBefore(momentDisablePrevious)}
+                onGoToNextWeek={goToNextWeek}
+                onGoToPrevious={goToPrevious}
+              />
+            )
+          }
+          <div className='d-flex align-items-start'>
+            <MButton
+              className='mr-2'
+              text='Template CSV'
+              variant='outline-primary'
+              size='sm'
+              IconComponent={iconComponents.Download}
+              iconSize='sm'
+              iconColor='dark'
+            />
+            <MButton
+              className='mr-2'
+              text='Import CSV'
+              variant='secondary'
+              size='sm'
+              IconComponent={iconComponents.Upload}
+              iconSize='sm'
+              iconColor='dark'
+            />
+            <Icon
+              IconComponent={iconComponents.Download}
+              size='lg'
+              color='primary'
+              className='mt-1'
+            />
+          </div>
+        </div>
 
-      <TurnsTable
-        turns={turns}
-        onAddNewTurn={addNewTurn}
-        addingNewTurn={addingNewTurn}
-        onSaveTurn={saveTurn}
-        onCancel={removeAddedTurn}
-      />
+        <section className='mb-4'>
+          <ScheduleTable
+            employees={employees}
+            onOpenScheduleEdit={openScheduleEdit}
+            onOpenScheduleDetails={openScheduleDetails}
+          />
+        </section>
 
-      {/* section for the ScheduleEditModal portal component */}
-      {editingEmployee &&
-        <ScheduleEdit
+        <TurnsTable
           turns={turns}
-          dateStart={mWeekStart.toDate()}
-          dateEnd={mWeekEnd.toDate()}
-          employee={employeeToEdit}
-          mCurrent={mCurrent}
-          onSaveChanges={modifiedEmp => saveScheduleOfEmployee(modifiedEmp)}
-          onCloseScheduleEdit={closeScheduleEdit}
-        />}
-    </div >
+          onAddNewTurn={addNewTurn}
+          addingNewTurn={addingNewTurn}
+          onSaveTurn={saveTurn}
+          onCancel={removeAddedTurn}
+        />
+
+        {/* section for the ScheduleEditModal portal component */}
+        {editingEmployee &&
+          <ScheduleEdit
+            turns={turns}
+            dateStart={mWeekStart.toDate()}
+            dateEnd={mWeekEnd.toDate()}
+            employee={employeeToEdit}
+            mCurrent={mCurrent}
+            onSaveChanges={modifiedEmp => saveScheduleOfEmployee(modifiedEmp)}
+            onCloseScheduleEdit={closeScheduleEdit}
+          />}
+      </>}
+    </>
   )
 }
 

@@ -1,25 +1,34 @@
 import './ScheduleTable.css'
 import { Table } from 'react-bootstrap'
 import { ScheduleHoursBox } from '../..';
-import { iconComponents, MButton } from '../../../components'
+import { IIcon, iconComponents, MButton } from '../../../components'
 
 const tableHeaders = ['Employee', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday', 'Monday', 'Total Hours']
 
-const ScheduleTable = ({ employees, onOpenScheduleEdit }) => {
+const ScheduleTable = ({ employees, onOpenScheduleEdit, onOpenScheduleDetails }) => {
   // console.log('employees', employees)
   /** Displays the employee schedule hours for each day of the week within one row.
-   * @param scheduleInfo schedule information of a particular employee
+   * @param employee employee with schedule information
    */
-  const handleRow = (scheduleInfo, key) => {
-    const { employeeName, weekDates, totalHours } = scheduleInfo;
+  const handleRow = (employee, key) => {
+    const { employeeName, weekDates, totalHours } = employee;
 
     /** Array of weekDate objects where the indexes represent the day in number form. */
     // let weekDatesArr = [0, 1, 2, 3, 4, 5, 6].map(day => weekDates[day] ? weekDates[day] : null)
 
     return (
       <tr key={employeeName}>
+        <td className='text-center align-middle'>
+          <IIcon
+            name='pen'
+            width={14}
+            height={14}
+            color='primary'
+            onClick={() => onOpenScheduleEdit(employee)}
+          />
+        </td>
         <td className='employeeNameTd'>
-          <p className='employeeName' onClick={() => onOpenScheduleEdit(scheduleInfo)}>
+          <p className='employeeName' onClick={() => onOpenScheduleDetails(employee)}>
             {employeeName}
           </p>
         </td>
@@ -43,6 +52,7 @@ const ScheduleTable = ({ employees, onOpenScheduleEdit }) => {
       <Table responsive size="sm" className='scheduleTable__table'>
         <thead>
           <tr>
+            <th></th>
             {(window.innerWidth > 1080) ? (
               tableHeaders.map(header => (<th key={header}>{header}</th>))
             ) : <>
@@ -52,7 +62,7 @@ const ScheduleTable = ({ employees, onOpenScheduleEdit }) => {
           </tr>
         </thead>
         <tbody>
-          {employees.map((schedule, i) => handleRow(schedule, i))}
+          {employees.map((employee, i) => handleRow(employee, i))}
           {/* <tr>
             <td>
               <MButton
