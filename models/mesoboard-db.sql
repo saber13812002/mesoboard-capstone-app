@@ -90,6 +90,8 @@ create table user_schedule (
 --     user_schedule_id        INTEGER REFERENCES schedule(schedule_id),
     user_schedule_id        SERIAL PRIMARY KEY,
     user_id                 INTEGER REFERENCES users(user_id),
+--     turn_id                 INTEGER REFERENCES turn(turn_id), -- only if manager is not allowed to set same turn hours
+    turn_id                 INTEGER NOT NULL,
     schedule_id             INTEGER REFERENCES schedule(schedule_id),
     date_start              TIMESTAMP,
     date_end                TIMESTAMP,
@@ -119,12 +121,12 @@ INSERT INTO schedule
 
 CREATE TABLE turn (
 --     turn_id         SERIAL PRIMARY KEY,
-    turn_id         INTEGER NOT NULL, -- specified through the frontend
 --     turn_id         INTEGER NOT NULL UNIQUE, -- specified through the frontend
+    turn_id         INTEGER NOT NULL, -- specified through the frontend
     user_id         INTEGER REFERENCES users(user_id),
-    hour_start      TIME,
-    hour_end        TIME,
-    hour_lunch      TIME
+    time_start      TIME,
+    time_end        TIME,
+    time_lunch      TIME
 );
 
 CREATE EXTENSION IF NOT EXISTS "pgcrypto";
