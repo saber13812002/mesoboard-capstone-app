@@ -61,9 +61,8 @@ exports.isAdmin = (req, res, next) => {
 // };
 
 exports.isAdminOrManager = (req, res, next) => {
-  // const user_type = req.app.locals.user_type;
   const user_type = req.jwt.user_type;
-  console.log('user_type', user_type)
+  console.log('isAdminOrManager', user_type)
   if (user_type == 'admin' || user_type == 'manager') {
     next();
   } else {

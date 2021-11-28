@@ -1,8 +1,10 @@
-import { useState } from 'react'
-import BootstrapTable from 'react-bootstrap-table-next';
+import { useState, useEffect } from 'react'
 import './UserPermissionsManager.css';
-import { iconComponents, MButton } from '../../../components'
-import { AddPermission } from '../../'
+import axios from 'axios';
+import BootstrapTable from 'react-bootstrap-table-next';
+import { iconComponents, MButton } from '../../../components';
+import { AddPermission } from '../../';
+import { ServerRoutes as server } from '../../../services/apiService';
 
 
 const profiles = [{
@@ -18,18 +20,19 @@ const profiles = [{
 }]
 
 const columns = [{
-  dataField: 'employeeName',
+  dataField: 'name',
   text: 'Employee',
   sort: true
 }, {
   dataField: 'email',
   text: 'Email'
 }, {
-  dataField: 'creationDate',
+  dataField: 'creation_date',
   text: 'Fecha de creación',
-  sort: true
+  sort: true,
+  // formatter: (cell, row) => types[cell]
 }, {
-  dataField: 'userType',
+  dataField: 'user_type',
   text: 'Tipo de usuario'
 }];
 
@@ -37,7 +40,19 @@ const columns = [{
 
 const UserPermissionsManager = () => {
   const [addingNewPermission, setAddingNewPermission] = useState(false);
-  console.log('UserPermissionsManager')
+  const [employees, setEmployees] = useState([]);
+  console.log('UserPermissionsManager');
+
+  useEffect(() => {
+    console.log('useEffect')
+    const getAllEmployees = () => {
+      axios.get(server.getAllEmployees()).then(res => {
+        console.log('res.data.employees', res.data.employees)
+        setEmployees(res.data.employees)
+      })
+    }
+    getAllEmployees()
+  }, [])
 
   const handleBack = () => {
     setAddingNewPermission(false)
@@ -50,7 +65,7 @@ const UserPermissionsManager = () => {
   return (
     <>
       {!addingNewPermission && <div className='userPermissionsManager'>
-        <BootstrapTable responsive bootstrap4 bordered={false} keyField='email' data={profiles} columns={columns} />
+        <BootstrapTable responsive bootstrap4 bordered={false} keyField='email' data={employees} columns={columns} />
         <div style={{ marginTop: '-40px' }}>
           <MButton
             onClick={handleAddNewPermission}
