@@ -16,8 +16,9 @@ class UrlConstants {
   static GET_USER_DATA = 'auth/userData';
   static SET_USER_SCHEDULES = 'schedule/week';
   static ALL_USER_SCHEDULES = 'schedule/week/all/<schedule_id>';
-  static GET_TURNS = 'schedule/turn/<user_id>';
+  static GET_TURNS = 'schedule/turn';
   static SET_TURN = 'schedule/turn/all';
+  static GET_ALL_EMPLOYEES = 'employee/all'
 }
 
 export class ServerRoutes {
@@ -48,10 +49,15 @@ export class ServerRoutes {
   static getUserSchedule(schedule_id) {
     return UrlConstants.PROTECTED + UrlConstants.ALL_USER_SCHEDULES.replace('<schedule_id>', schedule_id);
   }
-  static getUserTurns(user_id) {
-    return UrlConstants.PROTECTED + UrlConstants.GET_TURNS.replace('<user_id>', user_id);
+  static getUserTurns() {
+    return UrlConstants.PROTECTED + UrlConstants.GET_TURNS;
   }
   static setTurn() {
     return UrlConstants.PROTECTED + UrlConstants.SET_TURN
+  }
+
+  // EMPLOYEES
+  static getAllEmployees() {
+    return UrlConstants.PROTECTED + UrlConstants.GET_ALL_EMPLOYEES
   }
 }

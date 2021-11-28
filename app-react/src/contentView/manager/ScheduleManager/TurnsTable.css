@@ -1,5 +1,5 @@
 .scheduleTurns {
-  width: 36%;
+  width: 32%;
   min-width: 400px;
 }
 
@@ -21,7 +21,7 @@ table.scheduleTurns__table>:not(:first-child) {
 }
 
 .scheduleTurns__table {
-  width: 95%;
+  width: 93%;
   margin: 0 auto;
   border-collapse: initial !important;
 }
@@ -38,4 +38,13 @@ table.scheduleTurns__table>:not(:first-child) {
 .scheduleTurns__table > thead > tr > th:first-child,
 .scheduleTurns__table > tbody > tr > td:first-child {
   padding-left: 10px
+}
+
+
+/* .scheduleTurns__table > tbody.disableBorder { */
+.scheduleTurns__table > tbody.disableBorder {
+  /* border-bottom-width: 0 !important; */
+  /* border-width: 0 !important; */
+  border-style: none !important;
+  border: 0 none white;
 }

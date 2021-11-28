@@ -5,6 +5,7 @@ import { get12HourFormatOfDate, getDayName } from '../../services/scheduleServic
 const ProfileScheduleDetails = ({ employee, onBack }) => {
   console.log('employee', employee)
   const { employeeName, weekDates } = employee;
+  // const employeeHasSchedule = employee.weekDates.filter(wd => wd != null).length > 0
   return (
     <>
       <BackButton onClick={onBack} />

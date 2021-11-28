@@ -127,7 +127,7 @@ const AuthProvider = ({ children }) => {
       }).catch(err => {
         console.log('err', err)
         if (err.response.status)
-          console.log('msg', err.response.status)
+          console.log('status', err.response.status)
       })
     }
     logout()

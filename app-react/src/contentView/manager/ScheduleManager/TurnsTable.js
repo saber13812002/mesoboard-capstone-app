@@ -36,21 +36,21 @@ const TurnsTable = ({ turns, onAddNewTurn, addingNewTurn, onSaveTurn, onCancel }
       <Table responsive size="sm" className='scheduleTurns__table'>
         <thead>
           <tr style={{ fontSize: '14px' }}>
-            <td>ID</td>
-            <td>Entrada</td>
-            <td>Salidas</td>
-            <td>Almuerzo</td>
+            {(turns.length === 0) ? <td></td> :
+              <>
+                <td>ID</td>
+                <td>Entrada</td>
+                <td>Salidas</td>
+                <td>Almuerzo</td>
+              </>}
           </tr>
         </thead>
-        <tbody>
+        <tbody className={`${turns.length === 0 ? 'disableBorder' : ''}`}>
           {turns.map((turn) => {
             // console.log('-------', turn)
-            const { turnIndex, timeStart, timeEnd, timeLunch } = turn
-            // console.log('turnId, timeLunch, timeEnd, timeLunch\n\n')
-            // console.log(turnId, timeLunch, timeEnd, timeLunch)
-            // console.log(typeof turnId, typeof timeLunch, turnId)
+            const { turnIndex, timeStart, timeEnd, timeLunch } = turn;
             const isValidIndex = turnIndex >= 0
-            console.log('turnIndex', turnIndex)
+            // console.log('turnIndex', turnIndex)
             return (
               <Fragment key={turnIndex}>
                 {isValidIndex && <tr style={{ fontWeight: '500' }}>
@@ -91,8 +91,18 @@ const TurnsTable = ({ turns, onAddNewTurn, addingNewTurn, onSaveTurn, onCancel }
             <td><TimePicker start="10:00" end="21:00" step={30} /></td>
           </tr>
           )} */}
+          {turns.length === 0 && (
+            <tr style={{ fontWeight: '500' }}>
+              <td className='pt-2'>Create hours to manage employee schedules</td>
+            </tr>
+          )}
         </tbody>
       </Table>
+      {/* {turns.length === 0 && (
+        <div className='ml-2 pt-2 pb-2' style={{ marginTop: '-48px', fontWeight: '500' }}>
+          <p>Create turn hours to manage employee schedules</p>
+        </div>
+      )} */}
       {!addingNewTurn && <div className='ml-2 pt-2' style={{ marginTop: '-48px' }}>
         <MButton
           onClick={onAddNewTurn}

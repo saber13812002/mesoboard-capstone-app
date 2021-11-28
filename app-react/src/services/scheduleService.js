@@ -23,16 +23,57 @@ export const DAY_NAME = {
   6: 'Monday',
 }
 
-/** The given number represents the day of the week as a number.
- *  (0 -> Tuesday), (1 -> Wednesday), ...
- *  @param {number} day the day in number form.
- *  @return name of the day of the week that represents the given day.
+/** 
+ * The given number represents the day of the week as a number.
+ * (0 -> Tuesday), (1 -> Wednesday), ...
+ * @param {number} day the day in number form.
+ * @return name of the day of the week that represents the given day.
  */
-export const getDayName = day => DAY_NAME[day]
+export const getDayName = day => DAY_NAME[day];
+
+/**
+ * calculate the total hours of a particular week
+ * @param weekDates days of the week to calculate total hours
+ * @return the total hours of the given week dates
+ */
+export const calculateTotalHours = weekDates => {
+  // calculate and set the total hours of a particular week
+  let totalHours = 0;
+  for (let dates of weekDates) {
+    if (dates) {
+      const dateStart = dates.dateStart ? dates.dateStart : dates.date_start
+      const dateEnd = dates.dateEnd ? dates.dateEnd : dates.date_end
+      totalHours += Math.abs(new Date(dateEnd) - new Date(dateStart)) / 36e5;
+    }
+  }
+  return totalHours;
+}
 
 
-/** Returns the hours of the given date in a 24 hour format.
- *  @param {string} d a date object.
+/** 
+ * Returns a string representation of a date in YYYYMMDD format.
+ * @param {moment.Moment} m an instance of the Moment library
+ */
+export const getScheduleIdOfMoment = m => m.format('YYYYMMDD')
+
+
+/** 
+ * Returns the date string in ISO format.
+ * @param {Date} d a date object
+ */
+export const getScheduleIdOfDate = d => toISOYearFormat(d).replace('-', '')
+
+
+/** 
+ * Returns a string representing the database id of a schedule turn.
+ * @param {string} t string representing the time of a day
+ */
+export const getTurnIdByTime = t => get24HourFormatOfTime(t).replace(':', '');
+
+
+/** 
+ * Returns the hours of the given date in a 24 hour format.
+ * @param {string} d a date object.
  */
 export const get24HourFormatOfDate = d => {
   const date = new Date(d);
@@ -42,9 +83,10 @@ export const get24HourFormatOfDate = d => {
 }
 
 
-/** Returns the given hour string with the hour period ('AM' or 'PM').
- *  @param {string} d a date object.
- *  @param {boolean} spaceBeforePeriod true to add a space between the minute and the time period.
+/** 
+ * Returns the given hour string with the hour period ('AM' or 'PM').
+ * @param {string} d a date object.
+ * @param {boolean} spaceBeforePeriod true to add a space between the minute and the time period.
  */
 export const get12HourFormatOfDate = (d, spaceBeforePeriod) => {
   if (!d) return null;
@@ -61,9 +103,10 @@ export const get12HourFormatOfDate = (d, spaceBeforePeriod) => {
 }
 
 
-/** Returns the given hour in 24 hour format string.
- *  @param {string} h string representing the time of a day in 12 hour format.
- *  @param {boolean} zeroOnHour determines adding leading zero to the hour.
+/** 
+ * Returns the given hour in 24 hour format string.
+ * @param {string} h string representing the time of a day in 12 hour format.
+ * @param {boolean} zeroOnHour determines adding leading zero to the hour.
  */
 export const get24HourFormatOfTime = (t, zeroOnHour) => {
   t = String(t);
@@ -84,59 +127,33 @@ export const get24HourFormatOfTime = (t, zeroOnHour) => {
     return res;
   }
 
-  if (Number(split[0]) > 12)
-    return Number(split[0]) - 12 + split[1];
-  else
-    return t;
+  return t;
 }
-
-
-// export const getDateIdOf = d => toISOYearFormat(d).trim()
-/** Returns a string representation of a date in YYYYMMDD format.
- *  @param {moment.Moment} m an instance of the Moment library
- */
-export const getScheduleIdOfMoment = m => m.format('YYYYMMDD')
-
-
-/** Returns the date string in ISO format.
- *  @param {Date} d a date object
- */
-export const getScheduleIdOfDate = d => toISOYearFormat(d).replace('-', '')
-
-
-/** Returns a string representing the database id of a schedule turn.
- *  @param {string} t string representing the time of a day
- */
-export const getTurnIdByTime = t => get24HourFormatOfTime(t).replace(':', '');
 
 
 export const get12HourFormatByTurnId = (tid, spaceBeforePeriod) => {
   if (!tid) return;
-  // console.log('tid', tid)
+  let hour, minute, period = 'AM';
   tid = String(tid);
-  // const split = tid.split(':');
-  // let hour = Number(split[0]);
-  // const minute = split[1];
-  let period = 'AM';
 
   if (tid.length === 3) {
-    let hour = Number(tid[0]);
-    const minute = tid[1] + tid[2];
-    console.log(hour + ':' + minute + (spaceBeforePeriod ? ' ' : '') + period)
-    return hour + ':' + minute + (spaceBeforePeriod ? ' ' : '') + period;
+    hour = Number(tid[0]);
+    minute = tid[1] + tid[2];
   }
   else {
-    let hour = Number(tid[0] + tid[1]);
-    const minute = tid[2] + tid[3];
+    hour = Number(tid[0] + tid[1]);
+    minute = tid[2] + tid[3];
     if (hour >= 12) period = 'PM';
     if (hour == 24) hour = '00';
-    console.log(hour + ':' + minute + (spaceBeforePeriod ? ' ' : '') + period)
-    return hour + ':' + minute + (spaceBeforePeriod ? ' ' : '') + period;
   }
+  // console.log(hour + ':' + minute + (spaceBeforePeriod ? ' ' : '') + period)
+  return hour + ':' + minute + (spaceBeforePeriod ? ' ' : '') + period;
+
 }
 
-/** Returns given date into ISO format string excluding the time section.
- *  @param {object | string} d a date object
+/** 
+ * Returns given date into ISO format string excluding the time section.
+ * @param {object | string} d a date object
  */
 export const toISOYearFormat = d => {
   const parsed = new Date(d);
@@ -144,13 +161,15 @@ export const toISOYearFormat = d => {
 }
 
 
-/** Returns a string format describing the given date (i.e. Nov. 16, 2021).
- *  @param {*} d date to be beautify
+/** 
+ * Returns a string format describing the given date (i.e. Nov. 16, 2021).
+ * @param {*} d date to be beautify
  */
 export const beautifyDate = d => beautifyDateStr(toISOYearFormat(d))
 
-/** Returns a string format describing the given date in string string form (i.e. Nov. 16, 2021).
- *  @param {string} s iso date formatted string (i.e. 2021-11-16).  
+/** 
+ * Returns a string format describing the given date in string string form (i.e. Nov. 16, 2021).
+ * @param {string} s iso date formatted string (i.e. 2021-11-16).  
  */
 export const beautifyDateStr = isoStr => {
   const split = isoStr.split('-');

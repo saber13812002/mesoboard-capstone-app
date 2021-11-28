@@ -41,7 +41,11 @@
   padding-left: 16px;
 }
 /* .scheduleTable__table > thead > tr > th:not(:first-child) { */
-.scheduleTable__table > thead > tr > th:nth-child(1) {
+
+  .scheduleTable__table > thead > tr > th.employee {
+    text-align: left !important;
+  }
+.scheduleTable__table > thead > tr > th:not(:nth-child(1)) {
   text-align: center;
 }
 
@@ -57,19 +61,26 @@
   white-space: nowrap;
 }
 
+.scheduleTable__table > tbody > tr > td.icon {
+  /* border-bottom-width: 0 !important; */
+  width: 36px;
+}
+
+
 .scheduleTable__table > tbody > tr > td:first-child {
   /* padding-left: 16px !important; */
   /* padding: 0 16px !important; */
   /* padding: 0 16px 0 0 !important; */
-  padding: 0 8px 0 12px !important;
-  /* padding-right: 4px !important; */
+  /* padding: 0 8px 0 12px !important; */
+  padding-left: 16px;
+  padding-right: 0;
 
-  text-align: center;
+  /* text-align: center; */
 }
 /* .scheduleTable__table > tbody > tr > td:not(:first-child) { */
-.scheduleTable__table > tbody > tr > td:not(:nth-child(2)) {
+.scheduleTable__table > tbody > tr > td:not(:nth-child(1)):not(:nth-child(2)) {
   text-align: center;
-  padding: 4px 0;
+  /* padding: 4px 0; */
 }
 
 .scheduleTable__table > tbody > tr > td.hoursBox {

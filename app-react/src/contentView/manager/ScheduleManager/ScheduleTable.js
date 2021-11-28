@@ -3,9 +3,9 @@ import { Table } from 'react-bootstrap'
 import { ScheduleHoursBox } from '../..';
 import { IIcon, iconComponents, MButton } from '../../../components'
 
-const tableHeaders = ['Employee', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday', 'Monday', 'Total Hours']
+const tableHeaders = ['Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday', 'Monday', 'Total Hours']
 
-const ScheduleTable = ({ employees, onOpenScheduleEdit, onOpenScheduleDetails }) => {
+const ScheduleTable = ({ employees, isEditable, onOpenScheduleEdit, onOpenScheduleDetails }) => {
   // console.log('employees', employees)
   /** Displays the employee schedule hours for each day of the week within one row.
    * @param employee employee with schedule information
@@ -18,15 +18,17 @@ const ScheduleTable = ({ employees, onOpenScheduleEdit, onOpenScheduleDetails })
 
     return (
       <tr key={employeeName}>
-        <td className='text-center align-middle'>
-          <IIcon
-            name='pen'
-            width={14}
-            height={14}
-            color='primary'
-            onClick={() => onOpenScheduleEdit(employee)}
-          />
-        </td>
+        {isEditable && (
+          <td className='align-middle icon'>
+            <IIcon
+              name='pen'
+              width={14}
+              height={14}
+              color='primary'
+              onClick={() => onOpenScheduleEdit(employee)}
+            />
+          </td>
+        )}
         <td className='employeeNameTd'>
           <p className='employeeName' onClick={() => onOpenScheduleDetails(employee)}>
             {employeeName}
@@ -52,13 +54,11 @@ const ScheduleTable = ({ employees, onOpenScheduleEdit, onOpenScheduleDetails })
       <Table responsive size="sm" className='scheduleTable__table'>
         <thead>
           <tr>
-            <th></th>
-            {(window.innerWidth > 1080) ? (
-              tableHeaders.map(header => (<th key={header}>{header}</th>))
-            ) : <>
-              <th>{tableHeaders[0]}</th>
-              <th>{tableHeaders[tableHeaders.length - 1]}</th>
-            </>}
+            {isEditable && <th></th>}
+            <th className='employee'>{'Employee'}</th>
+            {(window.innerWidth > 1080)
+              ? tableHeaders.map(header => (<th key={header}>{header}</th>))
+              : <th>{tableHeaders[tableHeaders.length - 1]}</th>}
           </tr>
         </thead>
         <tbody>
