@@ -10,6 +10,7 @@ import { BsCaretRightFill } from "react-icons/bs";
 import { BsCaretRight } from "react-icons/bs";
 import { BsCalendarWeekFill } from "react-icons/bs";
 import { BsCalendarWeek } from "react-icons/bs";
+import { BsPerson } from "react-icons/bs";
 
 /**   cg   **/
 // import { CgUserList } from 'react-icons/cg'
@@ -43,6 +44,7 @@ import { MdListAlt } from 'react-icons/md' //or MdFormatListBulleted
 import { MdClose } from 'react-icons/md'
 import { MdNote } from 'react-icons/md'
 import { MdOutlineCancel } from 'react-icons/md'
+import { MdOutlineLogout } from 'react-icons/md'
 
 /**   io   **/
 import { IoMdPersonAdd } from 'react-icons/io'
@@ -69,6 +71,8 @@ const iconComponents = {
   Permissions: IoMdPersonAdd,
   // Permissions: AiOutlineUserAdd,
   // Permissions: GrUserAdd,
+  Logout: MdOutlineLogout,
+  Person: BsPerson,
 
   /******   All Icon   ******/
   UserAdd: AiOutlineUserAdd,

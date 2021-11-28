@@ -1,10 +1,10 @@
-import { useState, useEffect, useContext } from 'react'
+import { useState, useEffect, useContext, useRef } from 'react'
 import './Sidebar.css'
 import SidebarList from './SidebarList'
 import MesonLogoContainer from '../../components/logos/MesonLogoContainer'
 import { AuthContext } from '../../store'
 import { Redirect } from 'react-router-dom'
-import { SidebarProfileSection } from '..'
+import { ProfileSection } from '..'
 import { isLoggedOut } from '../../services/authService'
 import { allLinks, SidebarItem } from '../../services/sidebarService'
 
@@ -26,11 +26,13 @@ requestsItem.setNext(checksItem)
 checksItem.setNext(memosItem)
 
 const Sidebar = () => {
-  const [redirectToSignin, setRedirectToSignin] = useState(isLoggedOut()) //temporary logout HERE
-  const [sidebarItems, setSidebarItems] = useState([])
+  const [redirectToSignin, setRedirectToSignin] = useState(isLoggedOut()); //temporary logout HERE
+  const [sidebarItems, setSidebarItems] = useState([]);
+  // const [profileCardPos, setProfileCardPos] = useState({});
   // const [displayProfileCard, setDisplayProfileCard] = useState(false)
-  const { authState, logout } = useContext(AuthContext)
-  const { userType } = authState
+  const profileNameEl = useRef(null);
+  const { authState, logout } = useContext(AuthContext);
+  const { userType } = authState;
 
 
   useEffect(() => {
@@ -46,14 +48,8 @@ const Sidebar = () => {
     setSidebarItems(homeItem.toArray())
   }, [userType])
 
-
-  /**
-   * Display a card with at least the profile and logout items
-   * with the use of useRef hook
-   */
-  const handleProfileCard = () => {
-    logout(setRedirectToSignin) //temporary logout
-    // setDisplayProfileCard(true)
+  const handleLogout = () => {
+    logout(setRedirectToSignin)
   }
 
   return (
@@ -64,7 +60,7 @@ const Sidebar = () => {
           <div className='sidebar'>
             <MesonLogoContainer />
             <hr />
-            <SidebarProfileSection onProfileCard={handleProfileCard} />
+            <ProfileSection profileNameEl={profileNameEl} onLogout={handleLogout} />
             {(sidebarItems.length > 0) && <SidebarList sidebarItems={sidebarItems} />}
           </div>
         }

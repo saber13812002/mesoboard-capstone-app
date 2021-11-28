@@ -15,9 +15,7 @@
 .scheduleEdit__row {
   display: grid;
   grid-template-columns: 24px 4fr 28px 3fr;
-  
   align-items: center;
-  /* justify-items: end; */
   gap: 4px;
 }
 
@@ -32,7 +30,6 @@
 
 .scheduleEdit__row > .scheduleHoursBox {
   font-size: 14px;
-  /* justify-content: end; */
   justify-self: end;
 }
 
