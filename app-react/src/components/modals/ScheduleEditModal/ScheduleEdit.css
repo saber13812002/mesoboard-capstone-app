@@ -12,19 +12,46 @@
   font-size: .975em;
 }
 
-/* widths avoided if we change it to 'display: grid' */
+.scheduleEdit__row {
+  display: grid;
+  grid-template-columns: 24px 4fr 28px 3fr;
+  
+  align-items: center;
+  /* justify-items: end; */
+  gap: 4px;
+}
+
+.scheduleEdit__row > h4 {
+  justify-self: start;
+  padding-left: 20px;
+}
+
+.scheduleEdit__row > input {
+  height: 50%;
+}
+
+.scheduleEdit__row > .scheduleHoursBox {
+  font-size: 14px;
+  /* justify-content: end; */
+  justify-self: end;
+}
+
 .scheduleEdit__data {
-  width: 150px;
+  max-height: 330px;
+  overflow-y: auto;
 }
 
-.scheduleEdit__data > h4 {
-  width: 140px
+.scheduleEdit__data::-webkit-scrollbar {
+  width: 8px;
 }
-
-.scheduleEdit__data > input {
-  width: 50px;
+.scheduleEdit__data::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 10px;
 }
-
-.scheduleEdit__data > .scheduleHoursBox {
-  font-size: 14px
+.scheduleEdit__data::-webkit-scrollbar-thumb {
+  background: #c7c7c7;
+  border-radius: 10px;
+}
+.scheduleEdit__data::-webkit-scrollbar-thumb:hover {
+  background: #888;
 }

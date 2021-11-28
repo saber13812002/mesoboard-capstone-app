@@ -98,9 +98,14 @@ const ScheduleEdit = ({ employee, turns, dateStart, dateEnd, mCurrent, onSaveCha
     })
   }
 
-  const getTurnIndexByTurnId = turnId => turns.find(turn => turn.turnId === turnId).turnIndex;
+  /**
+   * finds the index of the turn with the same turn id as the one given.
+   * @param {*} turnId the turn id to find within the turns array
+   * @returns the turn index found or undefined turn id does not exist within the turns array
+   */
+  const getTurnIndexByTurnId = turnId => turns.find(turn => turn.turnId === turnId)?.turnIndex;
 
-  const portalElement = document.getElementById('navdrawer-portal')
+  const portalElement = document.getElementById('navdrawer-portal');
   // console.log('employeeToEdit', employeeToEdit)
   return (
     <Modal
@@ -130,27 +135,29 @@ const ScheduleEdit = ({ employee, turns, dateStart, dateEnd, mCurrent, onSaveCha
             return null
           })}
         </div>
-        {weekDates.map((weekDate, day) => {
-          if (weekDate) {
-            // console.log('weekDate', weekDate)
-            const turnIndex = getTurnIndexByTurnId(weekDate.turnId)
-            return (
-              // THE USE OF 'display: grid' would be best
-              <div key={day} className='scheduleEdit__data d-flex justify-content-between align-items-center w-100 mt-1'>
-                <h4>{getDayName(day)}</h4>
-                <input type='number' defaultValue={turnIndex} onChange={(e) => updateHours(day, e)} />
-                <ScheduleHoursBox weekDate={weekDate} showLunchMins={true} />
-                <Icon
-                  IconComponent={iconComponents.trash}
-                  size='md'
-                  color='red'
-                  onClick={() => removeWeekDateFromEmployee(day)}
-                />
-              </div>
-            )
-          }
-          return null
-        })}
+        <div className='scheduleEdit__data'>
+          {weekDates.map((weekDate, day) => {
+            if (weekDate) {
+              const turnIndex = getTurnIndexByTurnId(weekDate.turnId) || 0;
+              // console.log('turnIndex', turnIndex);
+
+              return (
+                <div key={day} className='scheduleEdit__row w-100 mt-2'>
+                  <Icon
+                    IconComponent={iconComponents.trash}
+                    size='md'
+                    color='red'
+                    onClick={() => removeWeekDateFromEmployee(day)}
+                  />
+                  <h4>{getDayName(day)}</h4>
+                  <input type='number' defaultValue={turnIndex} onChange={(e) => updateHours(day, e)} />
+                  <ScheduleHoursBox weekDate={weekDate} showLunchMins={true} />
+                </div>
+              )
+            }
+            return null
+          })}
+        </div>
         {isSameData ? (
           <Button
             disabled={true}
