@@ -3,6 +3,7 @@ import './AddPermission.css'
 import { MButton } from '../../../components'
 import { Form, Dropdown, DropdownButton } from 'react-bootstrap'
 import axios from 'axios'
+import { ServerRoutes as server } from '../../../services/apiService'
 
 const AddPermission = ({ onBack }) => {
   const [selectedPermissionType, setSelectedPermissionType] = useState({ label: 'Employee', value: 'employee' });
@@ -45,10 +46,12 @@ const AddPermission = ({ onBack }) => {
 
 
     const addPermissionFetch = async () => {
-      // console.log('code', code)
-      axios.post('protected/permissions/add', { email, permission_type, code }).then(res => {
-        console.log('res', res.data)
-      })
+      console.log('addPermissionFetch')
+      // axios.post('protected/permissions/add', { email, permission_type, code })
+      axios.post(server.addPermission(), { email, permission_type, code })
+        .then(res => {
+          console.log('res', res.data)
+        })
         .catch(err => console.log('err', err))
       // axios.post('/api/permissions/verify', { code }).then(res => {
       //   console.log('res', res)
@@ -60,6 +63,7 @@ const AddPermission = ({ onBack }) => {
       //   .catch(err => console.log('err', err))
     }
     addPermissionFetch()
+    onBack()
 
     e.preventDefault()
   }
@@ -75,9 +79,9 @@ const AddPermission = ({ onBack }) => {
       </div> */}
 
       <div className='addPermission__card card pb-3' >
-        <div className='d-flex justify-content-start align-items-center p-3 title bg-light-gray'>
+        <header className='d-flex justify-content-start align-items-center p-3 title bg-light-gray'>
           <h6 className='m-0'>Agregar nuevo permiso</h6>
-        </div>
+        </header>
 
         <Form className='addPermission__form' onSubmit={addPermission}>
           <br />
@@ -97,15 +101,14 @@ const AddPermission = ({ onBack }) => {
 
           <div className='d-flex justify-content-start w-100'>
             <MButton
+              text='Cancelar'
               onClick={onBack}
               className='mr-3'
-              text='Cancelar'
               variant='light'
-              type='submit'
             />
             <MButton
-              type='submit'
               text='Añadir Permiso'
+              type='submit'
               variant='primary'
             />
           </div>

@@ -4,22 +4,17 @@ const schedule = require('../controllers/schedule');
 const authUtils = require('../lib/authUtils')
 
 module.exports = app => {
-  app.route('/api/schedule/week')
-    // .get(security.verifyJWT, schedule.getWeekSchedule)
-    // .get(schedule.getWeekSchedule)
-    .get(security.verifyJWT)
-
   app.route('/protected/schedule/week')
-    .post(schedule.setUserSchedule)
+    .post(security.isAdminOrManager, schedule.setUserSchedule)
 
   app.route('/protected/schedule/week/all/:schedule_id')
-    .get(schedule.getUserSchedules)
+    .get(security.isAdminOrManager, schedule.getEmployeeSchedules)
 
   // app.route('/protected/schedule/turn/:turn_id/:user_id')
   app.route('/protected/schedule/turn/all')
     .post(schedule.insertUserTurn)
 
-  app.route('/protected/schedule/turn/:user_id')
+  app.route('/protected/schedule/turn')
     .get(schedule.getUserTurns)
   // app.route('/api/schedule/week') //for testing purposes
   //   .get(schedule.getWeekSchedule) //will not be used

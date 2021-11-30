@@ -5,13 +5,13 @@ import CheckManager from "./manager/CheckManager/CheckManager";
 import ProfileManager from "./manager/ProfileManager/ProfileManager";
 import RequestManager from "./manager/RequestManager/RequestManager";
 import MemoManager from "./manager/MemoManager/MemoManager";
-import UserPermissionsManager from './manager/UserPermissionsManager/UserPermissionsManager'
-import ScheduleTable from './manager/ScheduleManager/ScheduleTable'
-import TurnsTable from './manager/ScheduleManager/TurnsTable'
-import AddPermission from './manager/UserPermissionsManager/AddPermission'
-import DateRange from './manager/ScheduleManager/DateRange'
-import ScheduleHoursBox from './shared/ScheduleShared/ScheduleHoursBox'
-
+import UserPermissionsManager from './manager/UserPermissionsManager/UserPermissionsManager';
+import ScheduleTable from './manager/ScheduleManager/ScheduleTable';
+import TurnsTable from './manager/ScheduleManager/TurnsTable';
+import AddPermission from './manager/UserPermissionsManager/AddPermission';
+import DateRange from './manager/ScheduleManager/DateRange';
+import ScheduleHoursBox from './shared/ScheduleShared/ScheduleHoursBox';
+import ProfileScheduleDetails from './shared/ProfileScheduleDetails';
 
 
 export {
@@ -27,4 +27,5 @@ export {
   ScheduleHoursBox,
   DateRange,
   AddPermission,
+  ProfileScheduleDetails,
 }

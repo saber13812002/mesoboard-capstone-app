@@ -3,36 +3,35 @@ import axios from 'axios'
 import moment from 'moment'
 import { AuthContext } from '../../../store'
 import { MButton } from '../../../components'
-import { ScheduleTable, TurnsTable } from '../..'
-import { turnArray, employeeScheduleArray } from '../../../constants/scheduleConstant'
+import { ProfileScheduleDetails, ScheduleTable, TurnsTable } from '../..'
 import { Icon, iconComponents, ScheduleEdit } from '../../../components'
 import { timeFromInt } from 'time-number';
 import { DateRange } from '../..'
 import { ServerRoutes as server } from '../../../services/apiService'
 import {
   getScheduleIdOfMoment,
-  getTurnIdOfHour,
-  get24HourFormatOfHour,
+  getTurnIdByTime,
+  get24HourFormatOfTime,
+  calculateTotalHours
 } from '../../../services/scheduleService'
 
 
-const m = moment()
-const sunday = m.clone().isoWeekday(0)
-const monday = m.clone().isoWeekday(1)
-// console.log('sunday', sunday)
+const m1 = moment()
+const m2 = moment()
+const sunday = m1.clone().startOf('week')
+const monday = m2.clone().startOf('week').add(1, 'day')
+// console.log('sunday', sunday)moment()
 // console.log('monday', monday)
+// console.log('m1.isSame(sunday)', m1.isSame(sunday, 'date'))
 
 let startOfThisWeek = moment().clone();
 let endOfThisWeek = moment().clone();
-
-// console.log('m.isSame(sunday)', m.isSame(sunday))
-// console.log('m.isSame(monday)', m.isSame(monday))
-if (m.isSame(sunday)) {
+if (m1.isSame(sunday, 'date')) {
   // console.log('decrementing...')
   startOfThisWeek.add(-5, 'day') //tuesday
   endOfThisWeek.add(1, 'day') //monday
 }
-else if (m.isSame(monday)) {
+else if (m2.isSame(monday, 'date')) {
   // console.log('MONDAY decrement')
   startOfThisWeek.add(-6, 'day')
 }
@@ -41,12 +40,13 @@ else {
   endOfThisWeek = moment().clone().endOf('week').add(2, 'day')
 }
 
-const mondayInTwoWeeks = endOfThisWeek.clone().add(7, 'day')
-const momentDisablePrevious = moment(new Date('2021-11-17'))
-
+const mondayInTwoWeeks = endOfThisWeek.clone().add(7, 'day');
 // console.log('startOfThisWeek', startOfThisWeek)
 // console.log('endOfThisWeek', endOfThisWeek)
 // console.log('mondayInTwoWeeks', mondayInTwoWeeks)
+
+// the last week that data was added to the database. (a moment before a tuesday)
+const momentDisablePrevious = moment(new Date('2021-11-15'));
 
 const ScheduleManager = () => {
   // moment.js
@@ -56,146 +56,148 @@ const ScheduleManager = () => {
   const [mWeekEnd, setMWeekEnd] = useState(endOfThisWeek.clone()) //always a monday
 
   // employee
-  const [employeeSchedules, setEmployeeSchedules] = useState([]); // array of employee with their week date schedules
+  const [employees, setEmployees] = useState([]); // array of employee with their week date schedules
+  const [employeeDetails, setEmployeeDetails] = useState(undefined); // the employee to show schedule details
   const [editingEmployee, setEditingEmployee] = useState(false); // determines if an employee is being modified
-  const [editedEmployee, setEditedEmployee] = useState(undefined); // the employee with schedule to be modified
+  const [employeeToEdit, setEmployeeToEdit] = useState(undefined); // the employee with schedule to be modified
 
   // turns
   const [turns, setTurns] = useState([]); // the turns of this manager entity 
   const [addingNewTurn, setAddingNewTurn] = useState(false) // determines if a turn is being added
-  const [newTurn, setNewTurn] = useState({ turnId: -1, hourStart: undefined }) // the new turn being created
+  const [newTurn, setNewTurn] = useState({ turnId: -1, timeStart: undefined }) // the new turn being created
 
   // context
   const { authState } = useContext(AuthContext)
 
-  /** Initializing the manager's turns once. */
+  /** Initializing the manager TURNS once. */
   const userId = authState.userId;
   useEffect(() => {
-    if (userId) {
-      const getUserTurns = async () => {
-        // console.log('authState', authState)
-        console.log('-userId', userId)
-        const url = server.getUserTurns(userId);
-        console.log('url', url)
-        axios.get(url)
-          .then(res => {
-            console.log('res.data.turns', res.data.turns)
-
-            setTurns(res.data.turns)
-          })
-          .catch(err => console.log(err))
-      }
-      // setTimeout(() => getUserTurns(), 6000)
-      getUserTurns()
+    const getUserTurns = async () => {
+      const url = server.getUserTurns();
+      axios.get(url).then(res => {
+        // console.log('res.turns', res.data.turns)
+        setTurns(res.data.turns);
+      })
+        .catch(err => console.log(err))
     }
-  }, [userId])
+    // setTimeout(() => getUserTurns(), 6000)
+    getUserTurns()
+  }, [])
 
 
-  /** Initializing array of all employee schedules for the current week. */
+  /** Initializing array of EMPLOYEE schedules for the current week. */
   useEffect(() => {
-    if (mWeekStart) {
-      // console.log('mWeekStart', mWeekStart)
-      // console.log('mWeekEnd', mWeekEnd, '\n')
-      // set the schedule of the week starting with mWeekStart
-      const week = [];
-      let currentDay = mWeekStart.clone();
-      const nextTuesday = mWeekEnd.clone().add(1, 'day')
-      while (currentDay.isBefore(nextTuesday, 'day')) {
-        week.push(currentDay.clone())
-        currentDay.add(1, 'day')
-      }
-      // console.log('week', week)
-      setWeekSchedule(week)
+    if (!mWeekStart) return;
 
-      const getWeekSchedule = async () => {
-        const scheduleId = getScheduleIdOfMoment(mWeekStart)
-        const url = server.getUserSchedule(scheduleId);
-        console.log('url', url)
-        axios.get(url).then(res => {
-          if (res.data.schedules) {
-            const schedules = res.data.schedules
-            // console.log('schedules', schedules)
-            setEmployeeSchedules(schedules)
-          }
-          else setEmployeeSchedules([])
-        })
-          .catch(err => console.log(err))
-      }
-      // setTimeout(() => getWeekSchedule(), 2000)
-      getWeekSchedule()
+    // console.log('mWeekStart', mWeekStart)
+    // console.log('turns', turns)
+    // console.log('mWeekEnd', mWeekEnd, '\n')
+    // set the schedule of the week starting with mWeekStart
+    const week = [];
+    let currentDay = mWeekStart.clone();
+    const nextTuesday = mWeekEnd.clone().add(1, 'day');
+    while (currentDay.isBefore(nextTuesday, 'day')) {
+      // console.log('currentDay', currentDay)
+      week.push(currentDay.clone());
+      currentDay.add(1, 'day');
     }
+    // console.log('week', week);
+    setWeekSchedule(week);
+
+    const getWeekSchedule = async () => {
+      const scheduleId = getScheduleIdOfMoment(mWeekStart);
+      const url = server.getUserSchedule(scheduleId);
+      // console.log('url', url)
+      axios.get(url).then(res => {
+        if (res.data.employeesInfo) {
+          const employeesInfo = res.data.employeesInfo;
+          console.log('res.employeesInfo', employeesInfo);
+          // const scheduleArr = schedules.map(sched => {
+          // const tr = sched.weekDates.find(weekDate => turns.turnId === weekDate.turnId);
+          // const tr = turns.find(turn => turn.turnId === sched.weekDates.turnId);
+
+          // console.log('tr', tr)
+          // sched.turnIndex = tr
+          //   return sched
+          // })
+          // turns.find(turn => turn.turnId === date.turnId).turnIndex
+          // turnArr.map(turn => console.log(turn))
+          setEmployees(employeesInfo);
+        }
+        else setEmployees([]);
+      })
+        .catch(err => console.log(err))
+    }
+    // setTimeout(() => getWeekSchedule(), 2000)
+    getWeekSchedule();
   }, [mCurrent])
 
 
-  /** Applied when a turn has been created. */
+  /** TURN has been created. */
   useEffect(() => {
-    if (!addingNewTurn && newTurn.hourStart) {
-      // fetch create or update turn table
-      const saveTurns = async () => {
-        const turnId = getTurnIdOfHour(newTurn.hourStart)
-        const { hourStart, hourEnd, hourLunch } = newTurn
-        console.log('turnId', turnId)
-        console.log('userId', userId)
-        const url = server.setTurn();
-        console.log('url', url)
-        // console.log('get24HourFormatOfHour(hourStart)', get24HourFormatOfHour(hourStart))
-        axios.post(url, {
-          user_id: userId,
-          turn_id: turnId,
-          hour_start: get24HourFormatOfHour(hourStart),
-          hour_end: get24HourFormatOfHour(hourEnd),
-          hour_lunch: get24HourFormatOfHour(hourLunch)
-        })
-        setNewTurn({ turnId: -1 })
-        // .then(res => {
-        //   console.log('reseting turn with setNewTurn')
+    if (addingNewTurn || !newTurn.timeStart) return;
 
-        //   // setNewTurn({ turnId: -1 })
-        // })
-        // .catch(err => console.log(err))
-      }
-      saveTurns()
+    // fetch create or update turn table
+    const saveTurns = async () => {
+      const turnId = getTurnIdByTime(newTurn.timeStart)
+      const { timeStart, timeEnd, timeLunch } = newTurn
+      // console.log('newTurn.timeStart', newTurn.timeStart)
+      // console.log('userId', userId)
+      const url = server.setTurn();
+      // console.log('url', url)
+      // console.log('get24HourFormatOfTime(timeStart)', get24HourFormatOfTime(timeStart))
+      axios.post(url, {
+        user_id: userId,
+        turn_id: turnId,
+        time_start: get24HourFormatOfTime(timeStart),
+        time_end: get24HourFormatOfTime(timeEnd),
+        time_lunch: get24HourFormatOfTime(timeLunch)
+      })
+      setNewTurn({ turnId: -1 });
     }
+    saveTurns()
   }, [turns])
 
 
-  /** Applied when saving the changes made to the schedule of a particular employee. */
+  /** Saving the changes made to the schedule of a particular employee. */
   useEffect(() => {
-    if (!editingEmployee && editedEmployee) {
-      console.log('editedEmployee', editedEmployee)
-      const employee = employeeSchedules.find(emp => emp.userId === editedEmployee.userId);
-      employee.weekDates = editedEmployee.weekDates
+    if (editingEmployee || !employeeToEdit) return;
 
-      console.log('Now update the schedule of this employee on the database')
-      const setUserSchedule = async () => {
-        console.log('weekDates', employee.weekDates);
-        // const schedule_id = getScheduleIdOfDate(employeeSchedules[employeeIndex].weekDates[0]);
-        const schedule_id = getScheduleIdOfMoment(mWeekStart);
-        const user_id = employee.userId;
-        const is_hour_lunch = false;
+    console.log('employeeToEdit', employeeToEdit)
+    // set new properties of the employee state
+    let employee = employees.find(emp => emp.userId === employeeToEdit.userId);
+    employee.weekDates = employeeToEdit.weekDates;
+    employee.turnId = employeeToEdit.turnId;
+    console.log('employee', employee);
 
-        console.log('schedule_id', schedule_id);
-        console.log('user_id', user_id);
-        const url = server.setUserSchedule(); ///protected/schedule/week
-        console.log('url', url);
-        // console.log('employee.weekDates', employee.weekDates)
+    // console.log('Now update the schedule of this employee on the database')
+    const setUserSchedule = async () => {
+      // console.log('weekDates', employee.weekDates);
+      // const schedule_id = getScheduleIdOfDate(employees[employeeIndex].weekDates[0]);
+      const schedule_id = getScheduleIdOfMoment(mWeekStart);
+      const user_id = employee.userId;
+      const is_hour_lunch = false;
 
-        axios.post(url, {
-          user_id,
-          schedule_id,
-          is_hour_lunch,
-          ...employee.weekDates
-        })
-          .then(res => {
-            console.log('res', res)
-            // setEditedEmployee(undefined)
-          })
-        //   .catch(err => console.log(err))
-        setEditedEmployee(undefined)
-      }
-      setUserSchedule()
+      // console.log('schedule_id', schedule_id);
+      // console.log('user_id', user_id);
+      const url = server.setUserSchedule(); ///protected/schedule/week
+      // console.log('url', url);
+      // console.log('employee.weekDates', employee.weekDates)
+
+      axios.post(url, {
+        user_id,
+        schedule_id,
+        is_hour_lunch,
+        ...employee.weekDates
+      }).then(res => {
+        const newWeekDates = res.data.newWeekDates;
+        employee.totalHours = calculateTotalHours(newWeekDates);
+        console.log('res.data.newWeekDates', res.data.newWeekDates, employee.totalHours);
+        setEmployeeToEdit(undefined);
+      })
     }
-  }, [editedEmployee])
+    setUserSchedule()
+  }, [employeeToEdit])
 
 
   /************************************************/
@@ -203,12 +205,13 @@ const ScheduleManager = () => {
   /************************************************/
 
   const goToPrevious = () => {
-    setMCurrent(currMoment => {
-      const prevMoment = currMoment.clone().add(-7, 'day')
-      setMWeekStart(prevMoment.clone().startOf('week').add(2, 'day'));
-      setMWeekEnd(prevMoment.clone().endOf('week').add(2, 'day'))
-      return prevMoment
-    })
+    const oneWeekEarlier = mWeekStart.clone().add(-6, 'day'); //a moment of the previous week
+    // const newWeekStart = mWeekStart.clone().add(-7, 'day');
+    // console.log('oneWeekEarlier', oneWeekEarlier)
+    // console.log('oneWeekEarlier.clone().startOf(week).add(2, day)', oneWeekEarlier.clone().startOf('week').add(2, 'day'))
+    setMWeekStart(oneWeekEarlier.clone().startOf('week').add(2, 'day'));
+    setMWeekEnd(oneWeekEarlier.clone().endOf('week').add(2, 'day'))
+    setMCurrent(oneWeekEarlier)
   }
 
   const goToNextWeek = () => {
@@ -230,21 +233,21 @@ const ScheduleManager = () => {
   /*           Schedule Turns Functions           */
   /************************************************/
 
-  const saveTurn = (hourStart, hourEnd, lunchHour) => {
-    // console.log('saveTurn', hourStart, hourEnd, lunchHour)
+  const saveTurn = (timeStart, timeEnd, lunchHour) => {
+    // console.log('saveTurn', timeStart, timeEnd, lunchHour)
     setTurns(prev => {
       let turnClone = [...prev]
       const lastTurn = prev[prev.length - 1]
 
-      // console.log('hourStart', hourStart)
-      // console.log('hourEnd', hourEnd)
+      // console.log('timeStart', timeStart)
+      // console.log('timeEnd', timeEnd)
       // console.log('lunchHour', lunchHour)
 
-      lastTurn.hourStart = timeFromInt(hourStart, { format: 12, leadingZero: false })
-      lastTurn.hourEnd = timeFromInt(hourEnd, { format: 12, leadingZero: false })
-      lastTurn.hourLunch = timeFromInt(lunchHour, { format: 12, leadingZero: false })
+      lastTurn.timeStart = timeFromInt(timeStart, { format: 12, leadingZero: false })
+      lastTurn.timeEnd = timeFromInt(timeEnd, { format: 12, leadingZero: false })
+      lastTurn.timeLunch = timeFromInt(lunchHour, { format: 12, leadingZero: false })
 
-      // console.log('lastTurn.start', lastTurn.hourStart)
+      // console.log('lastTurn.start', lastTurn.timeStart)
       // console.log('lastTurn.end', lastTurn.end)
       // console.log('lastTurn.lunch', lastTurn.lunch)
 
@@ -255,30 +258,33 @@ const ScheduleManager = () => {
       // sort by date start
       turnClone = turnClone.sort((a, b) => {
         // console.log('\n\n')
-        const is_a_am = a.hourStart.includes('AM')
-        const is_b_am = a.hourStart.includes('AM')
-        const is_a_pm = b.hourStart.includes('PM')
-        const is_b_pm = b.hourStart.includes('PM')
+        const is_a_am = a.timeStart.includes('AM')
+        const is_a_pm = a.timeStart.includes('PM')
+        const is_b_am = b.timeStart.includes('AM')
+        const is_b_pm = b.timeStart.includes('PM')
 
         // do algorithm to determine order depending on AM or PM
         if (is_a_pm && is_b_am) {
           return -1
         }
         // 3 more conditions maybe
-        return a.hourStart.localeCompare(b.hourStart)
+        return a.timeStart.localeCompare(b.timeStart)
       })
 
       // enumerate in desc order
-      turnClone.forEach((turn, i) => turn.turnId = i + 1)
+      turnClone.forEach((turn, i) => turn.turnIndex = i + 1)
 
       // store new turn id for fetch insert on useEffect
-      const turnId = getTurnIdOfHour(lastTurn.hourStart)
-      console.log('turnId', turnId)
+      const turnIndex = getTurnIdByTime(lastTurn.timeStart)
+
+      console.log('lastTurn', lastTurn)
+      // console.log('turnId', turnId)
       setNewTurn({
-        turnId,
-        hourStart: lastTurn.hourStart,
-        hourEnd: lastTurn.hourEnd,
-        hourLunch: lastTurn.hourLunch
+        turnIndex,
+        turnId: getTurnIdByTime(lastTurn.timeStart),
+        timeStart: lastTurn.timeStart,
+        timeEnd: lastTurn.timeEnd,
+        timeLunch: lastTurn.timeLunch
       })
 
       setAddingNewTurn(false)
@@ -286,21 +292,19 @@ const ScheduleManager = () => {
     })
   }
 
-
   const removeAddedTurn = () => {
     turns.pop();
     setTurns(turns)
     setAddingNewTurn(false)
   }
 
-
   const addNewTurn = () => {
     // setTurns(prev => {
-    //   const res = [...prev, { turnId: -1, hourStart: undefined, hourEnd: undefined, hourLunch: undefined }];
+    //   const res = [...prev, { turnId: -1, timeStart: undefined, timeEnd: undefined, timeLunch: undefined }];
     //   setAddingNewTurn(true)
     //   return res
     // })
-    setTurns(prev => [...prev, { turnId: -1, hourStart: undefined, hourEnd: undefined, hourLunch: undefined }])
+    setTurns(prev => [...prev, { turnIndex: -1, timeStart: undefined, timeEnd: undefined, timeLunch: undefined }])
     setAddingNewTurn(true)
   }
 
@@ -309,116 +313,110 @@ const ScheduleManager = () => {
   /*           Schedule Edit Functions            */
   /************************************************/
 
-  const openScheduleEdit = employee => {
-    console.log('turns.length', turns.length)
-    if (turns[turns.length - 1].turnId === -1)
-      removeAddedTurn()
-    setEditedEmployee(employee)
-    setEditingEmployee(true)
+  const openScheduleDetails = employee => {
+    setEmployeeDetails(employee)
+    // setShowEmployeeDetails(true)
   }
 
+  const openScheduleEdit = employee => {
+    // console.log('turns.length', turns.length)
+    if (turns.length > 0 && turns[turns.length - 1].turnId === -1)
+      removeAddedTurn();
+    setEmployeeToEdit(employee);
+    setEditingEmployee(true);
+  }
 
   const closeScheduleEdit = () => {
-    setEditedEmployee(undefined);
-    setEditingEmployee(false)
+    setEmployeeToEdit(undefined);
+    setEditingEmployee(false);
   }
-
 
   const saveScheduleOfEmployee = emp => {
-    setEditingEmployee(false)
-    setEditedEmployee(emp)
+    setEditingEmployee(false);
+    setEmployeeToEdit(emp);
   }
 
-
-  const addWeekDateIntoList = (day) => {
-    if (turns.length > 0) {
-      const newWeekDate = {
-        turn: 1,
-        hourStart: turns[turns.length - 1].start,
-        hourEnd: turns[turns.length - 1].end,
-        hourLunch: turns[turns.length - 1].lunch
-      }
-
-      setEditedEmployee(emp => {
-        const newEmployee = { ...emp }
-        newEmployee.weekDates[day] = newWeekDate
-        return newEmployee
-      })
-    }
-  }
-
-  console.log('weekSchedule', weekSchedule)
+  // console.log('mCurrent', mCurrent)
   return (
-    <div>
-      {/* section for the weekDateRange component and the buttons */}
-      <div className='d-flex justify-content-between mb-3'>
-        {
-          (weekSchedule.length > 0) && (
-            <DateRange
-              dateStart={weekSchedule[0].toDate()}
-              dateEnd={weekSchedule[6].toDate()}
-              disableNext={!mWeekEnd.isBefore(mondayInTwoWeeks)}
-              disablePrev={mWeekStart.isBefore(momentDisablePrevious)}
-              onGoToNextWeek={goToNextWeek}
-              onGoToPrevious={goToPrevious}
-            />
-          )
-        }
-        <div className='d-flex align-items-start'>
-          <MButton
-            className='mr-2'
-            text='Template CSV'
-            variant='outline-primary'
-            size='sm'
-            IconComponent={iconComponents.Download}
-            iconSize='sm'
-            iconColor='dark'
-          />
-          <MButton
-            className='mr-2'
-            text='Import CSV'
-            variant='secondary'
-            size='sm'
-            IconComponent={iconComponents.Upload}
-            iconSize='sm'
-            iconColor='dark'
-          />
-          <Icon
-            IconComponent={iconComponents.Download}
-            size='lg'
-            color='primary'
-            className='mt-1'
-          />
-        </div>
-      </div>
-
-      {/* section for the scheduleTable and approve button */}
-      <section className='mb-4'>
-        <ScheduleTable
-          employeeSchedules={employeeSchedules}
-          onOpenScheduleEdit={openScheduleEdit}
+    <>
+      {employeeDetails && (
+        <ProfileScheduleDetails
+          employee={employeeDetails}
+          onBack={() => setEmployeeDetails(undefined)}
         />
-      </section>
+      )}
+      {!employeeDetails && <>
+        <div className='d-flex justify-content-between mb-3'>
+          {
+            (weekSchedule.length > 0) && (
+              <DateRange
+                dateStart={weekSchedule[0].toDate()}
+                dateEnd={weekSchedule[6].toDate()}
+                disableNext={!mWeekEnd.isBefore(mondayInTwoWeeks)}
+                disablePrev={mWeekStart.isBefore(momentDisablePrevious)}
+                onGoToNextWeek={goToNextWeek}
+                onGoToPrevious={goToPrevious}
+              />
+            )
+          }
+          <div className='d-flex align-items-start'>
+            <MButton
+              className='mr-2'
+              text='Template CSV'
+              variant='outline-primary'
+              size='sm'
+              IconComponent={iconComponents.Download}
+              iconSize='sm'
+              iconColor='dark'
+            />
+            <MButton
+              className='mr-2'
+              text='Import CSV'
+              variant='secondary'
+              size='sm'
+              IconComponent={iconComponents.Upload}
+              iconSize='sm'
+              iconColor='dark'
+            />
+            <Icon
+              IconComponent={iconComponents.Download}
+              size='lg'
+              color='primary'
+              className='mt-1'
+            />
+          </div>
+        </div>
 
-      {/* section for the ScheduleEditModal portal component */}
-      <TurnsTable
-        turns={turns}
-        onAddNewTurn={addNewTurn}
-        addingNewTurn={addingNewTurn}
-        onSaveTurn={saveTurn}
-        onCancel={removeAddedTurn}
-      />
-      {editingEmployee &&
-        <ScheduleEdit
-          employee={editedEmployee}
+        <section className='mb-4'>
+          <ScheduleTable
+            employees={employees}
+            onOpenScheduleEdit={openScheduleEdit}
+            onOpenScheduleDetails={openScheduleDetails}
+            isEditable={turns.length > 0 && turns[0].turnIndex > 0}
+          />
+        </section>
+
+        <TurnsTable
           turns={turns}
-          dateStart={mWeekStart.toDate()}
-          dateEnd={mWeekEnd.toDate()}
-          onWeekDateAdd={addWeekDateIntoList}
-          onSaveChanges={modifiedEmp => saveScheduleOfEmployee(modifiedEmp)}
-          onCloseScheduleEdit={closeScheduleEdit}
-        />}
-    </div >
+          onAddNewTurn={addNewTurn}
+          addingNewTurn={addingNewTurn}
+          onSaveTurn={saveTurn}
+          onCancel={removeAddedTurn}
+        />
+
+        {/* section for the ScheduleEditModal portal component */}
+        {editingEmployee &&
+          <ScheduleEdit
+            turns={turns}
+            dateStart={mWeekStart.toDate()}
+            dateEnd={mWeekEnd.toDate()}
+            employee={employeeToEdit}
+            mCurrent={mCurrent}
+            onSaveChanges={modifiedEmp => saveScheduleOfEmployee(modifiedEmp)}
+            onCloseScheduleEdit={closeScheduleEdit}
+          />}
+      </>}
+    </>
   )
 }
 

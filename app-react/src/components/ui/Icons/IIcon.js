@@ -11,7 +11,7 @@ const IIcon = (props) => {
 
   switch (props.name.toLowerCase()) {
     case 'pen':
-      TheIcon = <Pen {...props} color='primary' />; break;
+      TheIcon = <Pen {...props} />; break;
     case 'checkmark':
       TheIcon = <CheckMark {...props} />; break;
     default:

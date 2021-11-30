@@ -37,20 +37,17 @@ const AuthReducer = (state, action) => {
         firstName: first_name,
         lastName: last_name,
         email,
-        // password,
         userType: user_type,
         gender,
       }
     }
     case types.VERIFY: {
-      console.log('VERFIY')
       return {
         ...state,
         userType: payload.permission_type
       }
     }
     case types.RESET: {
-      console.log('RESET', payload)
       return payload
     }
     default:

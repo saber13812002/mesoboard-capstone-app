@@ -3,7 +3,11 @@
   width: 32%;
   /* width: 420px; */
   min-width: 302px;
-  max-width: 420px
+  max-width: 420px;
+}
+
+.addPermission__card > header {
+  margin: -1px -1px 0 0;
 }
 
 .addPermission__card > form {

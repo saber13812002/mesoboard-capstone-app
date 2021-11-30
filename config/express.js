@@ -13,8 +13,8 @@ module.exports = function () {
   const server = http.createServer(app);
 
   app.use(methodOverride());
-  app.use(express.json())
-  app.use(express.urlencoded({ extended: true }))
+  app.use(express.json());
+  app.use(express.urlencoded({ extended: true }));
   app.use(cors());
 
   // const allowedOrigins = ['http://localhost:3000', 'https://mesoboard-capstone-app.herokuapp.com', 'http://mesoboard-capstone-app.herokuapp.com', 'http://mesoboard-capstone-app.herokuapp.com/3001'];
@@ -40,7 +40,7 @@ module.exports = function () {
    *  verify the user's authorization by a Bearer Token and assign the
    *  jwt payload to the request object if verification was successful.
    */
-  app.use('/protected', require('../controllers/security').verifyJWT)
+  app.use('/protected', require('../controllers/security').verifyJWT);
 
   /***************************/
   /* REQUIRE THE ROUTES HERE */
@@ -48,6 +48,7 @@ module.exports = function () {
   require('../routes/authentication-routes')(app);
   require('../routes/permissions-routes')(app);
   require('../routes/schedule-routes')(app);
+  require('../routes/employee-routes')(app);
 
   // Have Node serve the files for our built React app
   app.use(express.static(path.resolve(__dirname, '../app-react/build')));

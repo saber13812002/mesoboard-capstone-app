@@ -14,6 +14,7 @@ import ContentHeader from './ui/ContentHeader';
 import ContentHeaderInfo from './ui/ContentHeaderInfo'
 import TotalServicioProduccion from './ui/TotalServicioProduccion'
 import MButton from './ui/Buttons/MButton'
+import BackButton from './ui/Buttons/BackButton'
 
 // components
 export {
@@ -31,5 +32,6 @@ export {
   ContentHeader,
   ContentHeaderInfo,
   TotalServicioProduccion,
-  MButton
+  MButton,
+  BackButton
 }
