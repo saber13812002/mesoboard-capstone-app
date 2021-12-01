@@ -4,10 +4,8 @@ import AuthReducer from './AuthReducer'
 import axios from 'axios'
 import { logoutStorage } from '../services/authService'
 import { ServerRoutes as server } from '../services/apiService'
-// import { useHistory } from 'react-router-dom'
 
 const AuthProvider = ({ children }) => {
-  // const history = useHistory()
 
   const initState = {
     userId: undefined,
@@ -116,21 +114,16 @@ const AuthProvider = ({ children }) => {
     verifyPermission()
   }
 
-  const logoutFetch = (setRedirect) => {
+  const logoutFetch = () => {
     const logout = async () => {
       // return axios.get('/protected/auth/logout')
-      axios.get(server.logout()).then(_ => {
-        logoutStorage()
-        resetState()
-        setRedirect(true)
-        // history.push('/signin')
-      }).catch(err => {
-        console.log('err', err)
-        if (err.response.status)
-          console.log('status', err.response.status)
-      })
+      return axios.get(server.logout()).then(_ => {
+        logoutStorage();
+        resetState();
+        return true;
+      }).catch(_ => false)
     }
-    logout()
+    return logout()
   }
 
 

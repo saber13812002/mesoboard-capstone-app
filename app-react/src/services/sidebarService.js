@@ -4,13 +4,13 @@ import { urlPaths } from '../services/urlService'
 
 export class SidebarItem {
   constructor(item) {
-    this.item = item
-    this.next = null
+    this.item = item;
+    this.next = null;
   }
 
   setNext(item) {
-    const savedItem = this.next
-    this.next = item
+    const savedItem = this.next;
+    this.next = item;
     if (savedItem !== null)
       item.next = savedItem;
   }
@@ -23,6 +23,36 @@ export class SidebarItem {
       curr = curr.next;
     }
     return arr;
+  }
+
+  /** clear all next references  */
+  clearAll() {
+    let curr = prev = this;
+    let currNext = this.next;
+
+    // clear all references
+    while (currNext != null) {
+      const savedNext = curr.next;
+      prev = curr;
+      curr = savedNext;
+      currNext = savedNext?.next;
+
+      prev.next = null;
+      prev = null;
+    }
+    // console.log('this', this)
+  }
+
+  toString() {
+    let s = '';
+    let curr = this;
+    while (curr != null) {
+      s += curr;
+      if (curr.next != null)
+        s += ',';
+      curr = curr.next;
+    }
+    return s;
   }
 }
 

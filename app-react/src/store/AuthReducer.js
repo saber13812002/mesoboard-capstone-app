@@ -25,9 +25,6 @@ const AuthReducer = (state, action) => {
     }
     case types.LOGIN: {
       const { user_id, first_name, last_name, email, user_type, gender, token, exp } = payload
-      console.log('-exp', exp)
-      console.log('email', email)
-
       if (token && exp)
         setLocalStorage({ token, exp, userId: user_id })
 

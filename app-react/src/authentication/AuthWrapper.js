@@ -5,7 +5,7 @@ import MesoboardBackgroundImg from '../assets/mesoboard_background.jpg'
 import { MesonLogo } from '../components'
 
 const AuthWrapper = ({ children, redirectToApp }) => {
-  console.log('redirectToApp', redirectToApp)
+  // console.log('redirectToApp', redirectToApp)
 
   return (
     <>
