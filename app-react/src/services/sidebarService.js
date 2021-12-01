@@ -27,7 +27,8 @@ export class SidebarItem {
 
   /** clear all next references  */
   clearAll() {
-    let curr = prev = this;
+    let curr = this;
+    let prev = this;
     let currNext = this.next;
 
     // clear all references

@@ -5,6 +5,7 @@ import { AuthWrapper } from '.';
 import { isLoggedIn } from '../services/authService';
 import { useHistory } from 'react-router-dom';
 import { ServerRoutes as server } from '../services/apiService';
+import { MButton, iconComponents } from '../components';
 import axios from 'axios';
 
 const ForgotPassword = () => {
@@ -16,10 +17,8 @@ const ForgotPassword = () => {
 
   useEffect(() => {
     if (!emailToSend) return;
-    console.log('-')
     axios.post(server.sendResetPassword(), { email }).then(res => {
       console.log('res.data', res.data);
-
     })
     setEmailToSend(undefined);
   }, [emailToSend])
@@ -35,21 +34,25 @@ const ForgotPassword = () => {
     <AuthWrapper redirectToApp={redirectToApp}>
       <h2 style={{ color: '#287F4E', textAlign: 'center' }}>Recuperar Contraseña</h2>
       <Form onSubmit={sendResetPassword}>
-        <Form.Control className='mt-4' size="lg" type="text" placeholder="Correo electrónico" />
+        <Form.Control className='mt-4' size='lg' type='text' placeholder='Correo electrónico' />
         <div className='d-flex w-100 justify-content-between mt-3 gap-3'>
-          <Button variant="light" className="w-100" onClick={handleCancel}>
+          <Button variant='light' className='w-100' onClick={handleCancel}>
             Cancelar
           </Button>
-          <Button type="submit" variant="primary" className="w-100">
+          {/* <Button type='submit' variant='primary' className='w-100'>
             Enviar
-          </Button>
+          </Button> */}
+          <MButton
+            className='w-100'
+            text='Enviar'
+            variant='primary'
+            size='sm'
+            IconComponent={iconComponents.Mail}
+            iconSize='sm'
+          // iconColor='dark'
+          />
         </div>
       </Form>
-      {/* <p className='auth__redirect'>
-        <NavLink to={'authenticate'}>
-          Registrase
-        </NavLink>
-      </p> */}
     </AuthWrapper>
   )
 }

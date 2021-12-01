@@ -13,7 +13,7 @@ import { IconContext } from 'react-icons'
 const Icon = ({ IconComponent, size = 'md', color = 'dark', className, style, isSidebarItemActive, onClick }) => {
   switch (size) {
     case 'sm':
-      size = '14px'; break;
+      size = '16px'; break;
     case 'lg':
       size = '24px'; break;
     case 'x-lg':

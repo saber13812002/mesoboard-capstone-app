@@ -63,7 +63,7 @@ const MButton = ({ type, text = '', variant = 'primary', size = 'md', IconCompon
     >
       {
         IconComponent
-          ? <div className='d-flex align-items-center text-nowrap'>
+          ? <div className='d-flex align-items-center justify-content-center text-nowrap'>
             <Icon
               IconComponent={IconComponent}
               size='sm'
