@@ -160,7 +160,7 @@ exports.createUser = (req, res, next) => {
             salt
           ];
 
-          if (user_type == 'admin') {
+          if (user_type == 'admin' || user_type == 'manager') {
             // console.log('userInfo', userInfo)
             const query4 = `insert into users(first_name, last_name, email, password, creation_date, is_deleted,
                 user_type, gender, salt) values ($1, $2, $3, $4, $5,

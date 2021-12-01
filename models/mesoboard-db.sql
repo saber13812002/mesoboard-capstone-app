@@ -131,5 +131,5 @@ CREATE TABLE turn (
 
 CREATE EXTENSION IF NOT EXISTS "pgcrypto";
 
-insert into permissions (email, code, permission_type) values('kevin.ramirez3@upr.edu', '123456', 'admin');
+insert into permissions (email, code, permission_type) values('kevin.ramirez3@upr.edu', '123456', 'manager');
 

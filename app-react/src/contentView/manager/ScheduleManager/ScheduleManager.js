@@ -5,7 +5,7 @@ import { AuthContext } from '../../../store'
 import { MButton } from '../../../components'
 import { ProfileScheduleDetails, ScheduleTable, TurnsTable } from '../..'
 import { Icon, iconComponents, ScheduleEdit } from '../../../components'
-import { timeFromInt } from 'time-number';
+import { timeFromInt,timeToInt } from 'time-number';
 import { DateRange } from '../..'
 import { ServerRoutes as server } from '../../../services/apiService'
 import {
@@ -258,17 +258,10 @@ const ScheduleManager = () => {
       // sort by date start
       turnClone = turnClone.sort((a, b) => {
         // console.log('\n\n')
-        const is_a_am = a.timeStart.includes('AM')
-        const is_a_pm = a.timeStart.includes('PM')
-        const is_b_am = b.timeStart.includes('AM')
-        const is_b_pm = b.timeStart.includes('PM')
-
-        // do algorithm to determine order depending on AM or PM
-        if (is_a_pm && is_b_am) {
-          return -1
-        }
-        // 3 more conditions maybe
-        return a.timeStart.localeCompare(b.timeStart)
+        let aHour = timeToInt(a.timeStart)
+        let bHour = timeToInt(b.timeStart)
+        console.log(aHour, bHour)
+        return ('' + aHour).localeCompare(bHour)
       })
 
       // enumerate in desc order
