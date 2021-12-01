@@ -5,20 +5,20 @@ class UrlConstants {
   static API = '/api/';
   static PROTECTED = '/protected/';
 
-  //
   // exports
   static VERIFY_PERMISSION = 'permissions/verify';
   static SIGNUP = 'auth/signup';
   static LOGIN = 'auth/login';
   static LOGOUT = 'auth/logout';
   static VERIFY_TOKEN_GET_USER = 'auth/verifyToken/getUser';
+  static SEND_RESET_PASSWORD = 'mailer/resetPassword';
   static ADD_PERMISSION = 'permissions/add';
-  static GET_USER_DATA = 'auth/userData';
+  static USER_DATA = 'auth/userData';
   static SET_USER_SCHEDULES = 'schedule/week';
   static ALL_USER_SCHEDULES = 'schedule/week/all/<schedule_id>';
-  static GET_TURNS = 'schedule/turn';
+  static TURNS = 'schedule/turn';
   static SET_TURN = 'schedule/turn/all';
-  static GET_ALL_EMPLOYEES = 'employee/all'
+  static ALL_EMPLOYEES = 'employee/all'
 }
 
 export class ServerRoutes {
@@ -37,8 +37,11 @@ export class ServerRoutes {
   static verifyTokenAndGetUser() {
     return UrlConstants.API + UrlConstants.VERIFY_TOKEN_GET_USER;
   }
+  static sendResetPassword() {
+    return UrlConstants.API + UrlConstants.SEND_RESET_PASSWORD;
+  }
   static getUserData() {
-    return UrlConstants.PROTECTED + UrlConstants.GET_USER_DATA
+    return UrlConstants.PROTECTED + UrlConstants.USER_DATA
   }
   static addPermission() {
     return UrlConstants.PROTECTED + UrlConstants.ADD_PERMISSION;
@@ -50,7 +53,7 @@ export class ServerRoutes {
     return UrlConstants.PROTECTED + UrlConstants.ALL_USER_SCHEDULES.replace('<schedule_id>', schedule_id);
   }
   static getUserTurns() {
-    return UrlConstants.PROTECTED + UrlConstants.GET_TURNS;
+    return UrlConstants.PROTECTED + UrlConstants.TURNS;
   }
   static setTurn() {
     return UrlConstants.PROTECTED + UrlConstants.SET_TURN
@@ -58,6 +61,6 @@ export class ServerRoutes {
 
   // EMPLOYEES
   static getAllEmployees() {
-    return UrlConstants.PROTECTED + UrlConstants.GET_ALL_EMPLOYEES
+    return UrlConstants.PROTECTED + UrlConstants.ALL_EMPLOYEES
   }
 }

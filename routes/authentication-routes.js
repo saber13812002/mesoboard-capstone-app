@@ -27,14 +27,12 @@ module.exports = app => {
   app.route('/protected/auth/userData')
     .get(tokens.removeExpiredTokens, auth.getUserData);
 
+  app.route('/api/auth/resetPassword/:user_id')
+    .get(auth.resetPassword);
+
+  app.route('/api/auth/:user_id/reset_password/:pass_request_id')
+    .get(auth.resetPassConfirmation);
+
   // .get(tokens.removeExpiredTokens, tokens.checkToken, auth.getUserData);
 
-  // app.route('/api/auth/changePassword')
-  //     .post(tokens.checkToken, auth.changePassword);
-
-  // app.route('/api/auth/resetPassword/:user_id')
-  //     .get(auth.resetPass);
-
-  // app.route('/api/auth/:user_id/reset_password/:pass_request_id')
-  //     .get(auth.resetPassConfirmation);
-};
+}

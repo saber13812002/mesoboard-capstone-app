@@ -65,7 +65,7 @@ exports.checkPermission = (req, res, next) => {
   const query = "SELECT (count(*) = 1) as code_exists FROM permissions WHERE code = $1;";
   const query1 = "SELECT permission_type FROM permissions WHERE code = $1;";
 
-  return db.task(t => {
+  return db.task(async t => {
     console.log(typeof code)
     return t.one(query, code).then(data => {
       console.log('data', data)

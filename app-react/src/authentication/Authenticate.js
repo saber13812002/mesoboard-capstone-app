@@ -89,15 +89,17 @@ const Authenticate = () => {
       {(userType.length === 0) && (
         <Form onSubmit={handleVerifyPermission}>
           <h2 style={{ color: '#287F4E' }}>Registración</h2>
-          <br />
-          <Form.Control type='text' placeholder='Código de verificación' value={code} onChange={(e) => setCode(e.target.value)} />
-          <br />
+          <Form.Control type='text' placeholder='Código de verificación'
+            className='mt-4'
+            value={code}
+            onChange={(e) => setCode(e.target.value)}
+          />
           {/* <Form.Control type='text' placeholder='Correo electrónico' />
           <br /> */}
 
-          {code.length === 0 && <Button disabled className='w-100'>Verificar</Button>}
+          {code.length === 0 && <Button disabled className='w-100 mt-3'>Verificar</Button>}
           {code.length > 0 && (
-            <Button type='submit' variant='primary' className='w-100'>
+            <Button type='submit' variant='primary' className='w-100 mt-3'>
               Verificar
             </Button>
           )}
@@ -112,8 +114,8 @@ const Authenticate = () => {
         />
       )}
       <p className='auth__redirect'>
-        ¿Ya tienes una cuenta?
-        <NavLink to={'signin'} onClick={() => resetState()}>
+        ¿No tienes una cuenta?
+        <NavLink to={'signin'} className='ml-1' onClick={() => resetState()}>
           Accesar
         </NavLink>
       </p>
