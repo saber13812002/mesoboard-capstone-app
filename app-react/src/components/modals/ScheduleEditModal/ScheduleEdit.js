@@ -8,6 +8,7 @@ import { ScheduleHoursBox } from '../../../contentView'
 import { getDayName, beautifyDate, get24HourFormatOfTime, toISOYearFormat } from '../../../services/scheduleService'
 import Dropdown from 'react-dropdown';
 import 'react-dropdown/style.css';
+import { timeFromInt } from 'time-number';
 
 const ScheduleEdit = ({ employee, turns, dateStart, dateEnd, mCurrent, onSaveChanges, onCloseScheduleEdit }) => {
   const deepCopy = JSON.parse(JSON.stringify(employee))
@@ -45,9 +46,9 @@ const ScheduleEdit = ({ employee, turns, dateStart, dateEnd, mCurrent, onSaveCha
    *  @param {Event} e the event containing the input value.
    */
   const updateHours = (day, e) => {
-    console.log(e.value)
+    //console.log(e.value)
     //e.target.value
-    const turnId = e.value;
+    const turnId = e.target.value;
     if (!turnId || turnId <= 0 || turnId > turns.length)
       return;
 
@@ -98,6 +99,17 @@ const ScheduleEdit = ({ employee, turns, dateStart, dateEnd, mCurrent, onSaveCha
       newEmployee.weekDates[day] = newWeekDate;
       return newEmployee;
     })
+  }
+  const updateLunch=(e) => {
+      //console.log(e.target.checked)
+      setEmployeeToEdit(emp =>{
+        const newEmployee = { ...emp };
+        newEmployee.isHourLunch = e.target.checked;
+        console.log(newEmployee.isHourLunch )
+
+        return newEmployee;
+      })
+    
   }
 
   /**
@@ -156,17 +168,18 @@ const ScheduleEdit = ({ employee, turns, dateStart, dateEnd, mCurrent, onSaveCha
                   />
                   <h4>{getDayName(day)}</h4>
                   {/*fix to grid to ease styling*/}
-                  {<Dropdown options={ids} onChange={(e) => updateHours(day, e)} />}
+                  {<Dropdown options={ids} onChange={(e) => updateHours(day,e)} />}
      
-                  <ScheduleHoursBox weekDate={weekDate} showLunchMins={true} />
+                  <ScheduleHoursBox isHourLunch={employeeToEdit.isHourLunch} weekDate={weekDate} showLunchMins={true} />
                   
                 </div>
+                
               )
             }
             return null
           })}
         </div>
-        <label><input type="checkbox" id="cbox1" value="first_checkbox"/> 1 hour Lunch</label><br/>
+        <label><input type="checkbox" onClick={(e) => updateLunch(e)}/> 1 hour Lunch</label><br/>
         {isSameData ? (
           <Button
             disabled={true}
