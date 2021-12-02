@@ -3,21 +3,21 @@ import { Table } from 'react-bootstrap'
 import { ScheduleHoursBox } from '../..';
 import { IIcon, iconComponents, MButton } from '../../../components'
 
-const tableHeaders = ['Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday', 'Monday', 'Total Hours']
+const tableHeaders = ['Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo', 'Lunes', 'Horas Asignadas']
 
-const ScheduleTable = ({ employees, isEditable, onOpenScheduleEdit, onOpenScheduleDetails }) => {
-  // console.log('employees', employees)
-  /** Displays the employee schedule hours for each day of the week within one row.
-   * @param employee employee with schedule information
+const ScheduleTable = ({ users, isEditable, onOpenScheduleEdit, onOpenScheduleDetails }) => {
+  // console.log('users', users)
+  /** Displays the user schedule hours for each day of the week within one row.
+   * @param user user with schedule information
    */
-  const handleRow = (employee, key) => {
-    const { employeeName, weekDates, totalHours } = employee;
+  const handleRow = (user, key) => {
+    const { name, weekDates, totalHours } = user;
 
     /** Array of weekDate objects where the indexes represent the day in number form. */
     // let weekDatesArr = [0, 1, 2, 3, 4, 5, 6].map(day => weekDates[day] ? weekDates[day] : null)
 
     return (
-      <tr key={employeeName}>
+      <tr key={name}>
         {isEditable && (
           <td className='align-middle icon'>
             <IIcon
@@ -25,13 +25,13 @@ const ScheduleTable = ({ employees, isEditable, onOpenScheduleEdit, onOpenSchedu
               width={14}
               height={14}
               color='primary'
-              onClick={() => onOpenScheduleEdit(employee)}
+              onClick={() => onOpenScheduleEdit(user)}
             />
           </td>
         )}
-        <td className='employeeNameTd'>
-          <p className='employeeName' onClick={() => onOpenScheduleDetails(employee)}>
-            {employeeName}
+        <td className='nameTd'>
+          <p className='name' onClick={() => onOpenScheduleDetails(user)}>
+            {name}
           </p>
         </td>
         {(window.innerWidth > 1080) && weekDates.map((weekDate, i) => weekDate
@@ -48,27 +48,27 @@ const ScheduleTable = ({ employees, isEditable, onOpenScheduleEdit, onOpenSchedu
     )
   }
 
-  // console.log('employees', employees)
+  console.log('users', users)
   return (
     <div className='scheduleTable'>
       <Table responsive size="sm" className='scheduleTable__table'>
         <thead>
           <tr>
             {isEditable && <th></th>}
-            <th className='employee'>{'Employee'}</th>
+            <th className='name'>{'Nombre'}</th>
             {(window.innerWidth > 1080)
               ? tableHeaders.map(header => (<th key={header}>{header}</th>))
               : <th>{tableHeaders[tableHeaders.length - 1]}</th>}
           </tr>
         </thead>
         <tbody>
-          {employees.map((employee, i) => handleRow(employee, i))}
+          {users.map((user, i) => handleRow(user, i))}
           {/* <tr>
             <td>
               <MButton
                 IconComponent={iconComponents.CheckMark}
                 iconSize='sm'
-                text='Approve'
+                text='Aprobar'
                 variant='primary'
                 size='sm'
                 className='ml-2 mt-3 mb-2'

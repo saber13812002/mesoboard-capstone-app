@@ -25,6 +25,13 @@ CREATE TABLE users (
   salt            TEXT
 );
 
+-- /* manager */
+CREATE TABLE manager (
+  manager_id      SERIAL PRIMARY KEY,
+  user_id         INTEGER REFERENCES users(user_id),
+  is_assistant    BOOLEAN
+);
+
  -- /* tokens */
 CREATE TABLE tokens (
   token_id        SERIAL PRIMARY KEY,
@@ -35,18 +42,12 @@ CREATE TABLE tokens (
   -- UNIQUE uniqueTokens (token)
 );
 
+
 -- -- /* admin */
 -- CREATE TABLE admin (
 --   admin_id        SERIAL PRIMARY KEY,
 --   user_id         INTEGER REFERENCES users(user_id),
 --   admin_type      TEXT
--- );
---
--- -- /* manager */
--- CREATE TABLE manager (
---   manager_id      SERIAL PRIMARY KEY,
---   user_id         INTEGER REFERENCES users(user_id),
---   is_assistant    BOOLEAN
 -- );
 
 -- -- /* employee */
@@ -66,7 +67,7 @@ CREATE TABLE reset_password (
 CREATE TABLE permissions (
   permission_id     SERIAL PRIMARY KEY,
   email             TEXT,
-  code              TEXT UNIQUE,
+  code              TEXT,
   last_update       TIMESTAMP,
   permission_type   TEXT
 );
@@ -97,8 +98,7 @@ create table user_schedule (
     date_start              TIMESTAMP,
     date_end                TIMESTAMP,
     date_lunch              TIMESTAMP,
-    is_hour_lunch           BOOLEAN,
-    num_day_in_week         INTEGER
+    is_hour_lunch           BOOLEAN
 );
 
 WITH date1 AS (

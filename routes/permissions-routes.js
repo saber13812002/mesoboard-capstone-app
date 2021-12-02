@@ -11,6 +11,9 @@ module.exports = app => {
     .post(tokens.removeExpiredTokens, /*tokens.checkToken,*/ security.isAdminOrManager, permissions.addPermission, mailer.sendRegisterInvitationEmail); //send mail MW only purpose is to end response, for now
   // .post(tokens.removeExpiredTokens, tokens.checkToken, security.isAdminOrManager, permissions.addPermission, mailer.sendRegisterInvitationEmail); //send mail MW only purpose is to end response, for now
 
+  app.route('/protected/permissions/all')
+    .post(security.isAdminOrManager, permissions.getAllPermissions);
+
   app.route('/api/permissions/verify')
     .post(permissions.checkPermission);
 

@@ -1,26 +1,26 @@
 export const MONTH_NAME = {
-  0: 'Jan',
+  0: 'Ene',
   1: 'Feb',
   2: 'Mar',
   3: 'Abr',
   4: 'May',
   5: 'Jun',
   6: 'Jul',
-  7: 'Aug',
+  7: 'Ago',
   8: 'Sep',
   9: 'Oct',
   10: 'Nov',
-  11: 'Dec',
+  11: 'Dic',
 }
 
 export const DAY_NAME = {
-  0: 'Tuesday',
-  1: 'Wednesday',
-  2: 'Thursday',
-  3: 'Friday',
-  4: 'Saturday',
-  5: 'Sunday',
-  6: 'Monday',
+  0: 'Martes',
+  1: 'Miércoles',
+  2: 'Jueves',
+  3: 'Viernes',
+  4: 'Sábado',
+  5: 'Domingo',
+  6: 'Lunes',
 }
 
 /** 
