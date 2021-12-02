@@ -1,13 +1,11 @@
 import './ContentView.css'
-import { urlSlug } from '../../services/urlService'
+import { getUrlSlug, urlSlugs } from '../../services/urlService'
 import { useRouteMatch } from 'react-router-dom'
 import { ContentHeader } from '../../components'
 import {
   HomeManager,
   ScheduleManager,
-  // Manager,
-  CheckManager,
-  ProfileManager,
+  ProfilesManager,
   MemoManager,
   RequestManager,
   UserPermissionsManager
@@ -15,19 +13,19 @@ import {
 
 /** returns the component to be viewed */
 const handleView = view => {
+  const { home, schedule, profiles, requests, memos, permissions } = urlSlugs;
   switch (view) {
-    case 'home':
+    case home:
       return <HomeManager />
-    case 'schedule':
+    case schedule:
       return <ScheduleManager />
-    // return <Manager />
-    case 'checks':
-      return <CheckManager />
-    case 'profiles':
-      return <ProfileManager />
-    case 'request':
+    case profiles:
+      return <ProfilesManager />
+    case requests:
       return <RequestManager />
-    case 'permissions':
+    case memos:
+      return <MemoManager />
+    case permissions:
       return <UserPermissionsManager />
     default:
       return <MemoManager />
@@ -36,7 +34,7 @@ const handleView = view => {
 
 const ContentView = () => {
   let { url } = useRouteMatch();
-  const slug = urlSlug(url)
+  const slug = getUrlSlug(url)
   // console.log('url', urlSlug(url))
 
   return (

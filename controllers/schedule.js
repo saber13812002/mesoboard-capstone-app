@@ -1,10 +1,9 @@
-const { any } = require('bluebird');
-
 const db = require('../config/postgres')();
+const scheduleUtils = require('../lib/scheduleUtils')
 
 // no funcionaria con  "times": "630,1500,110|1300,2130,1700",
-exports.setUserSchedule = (req, res, next) => {
-  console.log('createUserSchedule')
+exports.setUserSchedule = async (req, res, next) => {
+  // console.log('setUserSchedule')
   const schedule_id = req.body.schedule_id;
   const user_id = req.body.user_id;
   const is_hour_lunch = req.body.is_hour_lunch;
@@ -39,7 +38,7 @@ exports.setUserSchedule = (req, res, next) => {
     if (datesObj)
       dates.push(...Object.values(datesObj))
   })
-  console.log('dates', dates)
+  // console.log('dates', dates)
   const deleteQuery = 'DELETE FROM user_schedule WHERE user_id=$1 and schedule_id=$2';
   if (dates.length === 0)
     db.any(deleteQuery, [user_id, schedule_id])
@@ -59,7 +58,7 @@ exports.setUserSchedule = (req, res, next) => {
     VALUES `;
 
     const nColumnToInject = 4;
-    for (let i = 0; i < dates.length; i += dates.length) {
+    for (let i = 0; i < dates.length; i += nColumnToInject) {
       // to inject user_id and schedule_id
       q += '($1,$2,'
 
@@ -74,7 +73,7 @@ exports.setUserSchedule = (req, res, next) => {
         q += ','
     }
     q += ' returning *'
-    console.log(q);
+    // console.log(q);
 
     // res.status(200).json({ status: 'Developing...' })
     return db.any(q, [user_id, schedule_id, ...dates]).then(data => {
@@ -84,13 +83,9 @@ exports.setUserSchedule = (req, res, next) => {
 }
 
 
-exports.getEmployeeSchedules = (req, res, next) => {
+exports.getEmployeeSchedules = async (req, res, next) => {
   console.log('getEmployeeSchedules', req.params)
-  // const date = new Date(); //current date
   const schedule_id = req.params.schedule_id;
-
-  //   const q = `select schedule_id, date_format, num_day_in_week, name_day_en from schedule
-  //     where ${predicateIds.join(' OR ')};`;
 
   /*
   const q = `with sched as (select user_schedule.*, schedule.is_approved from schedule inner join user_schedule
@@ -98,88 +93,24 @@ exports.getEmployeeSchedules = (req, res, next) => {
     select first_name || ' ' || last_name AS name, sched.*
     from sched inner join users on sched.user_id=users.user_id ORDER BY name`;
    */
-  /**** applying (date - interval '4 hours') because for some reason its returning the date with 4 hours added (not UTC). ¯\_(ツ)_/¯ ****/
-  const q = `with sched as (select user_schedule.*, schedule.is_approved from schedule full outer join user_schedule
-    on schedule.schedule_id = user_schedule.schedule_id where user_schedule.schedule_id = $1) 
-    select first_name || ' ' || last_name AS name, users.user_id, sched.schedule_id,
-    CASE WHEN sched.user_id IS NULL THEN false ELSE true END AS has_schedule,
-    sched.turn_id, sched.is_hour_lunch, sched.is_approved, sched.date_start - interval '4 hours' AS date_start,
-    sched.date_end - interval '4 hours' AS date_end, sched.date_lunch - interval '4 hours' AS date_lunch
-    from sched right join users on sched.user_id=users.user_id where user_type='employee' ORDER BY name`;
+  /**** applying (date - interval '4 hours') because for its returning the date with 4 hours added (not UTC). need fix? ¯\_(ツ)_/¯ ****/
+  // const q = `with sched AS (select us.*, schedule.is_approved from schedule full outer join user_schedule AS us
+  //   on schedule.schedule_id = us.schedule_id where us.schedule_id = $1) 
+  //   select first_name || ' ' || last_name AS name, email, creation_date, user_type, u.gender, sched.schedule_id,
+  //   CASE WHEN sched.user_id IS NULL THEN false ELSE true END AS has_schedule,
+  //   sched.turn_id, sched.is_hour_lunch, sched.is_approved, sched.date_start - interval '4 hours' AS date_start,
+  //   sched.date_end - interval '4 hours' AS date_end, sched.date_lunch - interval '4 hours' AS date_lunch
+  //   from sched right join users AS u on sched.user_id=u.user_id where user_type='employee' ORDER BY name`;
 
-  // res.status(200).json({ status: 'success' })
-  return db.any(q, schedule_id).then(employeeScheduleData => {
-    console.log('employeeScheduleData', employeeScheduleData)
-    if (employeeScheduleData.length === 0)
+  const q = scheduleUtils.outerJoinUserScheduleQuery;
+  return db.any(q, schedule_id).then(userSchedulesData => {
+    // console.log('userSchedulesData', userSchedulesData)
+    if (userSchedulesData.length === 0)
       res.status(200).json({ status: 'success', message: 'No employees yet in the system' })
     else {
-      /** key is the number that represents the day of the week. (0 -> tuesday, 1 -> wednesday, ...) */
-      let weekDates = {
-        // 1: { dateStart: _, dateEnd: _, dateLunch: _ }
-        // 3: { dateStart: _, dateEnd: _, dateLunch: _ }
-      }
-
-      /** Array of employee information -> employeeName, isHourLunch, array of weekDate objects */
-      const employeesInfo = [];
-
-      /** push the information of the given data and the current week dates object into the employeesInfo array */
-      const pushDataToSchedule = data => {
-        // console.log('weekDates', weekDates)
-        employeesInfo.push({
-          userId: data.user_id,
-          scheduleId: data.schedule_id,
-          employeeName: data.name,
-          isHourLunch: data.is_hour_lunch,
-          weekDates
-        })
-      }
-
-      // construct schedule of each employee with array of objects
-      let dCurr = employeeScheduleData[0];
-      employeeScheduleData.forEach(d => {
-        // has_schedule=undefined means that a manager hasn't created a work schedule yet for this employee
-        if (d.has_schedule) {
-          if (dCurr.user_id !== d.user_id) {
-            // console.log('dCurr', dCurr)
-            pushDataToSchedule(dCurr);
-            dCurr = d;
-          }
-
-          // create weekDate information of a particular day
-          let day = d.date_start.getDay() - 2;
-          if (day < 0)
-            day += 7;
-
-          weekDates[day] = {
-            turnId: d.turn_id,
-            dateStart: d.date_start,
-            dateEnd: d.date_end,
-            dateLunch: d.date_lunch
-          }
-        }
-        else employeesInfo.push({ employeeName: d.name, userId: d.user_id });
-      })
-      // console.log('dCurr', dCurr)
-      if (dCurr.has_schedule)
-        pushDataToSchedule(dCurr);
-
-      employeesInfo.forEach(employee => {
-        // console.log('employee', employee)
-        if (employee.weekDates) {
-          // set weekDate obj to array containing each day as keys
-          employee.weekDates = [0, 1, 2, 3, 4, 5, 6].map(day => employee.weekDates[day] ? employee.weekDates[day] : null)
-
-          // calculate and set the total hours of a particular week
-          employee.totalHours = calculateTotalHours(employee.weekDates)
-        }
-        else {
-          employee.weekDates = new Array(7).fill(null);
-          employee.totalHours = 0;
-        }
-      })
-
-      console.log('-employeesInfo', employeesInfo)
-      res.status(200).json({ employeesInfo, status: 'success' })
+      userSchedulesData = scheduleUtils.joinUserSchedulesByUser(userSchedulesData);
+      // console.log('res', userSchedulesData)
+      res.status(200).json({ userSchedulesData, status: 'success' })
     }
   })
     .catch(err => {
@@ -217,9 +148,9 @@ exports.getUserTurns = (req, res, next) => {
       return {
         turnId: d.turn_id,
         turnIndex: i + 1,
-        timeStart: shortenFull24HoursTo12(d.time_start),
-        timeEnd: shortenFull24HoursTo12(d.time_end),
-        timeLunch: shortenFull24HoursTo12(d.time_lunch)
+        timeStart: scheduleUtils.shortenFull24HoursTo12(d.time_start),
+        timeEnd: scheduleUtils.shortenFull24HoursTo12(d.time_end),
+        timeLunch: scheduleUtils.shortenFull24HoursTo12(d.time_lunch)
       }
     })
     // console.log('turns', turns)
@@ -290,25 +221,25 @@ exports.getWeekSchedule = (req, res, next) => {
 // /** Returns given date into ISO format string excluding the hour */
 // const toISOString = d => d.toISOString().slice(0, 10)
 
-const shortenFull24HoursTo12 = h => {
-  const split = h.split(':');
-  let hour = Number(split[0]);
-  let period = 'AM';
-  if (hour >= 12) period = 'PM';
-  if (hour > 12) hour -= 12;
+// const shortenFull24HoursTo12 = h => {
+//   const split = h.split(':');
+//   let hour = Number(split[0]);
+//   let period = 'AM';
+//   if (hour >= 12) period = 'PM';
+//   if (hour > 12) hour -= 12;
 
-  const minute = split[1];
-  return hour + ':' + minute + ' ' + period
-}
+//   const minute = split[1];
+//   return hour + ':' + minute + ' ' + period
+// }
 
-const calculateTotalHours = weekDates => {
-  // calculate and set the total hours of a particular week
-  let totalHours = 0;
-  for (let dates of weekDates)
-    if (dates)
-      totalHours += Math.abs(new Date(dates.dateEnd) - new Date(dates.dateStart)) / 36e5;
-  return totalHours;
-}
+// const calculateTotalHours = weekDates => {
+//   // calculate and set the total hours of a particular week
+//   let totalHours = 0;
+//   for (let dates of weekDates)
+//     if (dates)
+//       totalHours += Math.abs(new Date(dates.dateEnd) - new Date(dates.dateStart)) / 36e5;
+//   return totalHours;
+// }
 
 // const isDateInstance = d => Object.prototype.toString.call(d) === '[object Date]';
 

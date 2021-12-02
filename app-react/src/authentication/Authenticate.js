@@ -1,9 +1,11 @@
-import { useState, useEffect, useContext } from 'react'
+import { useState, useEffect, useContext } from 'react';
 import { Form, Button } from 'react-bootstrap';
-import { AuthWrapper, Register } from '.'
-import { AuthContext } from '../store'
-import { isLoggedIn } from '../services/authService'
-import { NavLink } from 'react-router-dom'
+import { AuthWrapper, Register } from '.';
+import { AuthContext } from '../store';
+import { isLoggedIn } from '../services/authService';
+import { NavLink } from 'react-router-dom';
+
+const minCodeLength = 6;
 
 const Authenticate = () => {
   const [redirectToApp, setRedirectToApp] = useState(isLoggedIn())
@@ -72,11 +74,11 @@ const Authenticate = () => {
 
     // to register an employee - hardcoded
     const userForm = {
-      email: 'employee@gmail.com',
+      email: 'employee@gmail.com', last_name: 'Entity',
+      // email: 'employee2@gmail.com', last_name: 'Entity2',
       password: 'meso2021',
       gender: 'female',
       first_name: 'Employee',
-      last_name: 'Entity',
     }
     if (userForm) {
       setUserInfo(userForm)
@@ -89,15 +91,17 @@ const Authenticate = () => {
       {(userType.length === 0) && (
         <Form onSubmit={handleVerifyPermission}>
           <h2 style={{ color: '#287F4E' }}>Registración</h2>
-          <br />
-          <Form.Control type='text' placeholder='Código de verificación' value={code} onChange={(e) => setCode(e.target.value)} />
-          <br />
+          <Form.Control type='text' placeholder='Código de verificación'
+            className='mt-4'
+            value={code}
+            onChange={(e) => setCode(e.target.value)}
+          />
           {/* <Form.Control type='text' placeholder='Correo electrónico' />
           <br /> */}
 
-          {code.length === 0 && <Button disabled className='w-100'>Verificar</Button>}
-          {code.length > 0 && (
-            <Button type='submit' variant='primary' className='w-100'>
+          {(code.length < minCodeLength) && <Button disabled className='w-100 mt-3'>Verificar</Button>}
+          {(code.length >= minCodeLength) && (
+            <Button type='submit' variant='primary' className='w-100 mt-3'>
               Verificar
             </Button>
           )}
@@ -112,8 +116,8 @@ const Authenticate = () => {
         />
       )}
       <p className='auth__redirect'>
-        ¿Ya tienes una cuenta?
-        <NavLink to={'signin'} onClick={() => resetState()}>
+        ¿No tienes una cuenta?
+        <NavLink to={'signin'} className='ml-1' onClick={() => resetState()}>
           Accesar
         </NavLink>
       </p>

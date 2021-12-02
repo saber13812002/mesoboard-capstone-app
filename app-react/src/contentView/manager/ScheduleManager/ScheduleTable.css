@@ -42,9 +42,9 @@
 }
 /* .scheduleTable__table > thead > tr > th:not(:first-child) { */
 
-  .scheduleTable__table > thead > tr > th.employee {
-    text-align: left !important;
-  }
+.scheduleTable__table > thead > tr > th.name {
+  text-align: left !important;
+}
 .scheduleTable__table > thead > tr > th:not(:nth-child(1)) {
   text-align: center;
 }
@@ -95,13 +95,13 @@
   vertical-align: middle;
 }
 
-td.employeeNameTd {
+td.nameTd {
   width: 160px;
   /* padding-left: 16px !important; */
   text-align: left;
 }
 
-td.employeeNameTd > .employeeName {
+td.nameTd > .name {
   display: inline-block;
   font-size: 14px;
   font-weight: 500;
@@ -114,7 +114,7 @@ td.employeeNameTd > .employeeName {
 
 
 @media only screen and (max-width: 1080px) {
-  td.employeeNameTd {
+  td.nameTd {
     width: initial !important;
   }
   .scheduleTable {

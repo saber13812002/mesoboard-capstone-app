@@ -46,7 +46,8 @@ const mondayInTwoWeeks = endOfThisWeek.clone().add(7, 'day');
 // console.log('mondayInTwoWeeks', mondayInTwoWeeks)
 
 // the last week that data was added to the database. (a moment before a tuesday)
-const momentDisablePrevious = moment(new Date('2021-11-15'));
+// const momentDisablePrevious = moment(new Date('2021-11-15'));
+const momentDisablePrevious = moment();
 
 const ScheduleManager = () => {
   // moment.js
@@ -55,11 +56,11 @@ const ScheduleManager = () => {
   const [mWeekStart, setMWeekStart] = useState(startOfThisWeek.clone()) //always a tuesday
   const [mWeekEnd, setMWeekEnd] = useState(endOfThisWeek.clone()) //always a monday
 
-  // employee
-  const [employees, setEmployees] = useState([]); // array of employee with their week date schedules
-  const [employeeDetails, setEmployeeDetails] = useState(undefined); // the employee to show schedule details
-  const [editingEmployee, setEditingEmployee] = useState(false); // determines if an employee is being modified
-  const [employeeToEdit, setEmployeeToEdit] = useState(undefined); // the employee with schedule to be modified
+  // users
+  const [users, setUsers] = useState([]); // array of users with their week date schedules
+  const [userDetails, setUserDetails] = useState(undefined); // the user to show schedule details
+  const [editingUser, setEditingUser] = useState(false); // determines if an user is being modified
+  const [userToEdit, setUserToEdit] = useState(undefined); // the user with schedule to be modified
 
   // turns
   const [turns, setTurns] = useState([]); // the turns of this manager entity 
@@ -85,7 +86,7 @@ const ScheduleManager = () => {
   }, [])
 
 
-  /** Initializing array of EMPLOYEE schedules for the current week. */
+  /** Initializing array of USER schedules for the current week. */
   useEffect(() => {
     if (!mWeekStart) return;
 
@@ -109,22 +110,12 @@ const ScheduleManager = () => {
       const url = server.getUserSchedule(scheduleId);
       // console.log('url', url)
       axios.get(url).then(res => {
-        if (res.data.employeesInfo) {
-          const employeesInfo = res.data.employeesInfo;
-          console.log('res.employeesInfo', employeesInfo);
-          // const scheduleArr = schedules.map(sched => {
-          // const tr = sched.weekDates.find(weekDate => turns.turnId === weekDate.turnId);
-          // const tr = turns.find(turn => turn.turnId === sched.weekDates.turnId);
-
-          // console.log('tr', tr)
-          // sched.turnIndex = tr
-          //   return sched
-          // })
-          // turns.find(turn => turn.turnId === date.turnId).turnIndex
-          // turnArr.map(turn => console.log(turn))
-          setEmployees(employeesInfo);
+        if (res.data.userSchedulesData) {
+          const userSchedulesData = res.data.userSchedulesData;
+          // console.log('res.userSchedulesData', userSchedulesData);
+          setUsers(userSchedulesData);
         }
-        else setEmployees([]);
+        else setUsers([]);
       })
         .catch(err => console.log(err))
     }
@@ -159,45 +150,45 @@ const ScheduleManager = () => {
   }, [turns])
 
 
-  /** Saving the changes made to the schedule of a particular employee. */
+  /** Saving the changes made to the schedule of a particular user. */
   useEffect(() => {
-    if (editingEmployee || !employeeToEdit) return;
+    if (editingUser || !userToEdit) return;
 
-    console.log('employeeToEdit', employeeToEdit)
-    // set new properties of the employee state
-    let employee = employees.find(emp => emp.userId === employeeToEdit.userId);
-    employee.weekDates = employeeToEdit.weekDates;
-    employee.turnId = employeeToEdit.turnId;
-    console.log('employee', employee);
+    console.log('userToEdit', userToEdit)
+    // set new properties of the user state
+    let user = users.find(emp => emp.userId === userToEdit.userId);
+    user.weekDates = userToEdit.weekDates;
+    user.turnId = userToEdit.turnId;
+    console.log('user', user);
 
-    // console.log('Now update the schedule of this employee on the database')
+    // console.log('Now update the schedule of this user on the database')
     const setUserSchedule = async () => {
-      // console.log('weekDates', employee.weekDates);
-      // const schedule_id = getScheduleIdOfDate(employees[employeeIndex].weekDates[0]);
+      // console.log('weekDates', user.weekDates);
+      // const schedule_id = getScheduleIdOfDate(users[userIndex].weekDates[0]);
       const schedule_id = getScheduleIdOfMoment(mWeekStart);
-      const user_id = employee.userId;
+      const user_id = user.userId;
       const is_hour_lunch = false;
 
       // console.log('schedule_id', schedule_id);
       // console.log('user_id', user_id);
       const url = server.setUserSchedule(); ///protected/schedule/week
       // console.log('url', url);
-      // console.log('employee.weekDates', employee.weekDates)
+      // console.log('user.weekDates', user.weekDates)
 
       axios.post(url, {
         user_id,
         schedule_id,
         is_hour_lunch,
-        ...employee.weekDates
+        ...user.weekDates
       }).then(res => {
         const newWeekDates = res.data.newWeekDates;
-        employee.totalHours = calculateTotalHours(newWeekDates);
-        console.log('res.data.newWeekDates', res.data.newWeekDates, employee.totalHours);
-        setEmployeeToEdit(undefined);
+        user.totalHours = calculateTotalHours(newWeekDates);
+        console.log('res.data.newWeekDates', res.data.newWeekDates, user.totalHours);
+        setUserToEdit(undefined);
       })
     }
     setUserSchedule()
-  }, [employeeToEdit])
+  }, [userToEdit])
 
 
   /************************************************/
@@ -313,39 +304,41 @@ const ScheduleManager = () => {
   /*           Schedule Edit Functions            */
   /************************************************/
 
-  const openScheduleDetails = employee => {
-    setEmployeeDetails(employee)
-    // setShowEmployeeDetails(true)
+  const openScheduleDetails = user => {
+    setUserDetails(user)
+    // setShowUserDetails(true)
   }
 
-  const openScheduleEdit = employee => {
+  const openScheduleEdit = user => {
     // console.log('turns.length', turns.length)
     if (turns.length > 0 && turns[turns.length - 1].turnId === -1)
       removeAddedTurn();
-    setEmployeeToEdit(employee);
-    setEditingEmployee(true);
+    setUserToEdit(user);
+    setEditingUser(true);
   }
 
   const closeScheduleEdit = () => {
-    setEmployeeToEdit(undefined);
-    setEditingEmployee(false);
+    setUserToEdit(undefined);
+    setEditingUser(false);
   }
 
-  const saveScheduleOfEmployee = emp => {
-    setEditingEmployee(false);
-    setEmployeeToEdit(emp);
+  const saveScheduleOfUser = emp => {
+    setEditingUser(false);
+    setUserToEdit(emp);
   }
 
   // console.log('mCurrent', mCurrent)
   return (
     <>
-      {employeeDetails && (
+      {userDetails && (
         <ProfileScheduleDetails
-          employee={employeeDetails}
-          onBack={() => setEmployeeDetails(undefined)}
+          userScheduleData={userDetails}
+          mCurrent={mCurrent}
+          weekStartMoment={mWeekStart}
+          onBack={() => setUserDetails(undefined)}
         />
       )}
-      {!employeeDetails && <>
+      {!userDetails && <>
         <div className='d-flex justify-content-between mb-3'>
           {
             (weekSchedule.length > 0) && (
@@ -389,7 +382,7 @@ const ScheduleManager = () => {
 
         <section className='mb-4'>
           <ScheduleTable
-            employees={employees}
+            users={users}
             onOpenScheduleEdit={openScheduleEdit}
             onOpenScheduleDetails={openScheduleDetails}
             isEditable={turns.length > 0 && turns[0].turnIndex > 0}
@@ -405,14 +398,14 @@ const ScheduleManager = () => {
         />
 
         {/* section for the ScheduleEditModal portal component */}
-        {editingEmployee &&
+        {editingUser &&
           <ScheduleEdit
             turns={turns}
             dateStart={mWeekStart.toDate()}
             dateEnd={mWeekEnd.toDate()}
-            employee={employeeToEdit}
+            user={userToEdit}
             mCurrent={mCurrent}
-            onSaveChanges={modifiedEmp => saveScheduleOfEmployee(modifiedEmp)}
+            onSaveChanges={modifiedEmp => saveScheduleOfUser(modifiedEmp)}
             onCloseScheduleEdit={closeScheduleEdit}
           />}
       </>}

@@ -12,12 +12,12 @@ const AddPermission = ({ onBack }) => {
   const permissionTypes = [
     {
       id: 0,
-      label: 'Employee',
+      label: 'Empleado',
       value: 'employee',
     },
     {
       id: 1,
-      label: 'Manager',
+      label: 'Supervisor',
       value: 'manager',
     },
     {

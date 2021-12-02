@@ -51,6 +51,7 @@ exports.addPermission = (req, res, next) => {
   });
 };
 
+
 exports.checkPermission = (req, res, next) => {
   console.log('checkPermission body:', req.body)
   const code = req.body.code
@@ -65,7 +66,7 @@ exports.checkPermission = (req, res, next) => {
   const query = "SELECT (count(*) = 1) as code_exists FROM permissions WHERE code = $1;";
   const query1 = "SELECT permission_type FROM permissions WHERE code = $1;";
 
-  return db.task(t => {
+  return db.task(async t => {
     console.log(typeof code)
     return t.one(query, code).then(data => {
       console.log('data', data)
@@ -90,6 +91,26 @@ exports.checkPermission = (req, res, next) => {
         });
       res.end();
     }
+  }).catch(err => {
+    next(err);
+  });
+};
+
+
+exports.getAllPermissions = async (req, res, next) => {
+  return db.task(async t => {
+    return t.one(query, code).then(data => {
+      console.log('data', data)
+      if (!data.code_exists) {
+        console.log('Privisional code doesn\'t exist')
+        error.message = "Invalid provisional code.";
+        error.httpStatusCode = 400;
+        throw error;
+      } else {
+        console.log('getting permission_type from permissions table')
+        return t.one(query1, code);
+      }
+    });
   }).catch(err => {
     next(err);
   });

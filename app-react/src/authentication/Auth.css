@@ -58,15 +58,35 @@
 }
 
 .auth__redirect {
-  margin-top: 10px;
+  margin: 10px 0 0;
   color: rgba(0, 0, 0, 0.56);
   white-space: nowrap;
   text-align: center;
 }
 
-.auth__redirect a {
+.auth__resetPassword {
+  margin-top: 12px;
+  color: rgba(0, 0, 0, 0.56);
+  white-space: nowrap;
+  text-align: center;
+}
+
+.auth__redirect a,
+.auth__resetPassword a {
   text-decoration: none;
-  margin-left: 10px;
   font-weight: 600;
+  color: #287F4E;
+}
+
+.forgotPassword__description {
+  height: auto;
+  width: 60%;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-self: center;
+  flex-wrap: wrap;
+  background-color: none;
+  margin: auto auto auto auto;
 }
 

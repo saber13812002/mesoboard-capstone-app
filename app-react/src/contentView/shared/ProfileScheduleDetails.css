@@ -12,6 +12,10 @@
 .scheduleDetails__Cards {
   min-width: 160px;
   font-size: 14px;
+  padding: 14px;
+  /* padding-bottom: 4px; */
+  /* margin-bottom: 0; */
+  /* p-3 pb-0 */
 }
 
 .scheduleDetails__Cards > .timeInfo {

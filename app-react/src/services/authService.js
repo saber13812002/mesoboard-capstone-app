@@ -3,7 +3,7 @@ import axios from 'axios';
 
 export const setLocalStorage = ({ token, exp, userId }) => {
   const expiresIn = moment().add(exp, 'days');
-  console.log('<token>', token)
+  // console.log('<token>', token)
   localStorage.setItem('sub', userId);
   localStorage.setItem('token', token);
   axios.defaults.headers.common['Authorization'] = 'Bearer ' + token;

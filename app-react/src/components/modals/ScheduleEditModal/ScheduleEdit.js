@@ -8,38 +8,38 @@ import { ScheduleHoursBox } from '../../../contentView'
 import { getDayName, beautifyDate, get24HourFormatOfTime, toISOYearFormat } from '../../../services/scheduleService'
 
 
-const ScheduleEdit = ({ employee, turns, dateStart, dateEnd, mCurrent, onSaveChanges, onCloseScheduleEdit }) => {
-  const deepCopy = JSON.parse(JSON.stringify(employee))
-  const deepCopy2 = JSON.parse(JSON.stringify(employee))
-  const [employeeToEdit, setEmployeeToEdit] = useState(deepCopy)
-  const [employeeOriginal] = useState(deepCopy2)
+const ScheduleEdit = ({ user, turns, dateStart, dateEnd, mCurrent, onSaveChanges, onCloseScheduleEdit }) => {
+  const deepCopy = JSON.parse(JSON.stringify(user))
+  const deepCopy2 = JSON.parse(JSON.stringify(user))
+  const [userToEdit, setUserToEdit] = useState(deepCopy)
+  const [userOriginal] = useState(deepCopy2)
   const [isSameData, setIsSameData] = useState(true)
   // const [selectedTurnIndex, setSelectedTurnIndex] = useState(undefined)
 
-  const { employeeName, weekDates } = employeeToEdit;
+  const { name, weekDates } = userToEdit;
 
   useEffect(() => {
     setIsSameData(!hasDataChanged())
-  }, [employeeToEdit])
+  }, [userToEdit])
 
 
-  /** Determines if the local employee's week date schedule has changed from its original schedule. */
-  const hasDataChanged = () => JSON.stringify(employeeOriginal) != JSON.stringify(employeeToEdit)
+  /** Determines if the local user's week date schedule has changed from its original schedule. */
+  const hasDataChanged = () => JSON.stringify(userOriginal) != JSON.stringify(userToEdit)
 
 
-  /** Removes week date of a particular employee. More formally, sets the week date property with the given day to null.
+  /** Removes week date of a particular user. More formally, sets the week date property with the given day to null.
    *  @param {number} day the day in number form that represents the day of the week to remove.
    */
-  const removeWeekDateFromEmployee = day => {
-    setEmployeeToEdit(emp => {
-      const newEmployee = { ...emp }
-      newEmployee.weekDates[day] = null;
-      return newEmployee
+  const removeWeekDateFromUser = day => {
+    setUserToEdit(emp => {
+      const newUser = { ...emp }
+      newUser.weekDates[day] = null;
+      return newUser
     })
   }
 
 
-  /** Updates the week date value of the employee's week date property with the hours of the first turn. 
+  /** Updates the week date value of the user's week date property with the hours of the first turn. 
    *  Does not update it if there are no turns created.
    *  @param {number} day the day in number form that represents the day of the week to modify.
    *  @param {Event} e the event containing the input value.
@@ -50,15 +50,15 @@ const ScheduleEdit = ({ employee, turns, dateStart, dateEnd, mCurrent, onSaveCha
       return;
 
     // const selectedTurn = turns[turnId];
-    const dateToModify = employeeToEdit.weekDates[day].dateStart;
+    const dateToModify = userToEdit.weekDates[day].dateStart;
     setTimeOfWeekDate(day, turnId - 1, dateToModify);
   }
 
 
-  /** Adds week date of the employee. More formally, sets the week date property with the given day to the intended date.
+  /** Adds week date of the user. More formally, sets the week date property with the given day to the intended date.
    *  @param {number} day the day in number form that represents the day of the week to modify.
    */
-  const setWeekDateIntoEmployee = day => {
+  const setWeekDateIntoUser = day => {
     if (turns.length > 0) {
       const turnId = 0;
       const dateToModify = mCurrent.clone().startOf('week').isoWeekday(day + 2).toDate();
@@ -67,7 +67,7 @@ const ScheduleEdit = ({ employee, turns, dateStart, dateEnd, mCurrent, onSaveCha
   }
 
 
-  /** Sets the hours of the week date schedule of the employee by the given selected turn times.
+  /** Sets the hours of the week date schedule of the user by the given selected turn times.
    *  @param {number} day the day in number form that represents the day of the week to modify.
    *  @param {object} turnId the id of the turn object containing the new times.
    *  @param {string} dateToModify the date of the week to be modified.
@@ -91,10 +91,10 @@ const ScheduleEdit = ({ employee, turns, dateStart, dateEnd, mCurrent, onSaveCha
       dateLunch: newDateLunch
     }
 
-    setEmployeeToEdit(emp => {
-      const newEmployee = { ...emp };
-      newEmployee.weekDates[day] = newWeekDate;
-      return newEmployee;
+    setUserToEdit(emp => {
+      const newUser = { ...emp };
+      newUser.weekDates[day] = newWeekDate;
+      return newUser;
     })
   }
 
@@ -106,7 +106,7 @@ const ScheduleEdit = ({ employee, turns, dateStart, dateEnd, mCurrent, onSaveCha
   const getTurnIndexByTurnId = turnId => turns.find(turn => turn.turnId === turnId)?.turnIndex;
 
   const portalElement = document.getElementById('navdrawer-portal');
-  // console.log('employeeToEdit', employeeToEdit)
+  // console.log('userToEdit', userToEdit)
   return (
     <Modal
       onClose={onCloseScheduleEdit}
@@ -114,7 +114,7 @@ const ScheduleEdit = ({ employee, turns, dateStart, dateEnd, mCurrent, onSaveCha
       classes={classes}
     >
       <div className='scheduleEdit'>
-        <h4>{employeeName}</h4>
+        <h4>{name}</h4>
         <small>{beautifyDate(dateStart)} - {beautifyDate(dateEnd)}</small>
         <div className='d-flex flex-wrap mt-4'>
           {weekDates.map((weekDate, day) => {
@@ -128,7 +128,7 @@ const ScheduleEdit = ({ employee, turns, dateStart, dateEnd, mCurrent, onSaveCha
                   variant='outline-primary'
                   className='mr-2 mb-3'
                   size='sm'
-                  onClick={() => setWeekDateIntoEmployee(day)}
+                  onClick={() => setWeekDateIntoUser(day)}
                 />
               )
             }
@@ -144,10 +144,10 @@ const ScheduleEdit = ({ employee, turns, dateStart, dateEnd, mCurrent, onSaveCha
               return (
                 <div key={day} className='scheduleEdit__row w-100 mt-2'>
                   <Icon
-                    IconComponent={iconComponents.trash}
+                    IconComponent={iconComponents.Trash}
                     size='md'
                     color='red'
-                    onClick={() => removeWeekDateFromEmployee(day)}
+                    onClick={() => removeWeekDateFromUser(day)}
                   />
                   <h4>{getDayName(day)}</h4>
                   <input type='number' defaultValue={turnIndex} onChange={(e) => updateHours(day, e)} />
@@ -163,13 +163,13 @@ const ScheduleEdit = ({ employee, turns, dateStart, dateEnd, mCurrent, onSaveCha
             disabled={true}
             className='w-100 mt-4'
             variant='primary'
-          >Save Changes</Button>
+          >Guardar Cambios</Button>
         ) : (
           <MButton
             className='w-100 mt-4'
-            text='Save Changes'
+            text='Guardar Cambios'
             variant='primary'
-            onClick={() => onSaveChanges(employeeToEdit)}
+            onClick={() => onSaveChanges(userToEdit)}
           />
         )}
       </div>

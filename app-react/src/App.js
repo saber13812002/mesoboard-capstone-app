@@ -3,7 +3,7 @@ import './App.css';
 import { BrowserRouter as Router, Route, Redirect } from 'react-router-dom'
 import { Layout } from './layout'
 import { AuthProvider } from './store';
-import { Signin, Authenticate } from './authentication';
+import { Signin, Authenticate, ForgotPassword } from './authentication';
 import { isLoggedIn } from './services/authService'
 
 const ProtectedRoute = ({ children, ...rest }) => {
@@ -27,6 +27,7 @@ function App() {
         <Route exact path='/'><Redirect to='/signin' /></Route>
         <Route exact path='/authenticate' component={Authenticate} />
         <Route exact path='/signin' component={Signin} />
+        <Route exact path='/forgot-password' component={ForgotPassword} />
         <ProtectedRoute path='/app/:view'>
           <Layout />
         </ProtectedRoute>

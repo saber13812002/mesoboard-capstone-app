@@ -9,8 +9,6 @@ const ProfileSection = ({ profileNameEl, onLogout }) => {
   const { authState } = useContext(AuthContext)
   const { firstName, lastName } = authState;
 
-  console.log('profileCardDimensions', profileCardDimensions);
-
   /**
    * Display a card with at least the profile and logout items
    * with the use of useRef hook
@@ -23,13 +21,12 @@ const ProfileSection = ({ profileNameEl, onLogout }) => {
     });
   }
 
-  // add user info from context
   return (
     <div className='profileSection' ref={profileNameEl} onMouseLeave={() => setProfileCardDimensions({})}>
       {Object.keys(profileCardDimensions).length > 0 && (
         <ProfileCard profileCardDimensions={profileCardDimensions} onLogout={onLogout} onHideCard={() => setProfileCardDimensions({})} />
       )}
-      <p>Welcome{firstName && <>,</>}</p>
+      <p>Bienvenido{firstName && <>,</>}</p>
       <div className='profileSection__clickableName' onMouseEnter={showProfileCard}>
         {firstName && <>
           <p>{firstName} {lastName}</p>
@@ -43,7 +40,7 @@ const ProfileSection = ({ profileNameEl, onLogout }) => {
           </div>
         </>}
       </div>
-    </div >
+    </div>
   )
 }
 

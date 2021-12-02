@@ -1,38 +1,40 @@
 /**  ai   **/
-import { AiOutlineUserAdd } from "react-icons/ai"; //------------------
+import { AiOutlineUserAdd } from 'react-icons/ai'; //------------------
 
 /**   bs   **/
-import { BsCaretDownFill } from "react-icons/bs";
-import { BsCaretLeft } from "react-icons/bs";
-import { BsCaretLeftFill } from "react-icons/bs";
-import { BsCaretUpFill } from "react-icons/bs";
-import { BsCaretRightFill } from "react-icons/bs";
-import { BsCaretRight } from "react-icons/bs";
-import { BsCalendarWeekFill } from "react-icons/bs";
-import { BsCalendarWeek } from "react-icons/bs";
-import { BsPerson } from "react-icons/bs";
+import { BsCaretDownFill } from 'react-icons/bs';
+import { BsCaretLeft } from 'react-icons/bs';
+import { BsCaretLeftFill } from 'react-icons/bs';
+import { BsCaretUpFill } from 'react-icons/bs';
+import { BsCaretRightFill } from 'react-icons/bs';
+import { BsCaretRight } from 'react-icons/bs';
+import { BsCalendarWeekFill } from 'react-icons/bs';
+import { BsCalendarWeek } from 'react-icons/bs';
+import { BsPerson } from 'react-icons/bs';
 
 /**   cg   **/
 // import { CgUserList } from 'react-icons/cg'
 
 /**   fa   **/
-import { FaHome } from "react-icons/fa";
-import { FaBell } from "react-icons/fa";
-import { FaBars } from "react-icons/fa";
-import { FaPencilAlt } from "react-icons/fa";
-import { FaRegSave } from "react-icons/fa";
-import { FaChevronLeft } from "react-icons/fa";
-import { FaChevronRight } from "react-icons/fa";
-import { FaDownload } from "react-icons/fa";
-import { FaUpload } from "react-icons/fa";
-import { FaPlus } from "react-icons/fa";
-import { FaRegTrashAlt } from "react-icons/fa";
-import { FaMoneyCheckAlt } from "react-icons/fa";
-// import { FaMoneyBill } from "react-icons/fa";
-import { FaPencilRuler } from "react-icons/fa";
-import { FaCheck } from "react-icons/fa";
-import { FaCheckSquare } from "react-icons/fa";
+import { FaHome } from 'react-icons/fa';
+import { FaBell } from 'react-icons/fa';
+import { FaBars } from 'react-icons/fa';
+import { FaPencilAlt } from 'react-icons/fa';
+import { FaRegSave } from 'react-icons/fa';
+import { FaChevronLeft } from 'react-icons/fa';
+import { FaChevronRight } from 'react-icons/fa';
+import { FaDownload } from 'react-icons/fa';
+import { FaUpload } from 'react-icons/fa';
+import { FaPlus } from 'react-icons/fa';
+import { FaRegTrashAlt } from 'react-icons/fa';
+import { FaMoneyCheckAlt } from 'react-icons/fa';
+// import { FaMoneyBill } from 'react-icons/fa';
+import { FaPencilRuler } from 'react-icons/fa';
+import { FaCheck } from 'react-icons/fa';
+import { FaCheckSquare } from 'react-icons/fa';
 
+/**   fi   **/
+import { FiMail } from 'react-icons/fi';
 
 /**   gr   **/
 // import { GrSchedule } from 'react-icons/gr'
@@ -97,6 +99,7 @@ const iconComponents = {
   Cancel: MdOutlineCancel,
   CheckMark: FaCheck,
   CheckMarkSquared: FaCheckSquare,
-  trash: FaRegTrashAlt,
+  Trash: FaRegTrashAlt,
+  Mail: FiMail
 }
 export default iconComponents

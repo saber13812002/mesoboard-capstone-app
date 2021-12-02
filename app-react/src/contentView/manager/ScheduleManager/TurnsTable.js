@@ -40,7 +40,7 @@ const TurnsTable = ({ turns, onAddNewTurn, addingNewTurn, onSaveTurn, onCancel }
               <>
                 <td>ID</td>
                 <td>Entrada</td>
-                <td>Salidas</td>
+                <td>Salida</td>
                 <td>Almuerzo</td>
               </>}
           </tr>
@@ -93,14 +93,14 @@ const TurnsTable = ({ turns, onAddNewTurn, addingNewTurn, onSaveTurn, onCancel }
           )} */}
           {turns.length === 0 && (
             <tr style={{ fontWeight: '500' }}>
-              <td className='pt-2'>Create hours to manage employee schedules</td>
+              <td className='pt-2'>Create hours to manage user schedules</td>
             </tr>
           )}
         </tbody>
       </Table>
       {/* {turns.length === 0 && (
         <div className='ml-2 pt-2 pb-2' style={{ marginTop: '-48px', fontWeight: '500' }}>
-          <p>Create turn hours to manage employee schedules</p>
+          <p>Create turn hours to manage user schedules</p>
         </div>
       )} */}
       {!addingNewTurn && <div className='ml-2 pt-2' style={{ marginTop: '-48px' }}>

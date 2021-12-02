@@ -2,7 +2,7 @@
 import HomeManager from "./manager/HomeManager/HomeManager";
 import ScheduleManager from "./manager/ScheduleManager/ScheduleManager";
 import CheckManager from "./manager/CheckManager/CheckManager";
-import ProfileManager from "./manager/ProfileManager/ProfileManager";
+import ProfilesManager from "./manager/ProfilesManager/ProfilesManager";
 import RequestManager from "./manager/RequestManager/RequestManager";
 import MemoManager from "./manager/MemoManager/MemoManager";
 import UserPermissionsManager from './manager/UserPermissionsManager/UserPermissionsManager';
@@ -18,7 +18,7 @@ export {
   HomeManager,
   ScheduleManager,
   CheckManager,
-  ProfileManager,
+  ProfilesManager,
   RequestManager,
   MemoManager,
   UserPermissionsManager,

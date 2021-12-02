@@ -3,6 +3,7 @@
 const db = require('../config/postgres')();
 const fs = require('fs');
 const authUtils = require('../lib/authUtils')
+const utils = require('../lib/utils')
 
 exports.login = (req, res, next) => {
   const { email, password } = req.body
@@ -41,12 +42,13 @@ exports.login = (req, res, next) => {
       return next(error);
     }
   })
-    .catch(err => {
-      next(err);
+    .catch(error => {
+      next(error);
     });
 };
 
-// not protected - need pass token on body
+
+// not protected - need to get token from body
 exports.checkTokenAndGetUser = (req, res, next) => {
   console.log('checkTokenAndGetUser')
   const { user_id, token } = req.body
@@ -69,10 +71,11 @@ exports.checkTokenAndGetUser = (req, res, next) => {
         });
       // res.end();
     }
-  }).catch(err => {
-    next(err);
+  }).catch(error => {
+    next(error);
   });
 }
+
 
 exports.confirmEmail = (req, res, next) => {
   console.log('confirmEmail')
@@ -105,6 +108,7 @@ exports.confirmEmail = (req, res, next) => {
   });
 };
 
+
 exports.createUser = (req, res, next) => {
   console.log('createUser')
   const { code, email, password, first_name, last_name, gender } = req.body;
@@ -122,7 +126,7 @@ exports.createUser = (req, res, next) => {
     return next(error);
   }
 
-  return db.task(t => {
+  return db.task(async t => {
     return t.one("Select permission_type From permissions Where code = $1", code).then(data => {
       if (!data) {
         error.message = "Provisional code does\'t exist";
@@ -136,7 +140,7 @@ exports.createUser = (req, res, next) => {
       //check if criteria exists 
       //I was thinking, for employee will be either email or phone.
       //Which ever the employee chooses
-      return t.any("Select * from users where email = $1", [email]).then(data2 => {
+      return t.any("Select * from users where email = $1", email).then(data2 => {
         if (data2.length > 0) {
           error.message = "User Already Exist";
           error.httpStatusCode = 403;
@@ -147,7 +151,7 @@ exports.createUser = (req, res, next) => {
           const saltHash = authUtils.genPassword(password);
           const hash = saltHash.hash;
           const salt = saltHash.salt;
-          console.log('saltHash', saltHash)
+          console.log('saltHash', saltHash);
 
           const userInfo = [
             first_name,
@@ -160,7 +164,7 @@ exports.createUser = (req, res, next) => {
             salt
           ];
 
-          if (user_type == 'admin') {
+          if (user_type == 'admin' || user_type == 'manager') {
             // console.log('userInfo', userInfo)
             const query4 = `insert into users(first_name, last_name, email, password, creation_date, is_deleted,
                 user_type, gender, salt) values ($1, $2, $3, $4, $5,
@@ -196,30 +200,23 @@ exports.createUser = (req, res, next) => {
     req.app.locals.user_type = user_type;
     req.app.locals.email = email;
     next();
-  }).catch(err => {
-    next(err);
+  }).catch(error => {
+    next(error);
   });
 };
 
-exports.resetPassConfirmation = (req, res, next) => {
-  const user_id = req.params.user_id;
-  const pid = req.params.pass_request_id;
-  const link = "https://mesoboard-capstone-app.herokuapp.com/api/auth/resetPassword/" + user_id;
-  db.oneOrNone("Select * from reset_password where user_id = $1 and reset_id = $2", [user_id, pid]).then(data => {
-    // db.any("delete from reset_password where user_id = $1",[user_id]).then(data => {
-    if (data == null) return res.redirect("https://mesoboard-capstone-app.herokuapp.com/not-found");
-    else {
-      file1 = readFile(__dirname + "/../views/reset-password", "reset-password-form1.html")
-      file2 = readFile(__dirname + "/../views/reset-password", "reset-password-form2.html")
-      file = file1 + link + file2;
-      return res.send(file); //do the re direct here
-    }
-    //must delete reset_password request when pass are changed
-    // });
-  });
-};
+// exports.getUserById = async (req, res, next) => {
+//   const user_id = req.params.id;
+//   const query = 'select * from users where user_id=$1;'
 
-exports.getUserData = function (req, res, next) {
+//   return db.one(query, [user_id]).then(user => {
+//     return res.status(200).json({ data: user })
+//   }).catch(error => {
+//     next(error)
+//   })
+// }
+
+exports.getUserData = async (req, res, next) => {
   // const user_id = parseInt(req.body.user_id);
   // const user_type = req.body.user_type;
   console.log('req.jwt', req.jwt)
@@ -227,7 +224,7 @@ exports.getUserData = function (req, res, next) {
   // const user_type = req.jwt.user_type;
   console.log('\n\nuser_id', user_id)
   const query = `select user_id, first_name, last_name, email, user_type, gender from users where user_id=$1`;
-  return db.one(query, user_id).then(data => {
+  return db.one(query, [user_id]).then(data => {
     // console.log('data', data)
     res.status(200).json({
       // data,
@@ -245,4 +242,50 @@ exports.getUserData = function (req, res, next) {
   // error.message = "Invalid account type";
   // error.httpStatusCode = 500;
   // next(error);
+};
+
+
+exports.resetPassword = (req, res, next) => {
+  const newPassword = req.query.pass;
+  const user_id = req.params.user_id;
+  console.log('newPassword', newPassword);
+  // console.log('user_id', user_id);
+
+  const saltHash = authUtils.genPassword(newPassword);
+  const hash = saltHash.hash;
+  const salt = saltHash.salt;
+  console.log('saltHash', saltHash);
+
+  return db.task(async t => {
+    return t.none('UPDATE users SET password = $2, salt = $3 where user_id = $1', [user_id, hash, salt]).then(async _ => {
+      return t.none('Delete from reset_password where user_id = $1', user_id).then(_ => {
+        const link = utils.getUrlByEnvironment(req, 'signin', 3000); //redirect to app's signin component
+        console.log('redirecting to', link);
+        return res.redirect(link);
+      });
+    }).catch(error => {
+      next(error);
+    });
+  });
+}
+
+exports.resetPassConfirmation = (req, res, next) => {
+  console.log('\n\nresetPassConfirmation\n\n');
+  const user_id = req.params.user_id;
+  const pid = req.params.pass_request_id;
+  // console.log('user_id, pass_request_id', user_id, pid);
+  const link = utils.getUrlByEnvironment(req, `api/auth/resetPassword/${user_id}`);
+  // console.log('link', link);
+
+  return db.oneOrNone("Select * from reset_password where user_id = $1 and reset_id = $2", [user_id, pid]).then(data => {
+    console.log('data', data)
+    if (data == null) return res.redirect(utils.getUrlByEnvironment(req, 'not-found'));
+    else {
+      file1 = readFile(__dirname + "/../views/reset-password", "reset-password-form1.html");
+      file2 = readFile(__dirname + "/../views/reset-password", "reset-password-form2.html");
+      file = file1 + link + file2;
+      // console.log('file', file);
+      return res.send(file); //do the re direct here
+    }
+  });
 };
