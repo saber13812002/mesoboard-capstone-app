@@ -1,9 +1,11 @@
-import { useState, useEffect, useContext } from 'react'
+import { useState, useEffect, useContext } from 'react';
 import { Form, Button } from 'react-bootstrap';
-import { AuthWrapper, Register } from '.'
-import { AuthContext } from '../store'
-import { isLoggedIn } from '../services/authService'
-import { NavLink } from 'react-router-dom'
+import { AuthWrapper, Register } from '.';
+import { AuthContext } from '../store';
+import { isLoggedIn } from '../services/authService';
+import { NavLink } from 'react-router-dom';
+
+const minCodeLength = 6;
 
 const Authenticate = () => {
   const [redirectToApp, setRedirectToApp] = useState(isLoggedIn())
@@ -72,11 +74,11 @@ const Authenticate = () => {
 
     // to register an employee - hardcoded
     const userForm = {
-      email: 'employee@gmail.com',
+      email: 'employee@gmail.com', last_name: 'Entity',
+      // email: 'employee2@gmail.com', last_name: 'Entity2',
       password: 'meso2021',
       gender: 'female',
       first_name: 'Employee',
-      last_name: 'Entity',
     }
     if (userForm) {
       setUserInfo(userForm)
@@ -97,8 +99,8 @@ const Authenticate = () => {
           {/* <Form.Control type='text' placeholder='Correo electrónico' />
           <br /> */}
 
-          {code.length === 0 && <Button disabled className='w-100 mt-3'>Verificar</Button>}
-          {code.length > 0 && (
+          {(code.length < minCodeLength) && <Button disabled className='w-100 mt-3'>Verificar</Button>}
+          {(code.length >= minCodeLength) && (
             <Button type='submit' variant='primary' className='w-100 mt-3'>
               Verificar
             </Button>

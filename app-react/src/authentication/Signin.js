@@ -34,10 +34,8 @@ const Signin = () => {
         </NavLink>
       </p>
       <p className='auth__redirect'>
-        {/* ¿No tienes una cuenta? */}
-        {/* <NavLink to={'authenticate'} className='ml-2'> */}
         <NavLink to={'authenticate'}>
-          Registrase
+          Registrarse
         </NavLink>
       </p>
     </AuthWrapper>

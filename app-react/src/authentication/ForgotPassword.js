@@ -36,20 +36,18 @@ const ForgotPassword = () => {
       <Form onSubmit={sendResetPassword}>
         <Form.Control className='mt-4' size='lg' type='text' placeholder='Correo electrónico' />
         <div className='d-flex w-100 justify-content-between mt-3 gap-3'>
-          <Button variant='light' className='w-100' onClick={handleCancel}>
-            Cancelar
-          </Button>
-          {/* <Button type='submit' variant='primary' className='w-100'>
-            Enviar
-          </Button> */}
+          <MButton
+            className='w-100'
+            text='Cancelar'
+            variant='light'
+            onClick={handleCancel}
+          />
           <MButton
             className='w-100'
             text='Enviar'
             variant='primary'
-            size='sm'
             IconComponent={iconComponents.Mail}
             iconSize='sm'
-          // iconColor='dark'
           />
         </div>
       </Form>
