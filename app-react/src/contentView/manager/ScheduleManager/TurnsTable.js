@@ -6,7 +6,7 @@ import TimePicker from 'react-bootstrap-time-picker';
 import { timeFromInt } from 'time-number';
 
 
-const TurnsTable = ({ turns, onAddNewTurn, addingNewTurn, onSaveTurn, onCancel }) => {
+const TurnsTable = ({ turns, onAddNewTurn, addingNewTurn, onSaveTurn, onCancel, deleteTurn }) => {
   const [selectTimeStart, setSelectTimeStart] = useState(14400) //represents 4:00 AM
   // const [selectTimeEnd, setSelectTimeEnd] = useState(14400)
   // const [selectTimeLunch, setSelectTimeLunch] = useState(14400)
@@ -58,6 +58,13 @@ const TurnsTable = ({ turns, onAddNewTurn, addingNewTurn, onSaveTurn, onCancel }
                   <td>{timeStart}</td>
                   <td>{timeEnd}</td>
                   <td>{timeLunch}</td>
+                  <td>
+                    <Icon
+                      IconComponent={iconComponents.trash}
+                      onClick={() => deleteTurn(turn.turnIndex)}
+                      color='red'
+                    />
+                  </td>
                   {/* <td></td> */}
                 </tr>}
                 {addingNewTurn && !isValidIndex && (

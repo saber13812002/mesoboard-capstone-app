@@ -5,7 +5,7 @@ import { AuthContext } from '../../../store'
 import { MButton } from '../../../components'
 import { ProfileScheduleDetails, ScheduleTable, TurnsTable } from '../..'
 import { Icon, iconComponents, ScheduleEdit } from '../../../components'
-import { timeFromInt } from 'time-number';
+import { timeFromInt,timeToInt } from 'time-number';
 import { DateRange } from '../..'
 import { ServerRoutes as server } from '../../../services/apiService'
 import {
@@ -247,23 +247,17 @@ const ScheduleManager = () => {
         and after sorting, iterate and convert with timeFromInt
       */
       // sort by date start
-      turnClone = turnClone.sort((a, b) => {
+      turnClone = sortTurns(turnClone)
+      /* turnClone.sort((a, b) => {
         // console.log('\n\n')
-        const is_a_am = a.timeStart.includes('AM')
-        const is_a_pm = a.timeStart.includes('PM')
-        const is_b_am = b.timeStart.includes('AM')
-        const is_b_pm = b.timeStart.includes('PM')
-
-        // do algorithm to determine order depending on AM or PM
-        if (is_a_pm && is_b_am) {
-          return -1
-        }
-        // 3 more conditions maybe
-        return a.timeStart.localeCompare(b.timeStart)
+        let aHour = timeToInt(a.timeStart)
+        let bHour = timeToInt(b.timeStart)
+        console.log(aHour, bHour)
+        return ('' + aHour).localeCompare(bHour)
       })
-
+ */
       // enumerate in desc order
-      turnClone.forEach((turn, i) => turn.turnIndex = i + 1)
+      //turnClone.forEach((turn, i) => turn.turnIndex = i + 1)
 
       // store new turn id for fetch insert on useEffect
       const turnIndex = getTurnIdByTime(lastTurn.timeStart)
@@ -282,7 +276,28 @@ const ScheduleManager = () => {
       return turnClone
     })
   }
-
+  const sortTurns = (turns) => {
+     turns = turns.sort((a, b) => {
+        let aHour = timeToInt(a.timeStart)
+        let bHour = timeToInt(b.timeStart)
+        console.log(aHour, bHour)
+        return ('' + aHour).localeCompare(bHour)
+    })
+    turns.forEach((turn, i) => turn.turnIndex = i + 1)
+    //console.log(turn)
+    return turns
+  }
+  const deleteTurn = (turnId) => {
+    if(addingNewTurn){return;}
+    setTurns(prev => {
+      let turnClone = [...prev]      
+      turnClone.splice(turnId-1, 1);
+      //turnClone = sortTurns(turnClone)
+      turnClone.forEach((turn, i) =>
+      turn.id = i+1) 
+      return turnClone
+    })
+  }
   const removeAddedTurn = () => {
     turns.pop();
     setTurns(turns)
@@ -395,6 +410,7 @@ const ScheduleManager = () => {
           addingNewTurn={addingNewTurn}
           onSaveTurn={saveTurn}
           onCancel={removeAddedTurn}
+          deleteTurn={deleteTurn}
         />
 
         {/* section for the ScheduleEditModal portal component */}

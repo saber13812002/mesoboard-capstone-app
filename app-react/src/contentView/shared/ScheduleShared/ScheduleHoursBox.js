@@ -1,9 +1,9 @@
 import './ScheduleHoursBox.css'
 import { get12HourFormatOfDate } from '../../../services/scheduleService'
 
-const ScheduleHoursBox = ({ weekDate, showLunchMins = true, className = '' }) => {
+const ScheduleHoursBox = ({ isHourLunch, weekDate, showLunchMins = true, className = '' }) => {
   // console.log('weekDate', weekDate);
-  const { dateStart, dateEnd, dateLunch, isHourLunch } = weekDate;
+  const { dateStart, dateEnd, dateLunch } = weekDate;
 
   // start and end of work schedule
   const timeStart = get12HourFormatOfDate(dateStart);
