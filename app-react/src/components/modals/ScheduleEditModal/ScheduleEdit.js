@@ -104,7 +104,7 @@ const ScheduleEdit = ({ user, turns, dateStart, dateEnd, mCurrent, onSaveChanges
   }
   const updateLunch = (e) => {
     //console.log(e.target.checked)
-    setEmployeeToEdit(emp => {
+    setUserToEdit(emp => {
       const newEmployee = { ...emp };
       newEmployee.isHourLunch = e.target.checked;
       console.log(newEmployee.isHourLunch)
@@ -155,7 +155,7 @@ const ScheduleEdit = ({ user, turns, dateStart, dateEnd, mCurrent, onSaveChanges
         <div className='scheduleEdit__data'>
           {weekDates.map((weekDate, day) => {
             if (weekDate) {
-              const turnIndex = getTurnIndexByTurnId(weekDate.turnId) || 0;
+              // const turnIndex = getTurnIndexByTurnId(weekDate.turnId) || 0;
               // console.log('turnIndex', turnIndex);
 
               return (
@@ -167,13 +167,9 @@ const ScheduleEdit = ({ user, turns, dateStart, dateEnd, mCurrent, onSaveChanges
                     onClick={() => removeWeekDateFromUser(day)}
                   />
                   <h4>{getDayName(day)}</h4>
-                  {/*fix to grid to ease styling*/}
                   {<Dropdown options={ids} onChange={(e) => updateHours(day, e)} />}
-
-                  <ScheduleHoursBox isHourLunch={employeeToEdit.isHourLunch} weekDate={weekDate} showLunchMins={true} />
-
+                  <ScheduleHoursBox isHourLunch={userToEdit.isHourLunch} weekDate={weekDate} showLunchMins={true} />
                 </div>
-
               )
             }
             return null

@@ -5,7 +5,7 @@ import { AuthContext } from '../../../store'
 import { MButton } from '../../../components'
 import { ProfileScheduleDetails, ScheduleTable, TurnsTable } from '../..'
 import { Icon, iconComponents, ScheduleEdit } from '../../../components'
-import { timeFromInt,timeToInt } from 'time-number';
+import { timeFromInt, timeToInt } from 'time-number';
 import { DateRange } from '../..'
 import { ServerRoutes as server } from '../../../services/apiService'
 import {
@@ -76,7 +76,7 @@ const ScheduleManager = () => {
     const getUserTurns = async () => {
       const url = server.getUserTurns();
       axios.get(url).then(res => {
-        // console.log('res.turns', res.data.turns)
+        console.log('res.turns', res.data.turns)
         setTurns(res.data.turns);
       })
         .catch(err => console.log(err))
@@ -277,24 +277,24 @@ const ScheduleManager = () => {
     })
   }
   const sortTurns = (turns) => {
-     turns = turns.sort((a, b) => {
-        let aHour = timeToInt(a.timeStart)
-        let bHour = timeToInt(b.timeStart)
-        console.log(aHour, bHour)
-        return ('' + aHour).localeCompare(bHour)
+    turns = turns.sort((a, b) => {
+      let aHour = timeToInt(a.timeStart)
+      let bHour = timeToInt(b.timeStart)
+      console.log(aHour, bHour)
+      return ('' + aHour).localeCompare(bHour)
     })
     turns.forEach((turn, i) => turn.turnIndex = i + 1)
     //console.log(turn)
     return turns
   }
   const deleteTurn = (turnId) => {
-    if(addingNewTurn){return;}
+    if (addingNewTurn) { return; }
     setTurns(prev => {
-      let turnClone = [...prev]      
-      turnClone.splice(turnId-1, 1);
+      let turnClone = [...prev]
+      turnClone.splice(turnId - 1, 1);
       //turnClone = sortTurns(turnClone)
       turnClone.forEach((turn, i) =>
-      turn.id = i+1) 
+        turn.id = i + 1)
       return turnClone
     })
   }

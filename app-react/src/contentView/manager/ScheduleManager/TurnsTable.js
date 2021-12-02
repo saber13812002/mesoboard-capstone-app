@@ -60,7 +60,7 @@ const TurnsTable = ({ turns, onAddNewTurn, addingNewTurn, onSaveTurn, onCancel, 
                   <td>{timeLunch}</td>
                   <td>
                     <Icon
-                      IconComponent={iconComponents.trash}
+                      IconComponent={iconComponents.Trash}
                       onClick={() => deleteTurn(turn.turnIndex)}
                       color='red'
                     />
