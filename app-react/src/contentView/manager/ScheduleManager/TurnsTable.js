@@ -58,7 +58,13 @@ const TurnsTable = ({ turns, onAddNewTurn, addingNewTurn, onSaveTurn, onCancel, 
                   <td>{timeStart}</td>
                   <td>{timeEnd}</td>
                   <td>{timeLunch}</td>
-                  <td><Icon IconComponent={iconComponents.Plus} onClick={() => deleteTurn(turn.turnIndex)}/></td> 
+                  <td>
+                    <Icon
+                      IconComponent={iconComponents.trash}
+                      onClick={() => deleteTurn(turn.turnIndex)}
+                      color='red'
+                    />
+                  </td>
                   {/* <td></td> */}
                 </tr>}
                 {addingNewTurn && !isValidIndex && (
