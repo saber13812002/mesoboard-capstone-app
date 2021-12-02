@@ -29,6 +29,8 @@ const Sidebar = () => {
   const { userType } = authState;
 
   useEffect(() => {
+    if (!userType) return;
+
     // initialize sidebar list with items that are shared by every type of user
     homeItem.setNext(requestsItem);
     requestsItem.setNext(memosItem);
@@ -49,7 +51,7 @@ const Sidebar = () => {
         break;
     }
     setSidebarItems(homeItem.toArray());
-  }, []);
+  }, [userType]);
 
 
   // clear sidebar item next references on dismount

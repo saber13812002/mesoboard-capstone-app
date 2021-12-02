@@ -1,4 +1,4 @@
-// import { urlPaths } from './urlService'
+import { urlSlugs } from './urlService'
 import { iconComponents } from '../components'
 import { urlPaths } from '../services/urlService'
 
@@ -58,10 +58,10 @@ export class SidebarItem {
 }
 
 export const sidebarItemNames = {
-  home: 'Home',
-  schedule: 'Schedule',
+  home: 'Inicio',
+  schedule: 'Horarios',
   profiles: 'Perfiles',
-  checks: 'Talonarios',
+  // checks: 'Talonarios',
   requests: 'Solicitudes',
   memos: 'Memorandos',
   permissions: 'Permisos de Usuario'
@@ -83,11 +83,11 @@ export const allLinks = {
     name: sidebarItemNames.profiles,
     IconComponent: iconComponents.Profile,
   },
-  CHECKS: {
-    to: urlPaths.checks,
-    name: sidebarItemNames.checks,
-    IconComponent: iconComponents.MoneyCheck,
-  },
+  // CHECKS: {
+  //   to: urlPaths.checks,
+  //   name: sidebarItemNames.checks,
+  //   IconComponent: iconComponents.MoneyCheck,
+  // },
   REQUESTS: {
     to: urlPaths.requests,
     name: sidebarItemNames.requests,
@@ -106,23 +106,21 @@ export const allLinks = {
 }
 
 export const setSidebarActiveItemNameByUrlPath = setter => {
-
-  // export const getSidebarActiveItemNameByUrlPath = () => {
   const pathname = window.location.pathname;
+  const { schedule, profiles, requests, memos, permissions } = urlSlugs;
+  const includes = slug => pathname.includes(`/${slug}`);
+
   let activeItemName = sidebarItemNames.home;
-  if (pathname.includes('/schedule')) {
+  if (includes(schedule))
     activeItemName = sidebarItemNames.schedule;
-  } if (pathname.includes('/profiles')) {
+  else if (includes(profiles))
     activeItemName = sidebarItemNames.profiles;
-  } else if (pathname.includes('/checks')) {
-    activeItemName = sidebarItemNames.checks;
-  } else if (pathname.includes('/requests')) {
+  else if (includes(requests))
     activeItemName = sidebarItemNames.requests;
-  } else if (pathname.includes('/memos')) {
+  else if (includes(memos))
     activeItemName = sidebarItemNames.memos;
-  }
-  else if (pathname.includes('/permissions')) {
+  else if (includes(permissions))
     activeItemName = sidebarItemNames.permissions;
-  }
+
   setter(activeItemName);
 }

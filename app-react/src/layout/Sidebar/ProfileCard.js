@@ -5,10 +5,10 @@ const ProfileCard = ({ profileCardDimensions, onHideCard, onLogout }) => {
   // console.log('profileCardDimensions', profileCardDimensions);
   const cardItems = [{
     IconComponent: iconComponents.Person,
-    text: 'Profile',
+    text: 'Perfil',
   }, {
     IconComponent: iconComponents.Logout,
-    text: 'Logout',
+    text: 'Cerrar Sesión',
     onClick: onLogout
   }]
 

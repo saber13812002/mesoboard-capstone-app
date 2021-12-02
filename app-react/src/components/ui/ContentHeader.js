@@ -1,25 +1,26 @@
 import { useState, useEffect } from 'react'
 import './ContentHeader.css'
+import { urlSlugs } from '../../services/urlService'
 import { ContentHeaderInfo } from '..'
 
 const ContentHeader = ({ view }) => {
   const [header, setHeader] = useState('')
+  const { home, schedule, profiles, requests, memos, permissions } = urlSlugs;
+
   useEffect(() => {
     switch (view) {
-      case 'home':
-        setHeader('inicio'); break;
-      case 'schedule':
-        setHeader('horarios'); break;
-      case 'request':
-        setHeader('solicitudes'); break;
-      case 'memo':
-        setHeader('memos'); break;
-      case 'checks':
-        setHeader('talonarios'); break;
-      case 'permissions':
-        setHeader('Permisos de Usuario'); break;
+      case home:
+        setHeader('Inicio'); break;
+      case schedule:
+        setHeader('Horarios'); break;
+      case requests:
+        setHeader('Solicitudes'); break;
+      case memos:
+        setHeader('Memorandos'); break;
+      case profiles:
+        setHeader('Perfiles'); break;
       default:
-        setHeader('perfiles'); break;
+        setHeader('Permisos de Usuario'); break;
     }
   }, [view])
 

@@ -42,8 +42,8 @@ exports.login = (req, res, next) => {
       return next(error);
     }
   })
-    .catch(err => {
-      next(err);
+    .catch(error => {
+      next(error);
     });
 };
 
@@ -71,8 +71,8 @@ exports.checkTokenAndGetUser = (req, res, next) => {
         });
       // res.end();
     }
-  }).catch(err => {
-    next(err);
+  }).catch(error => {
+    next(error);
   });
 }
 
@@ -200,11 +200,21 @@ exports.createUser = (req, res, next) => {
     req.app.locals.user_type = user_type;
     req.app.locals.email = email;
     next();
-  }).catch(err => {
-    next(err);
+  }).catch(error => {
+    next(error);
   });
 };
 
+// exports.getUserById = async (req, res, next) => {
+//   const user_id = req.params.id;
+//   const query = 'select * from users where user_id=$1;'
+
+//   return db.one(query, [user_id]).then(user => {
+//     return res.status(200).json({ data: user })
+//   }).catch(error => {
+//     next(error)
+//   })
+// }
 
 exports.getUserData = async (req, res, next) => {
   // const user_id = parseInt(req.body.user_id);

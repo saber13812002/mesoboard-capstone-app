@@ -26,7 +26,7 @@ const ProfileSection = ({ profileNameEl, onLogout }) => {
       {Object.keys(profileCardDimensions).length > 0 && (
         <ProfileCard profileCardDimensions={profileCardDimensions} onLogout={onLogout} onHideCard={() => setProfileCardDimensions({})} />
       )}
-      <p>Welcome{firstName && <>,</>}</p>
+      <p>Bienvenido{firstName && <>,</>}</p>
       <div className='profileSection__clickableName' onMouseEnter={showProfileCard}>
         {firstName && <>
           <p>{firstName} {lastName}</p>

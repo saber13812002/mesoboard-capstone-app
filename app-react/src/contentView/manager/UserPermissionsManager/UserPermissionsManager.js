@@ -6,26 +6,13 @@ import { iconComponents, MButton } from '../../../components';
 import { AddPermission } from '../../';
 import { ServerRoutes as server } from '../../../services/apiService';
 
-
-const profiles = [{
-  employeeName: 'J. Ramírez, Iris',
-  email: 'iris.ramirez@gmail.com',
-  creationDate: '8/22/2021',
-  userType: 'employee'
-}, {
-  employeeName: 'D. Ocasio, Iván',
-  email: 'ivan.ocasio@gmail.com',
-  creationDate: '8/24/2021',
-  userType: 'employee'
-}]
-
 const columns = [{
   dataField: 'name',
-  text: 'Employee',
+  text: 'Usuario',
   sort: true
 }, {
   dataField: 'email',
-  text: 'Email'
+  text: 'Correo Electronico'
 }, {
   dataField: 'creation_date',
   text: 'Fecha de creación',
@@ -33,7 +20,8 @@ const columns = [{
   // formatter: (cell, row) => types[cell]
 }, {
   dataField: 'user_type',
-  text: 'Tipo de usuario'
+  text: 'Tipo de usuario',
+  sort: true,
 }];
 
 
