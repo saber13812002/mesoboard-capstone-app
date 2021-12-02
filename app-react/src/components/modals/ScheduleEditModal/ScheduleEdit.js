@@ -6,7 +6,8 @@ import { Modal } from '../..'
 import { Icon, iconComponents, MButton } from '../..'
 import { ScheduleHoursBox } from '../../../contentView'
 import { getDayName, beautifyDate, get24HourFormatOfTime, toISOYearFormat } from '../../../services/scheduleService'
-
+import Dropdown from 'react-dropdown';
+import 'react-dropdown/style.css';
 
 const ScheduleEdit = ({ employee, turns, dateStart, dateEnd, mCurrent, onSaveChanges, onCloseScheduleEdit }) => {
   const deepCopy = JSON.parse(JSON.stringify(employee))
@@ -15,7 +16,6 @@ const ScheduleEdit = ({ employee, turns, dateStart, dateEnd, mCurrent, onSaveCha
   const [employeeOriginal] = useState(deepCopy2)
   const [isSameData, setIsSameData] = useState(true)
   // const [selectedTurnIndex, setSelectedTurnIndex] = useState(undefined)
-
   const { employeeName, weekDates } = employeeToEdit;
 
   useEffect(() => {
@@ -45,7 +45,9 @@ const ScheduleEdit = ({ employee, turns, dateStart, dateEnd, mCurrent, onSaveCha
    *  @param {Event} e the event containing the input value.
    */
   const updateHours = (day, e) => {
-    const turnId = e.target.value;
+    console.log(e.value)
+    //e.target.value
+    const turnId = e.value;
     if (!turnId || turnId <= 0 || turnId > turns.length)
       return;
 
@@ -106,6 +108,9 @@ const ScheduleEdit = ({ employee, turns, dateStart, dateEnd, mCurrent, onSaveCha
   const getTurnIndexByTurnId = turnId => turns.find(turn => turn.turnId === turnId)?.turnIndex;
 
   const portalElement = document.getElementById('navdrawer-portal');
+  let ids = turns.map((turn)=>{
+    return turn.turnIndex
+  })
   // console.log('employeeToEdit', employeeToEdit)
   return (
     <Modal
@@ -150,14 +155,18 @@ const ScheduleEdit = ({ employee, turns, dateStart, dateEnd, mCurrent, onSaveCha
                     onClick={() => removeWeekDateFromEmployee(day)}
                   />
                   <h4>{getDayName(day)}</h4>
-                  <input type='number' defaultValue={turnIndex} onChange={(e) => updateHours(day, e)} />
+                  {/*fix to grid to ease styling*/}
+                  {<Dropdown options={ids} onChange={(e) => updateHours(day, e)} />}
+     
                   <ScheduleHoursBox weekDate={weekDate} showLunchMins={true} />
+                  
                 </div>
               )
             }
             return null
           })}
         </div>
+        <label><input type="checkbox" id="cbox1" value="first_checkbox"/> 1 hour Lunch</label><br/>
         {isSameData ? (
           <Button
             disabled={true}
