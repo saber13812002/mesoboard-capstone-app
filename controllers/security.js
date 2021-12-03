@@ -24,9 +24,8 @@ exports.verifyJWT = (req, res, next) => {
 }
 
 exports.isAdmin = (req, res, next) => {
-  const user_type = req.app.locals.user_type;
-  console.log('\n\nuser_type', user_type)
-  if (user_type == 'admin') {
+  const user_type = req.jwt.user_type;
+  if (user_type === 'admin') {
     next();
   } else {
     const error = new Error();
@@ -36,17 +35,17 @@ exports.isAdmin = (req, res, next) => {
   }
 };
 
-// exports.isManager = (req, res, next) => {
-//   const user_type = req.app.locals.user_type;
-//   if (user_type == 'manager') {
-//     next();
-//   } else {
-//     const error = new Error();
-//     error.message = "Forbidden: Manager privileges required for this operation.";
-//     error.httpStatusCode = 403;
-//     next(error);
-//   }
-// };
+exports.isManager = (req, res, next) => {
+  const user_type = req.jwt.user_type;
+  if (user_type === 'manager') {
+    next();
+  } else {
+    const error = new Error();
+    error.message = "Forbidden: Manager privileges required for this operation.";
+    error.httpStatusCode = 403;
+    next(error);
+  }
+};
 
 // exports.isEmployee = (req, res, next) => {
 //   const user_type = req.app.locals.user_type;
@@ -62,8 +61,8 @@ exports.isAdmin = (req, res, next) => {
 
 exports.isAdminOrManager = (req, res, next) => {
   const user_type = req.jwt.user_type;
-  console.log('isAdminOrManager', user_type)
-  if (user_type == 'admin' || user_type == 'manager') {
+  // console.log('isAdminOrManager', user_type)
+  if (user_type === 'admin' || user_type === 'manager') {
     next();
   } else {
     const error = new Error();

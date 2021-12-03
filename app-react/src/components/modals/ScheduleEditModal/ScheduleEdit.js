@@ -155,7 +155,7 @@ const ScheduleEdit = ({ user, turns, dateStart, dateEnd, mCurrent, onSaveChanges
         <div className='scheduleEdit__data'>
           {weekDates.map((weekDate, day) => {
             if (weekDate) {
-              // const turnIndex = getTurnIndexByTurnId(weekDate.turnId) || 0;
+              const turnIndex = getTurnIndexByTurnId(weekDate.turnId);
               // console.log('turnIndex', turnIndex);
 
               return (
@@ -167,7 +167,11 @@ const ScheduleEdit = ({ user, turns, dateStart, dateEnd, mCurrent, onSaveChanges
                     onClick={() => removeWeekDateFromUser(day)}
                   />
                   <h4>{getDayName(day)}</h4>
-                  {<Dropdown options={ids} onChange={(e) => updateHours(day, e)} />}
+                  {<Dropdown
+                    value={turnIndex}
+                    options={ids}
+                    onChange={(e) => updateHours(day, e)}
+                  />}
                   <ScheduleHoursBox isHourLunch={userToEdit.isHourLunch} weekDate={weekDate} showLunchMins={true} />
                 </div>
               )

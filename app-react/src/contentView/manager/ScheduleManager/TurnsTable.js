@@ -6,7 +6,7 @@ import TimePicker from 'react-bootstrap-time-picker';
 import { timeFromInt } from 'time-number';
 
 
-const TurnsTable = ({ turns, onAddNewTurn, addingNewTurn, onSaveTurn, onCancel, deleteTurn }) => {
+const TurnsTable = ({ turns, onAddNewTurn, addingNewTurn, onSaveTurn, onCancel, onDeleteTurn }) => {
   const [selectTimeStart, setSelectTimeStart] = useState(14400) //represents 4:00 AM
   // const [selectTimeEnd, setSelectTimeEnd] = useState(14400)
   // const [selectTimeLunch, setSelectTimeLunch] = useState(14400)
@@ -61,7 +61,7 @@ const TurnsTable = ({ turns, onAddNewTurn, addingNewTurn, onSaveTurn, onCancel, 
                   <td>
                     <Icon
                       IconComponent={iconComponents.Trash}
-                      onClick={() => deleteTurn(turn.turnIndex)}
+                      onClick={() => onDeleteTurn(turn.turnIndex)}
                       color='red'
                     />
                   </td>
@@ -73,7 +73,7 @@ const TurnsTable = ({ turns, onAddNewTurn, addingNewTurn, onSaveTurn, onCancel, 
                     {isValidIndex ? <td><strong>{turnIndex}</strong></td> : <td></td>}
                     <td><TimePicker start="04:00" end="18:00" format="12" step={30} onChange={handleSelectTimeStart} value={selectTimeStart} /></td>
                     <td><TimePicker start={timeFromInt(selectTimeStart)} end="24:00" step={30} onChange={handleSelectTimeEnd} value={selectTimeEnd} /></td>
-                    <td><TimePicker start="03:00" end="22:00" step={30} onChange={handleSelectTimeLunch} value={selectTimeLunch} /></td>
+                    <td><TimePicker start={timeFromInt(selectTimeStart + (30 * 60))} end={timeFromInt(selectTimeEnd)} step={30} onChange={handleSelectTimeLunch} value={selectTimeLunch} /></td>
                     <td className='text-center align-middle' onClick={() => onSaveTurn(selectTimeStart, selectTimeEnd, selectTimeLunch)}>
                       <IIcon
                         name='checkmark'

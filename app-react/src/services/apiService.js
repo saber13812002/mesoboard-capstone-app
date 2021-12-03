@@ -19,8 +19,9 @@ class UrlConstants {
   static USER_DATA = 'auth/userData';
   static SET_USER_SCHEDULES = 'schedule/week';
   static ALL_USER_SCHEDULES = 'schedule/week/all/<schedule_id>';
-  static TURNS = 'schedule/turn';
-  static SET_TURN = 'schedule/turn/all';
+  static GET_TURNS = 'schedule/turn/all';
+  static SET_TURN = 'schedule/turn';
+  static REMOVE_TURN = 'schedule/turn/<turn_id>/remove';
   // static ALL_EMPLOYEES = 'employee/all';
   static USERS_WITH_SCHEDULE = 'profiles/schedule/all/<schedule_id>'
   static USER_WITH_SCHEDULE = 'profiles/schedule/<user_id>/<schedule_id>'
@@ -66,10 +67,14 @@ export class ServerRoutes {
     return UrlConstants.PROTECTED + UrlConstants.ALL_USER_SCHEDULES.replace('<schedule_id>', schedule_id);
   }
   static getUserTurns() {
-    return UrlConstants.PROTECTED + UrlConstants.TURNS;
+    return UrlConstants.PROTECTED + UrlConstants.GET_TURNS;
   }
   static setTurn() {
     return UrlConstants.PROTECTED + UrlConstants.SET_TURN;
+  }
+  static removeTurn(turn_id) {
+    return UrlConstants.PROTECTED + UrlConstants.REMOVE_TURN
+      .replace('<turn_id>', turn_id);
   }
 
   // PROFILES

@@ -49,13 +49,13 @@ const ProfilesManager = () => {
       classes: 'nameTd',
       formatter: (name, data) => <p className='name' onClick={() => setProfileDetails(data)}>{name}</p>
     }, {
-      dataField: 'totalHours',
+      dataField: 'assigned_hours',
       text: 'Horas Acumuladas',
       sort: true,
       headerAlign: 'center',
       align: 'center',
     }, {
-      dataField: 'assigned_hours',
+      dataField: 'totalHours',
       text: 'Horas Asignadas',
       sort: true,
       headerAlign: 'center',

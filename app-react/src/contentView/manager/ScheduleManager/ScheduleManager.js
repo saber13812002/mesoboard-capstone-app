@@ -288,17 +288,19 @@ const ScheduleManager = () => {
   }
 
 
-  const deleteTurn = (turnId) => {
-    if (addingNewTurn) { return; }
+  const deleteTurn = turnIndex => {
+    if (addingNewTurn) return;
+
     setTurns(prev => {
-      let turnClone = [...prev]
-      turnClone.splice(turnId - 1, 1);
-      //turnClone = sortTurns(turnClone)
-      turnClone.forEach((turn, i) =>
-        turn.id = i + 1)
-      return turnClone
-    })
-  }
+      const turnClone = [...prev];
+      turnClone.splice(turnIndex - 1, 1);
+      turnClone.forEach((turn, i) => (turn.turnIndex = i + 1));
+      return turnClone;
+    });
+
+    axios.delete(server.removeTurn(turns[turnIndex - 1].turnId));
+  };
+
   const removeAddedTurn = () => {
     turns.pop();
     setTurns(turns)
@@ -393,8 +395,8 @@ const ScheduleManager = () => {
               color='primary'
               className='mt-1'
             />
-          </div>
-        </div>
+          </div >
+        </div >
 
         <section className='mb-4'>
           <ScheduleTable
@@ -415,7 +417,8 @@ const ScheduleManager = () => {
         />
 
         {/* section for the ScheduleEditModal portal component */}
-        {editingUser &&
+        {
+          editingUser &&
           <ScheduleEdit
             turns={turns}
             dateStart={mWeekStart.toDate()}
@@ -424,7 +427,8 @@ const ScheduleManager = () => {
             mCurrent={mCurrent}
             onSaveChanges={modifiedEmp => saveScheduleOfUser(modifiedEmp)}
             onCloseScheduleEdit={closeScheduleEdit}
-          />}
+          />
+        }
       </>}
     </>
   )

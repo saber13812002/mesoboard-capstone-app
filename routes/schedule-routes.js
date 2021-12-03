@@ -11,11 +11,14 @@ module.exports = app => {
     .get(security.isAdminOrManager, schedule.getEmployeeSchedules)
 
   // app.route('/protected/schedule/turn/:turn_id/:user_id')
-  app.route('/protected/schedule/turn/all')
-    .post(schedule.insertUserTurn)
-
   app.route('/protected/schedule/turn')
-    .get(schedule.getUserTurns)
+    .post(security.isManager, schedule.insertUserTurn)
+
+  app.route('/protected/schedule/turn/all')
+    .get(security.isManager, schedule.getUserTurns)
+
+  app.route('/protected/schedule/turn/:turn_id/remove')
+    .delete(security.isManager, schedule.removeUserTurn)
   // app.route('/api/schedule/week') //for testing purposes
   //   .get(schedule.getWeekSchedule) //will not be used
 

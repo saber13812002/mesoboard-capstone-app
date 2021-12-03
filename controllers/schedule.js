@@ -159,6 +159,14 @@ exports.getUserTurns = (req, res, next) => {
     .catch(err => next(err))
 }
 
+exports.removeUserTurn = (req, res, next) => {
+  var user_id = req.jwt.sub;
+  var turn_id = Number(req.params.turn_id);
+
+  const q = `delete from turn where user_id=$1 and turn_id=$2`;
+  return db.any(q, [user_id, turn_id])
+}
+
 
 
 
