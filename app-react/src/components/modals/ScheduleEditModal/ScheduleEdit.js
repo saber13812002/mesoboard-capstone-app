@@ -8,7 +8,6 @@ import { ScheduleHoursBox } from '../../../contentView'
 import { getDayName, beautifyDate, get24HourFormatOfTime, toISOYearFormat } from '../../../services/scheduleService'
 import Dropdown from 'react-dropdown';
 import 'react-dropdown/style.css';
-import { timeFromInt } from 'time-number';
 
 const ScheduleEdit = ({ user, turns, dateStart, dateEnd, mCurrent, onSaveChanges, onCloseScheduleEdit }) => {
   const deepCopy = JSON.parse(JSON.stringify(user))
@@ -120,6 +119,16 @@ const ScheduleEdit = ({ user, turns, dateStart, dateEnd, mCurrent, onSaveChanges
    * @returns the turn index found or undefined turn id does not exist within the turns array
    */
   const getTurnIndexByTurnId = turnId => turns.find(turn => turn.turnId === turnId)?.turnIndex;
+  // const getTurnIndexByTurnId = turnId => {
+  //   console.log('turnId', turnId)
+  //   // turns.find(turn => turn.turnId === turnId)?.turnIndex;
+  //   const res = turns.find(turn => {
+  //     return turn.turnId === turnId
+  //   });
+  //   console.log('res', res);
+  //   console.log(res?.turnIndex)
+  //   return res?.turnIndex
+  // }
 
   const portalElement = document.getElementById('navdrawer-portal');
 
@@ -155,7 +164,7 @@ const ScheduleEdit = ({ user, turns, dateStart, dateEnd, mCurrent, onSaveChanges
         <div className='scheduleEdit__data'>
           {weekDates.map((weekDate, day) => {
             if (weekDate) {
-              const turnIndex = getTurnIndexByTurnId(weekDate.turnId) || 0;
+              const turnIndex = getTurnIndexByTurnId(weekDate.turnId);
               console.log('turnIndex', turnIndex);
 
               return (
@@ -167,7 +176,12 @@ const ScheduleEdit = ({ user, turns, dateStart, dateEnd, mCurrent, onSaveChanges
                     onClick={() => removeWeekDateFromUser(day)}
                   />
                   <h4>{getDayName(day)}</h4>
-                  {<Dropdown value={turnIndex} options={ids} onChange={(e) => updateHours(day, e)} />}
+                  {<Dropdown
+                    value={turnIndex}
+                    options={ids}
+                    onChange={(e) => updateHours(day, e)}
+                  // placeholder={'9'}
+                  />}
                   <ScheduleHoursBox isHourLunch={userToEdit.isHourLunch} weekDate={weekDate} showLunchMins={true} />
                 </div>
               )
