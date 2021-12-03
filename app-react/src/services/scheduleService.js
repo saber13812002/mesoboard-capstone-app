@@ -37,6 +37,8 @@ export const getDayName = day => DAY_NAME[day];
  * @return the total hours of the given week dates
  */
 export const calculateTotalHours = weekDates => {
+  if (!weekDates) return 0
+
   // calculate and set the total hours of a particular week
   let totalHours = 0;
   for (let dates of weekDates) {
@@ -76,6 +78,7 @@ export const getTurnIdByTime = t => get24HourFormatOfTime(t).replace(':', '');
  * @param {string} d a date object.
  */
 export const get24HourFormatOfDate = d => {
+  if (!d) return ''
   const date = new Date(d);
   let hour = date.getUTCHours();
   const minute = addLeadingZeros(date.getUTCMinutes());
@@ -109,6 +112,8 @@ export const get12HourFormatOfDate = (d, spaceBeforePeriod) => {
  * @param {boolean} zeroOnHour determines adding leading zero to the hour.
  */
 export const get24HourFormatOfTime = (t, zeroOnHour) => {
+  if (!t) return ''
+
   t = String(t);
   const split = t.split(':');
 
@@ -156,6 +161,7 @@ export const get12HourFormatByTurnId = (tid, spaceBeforePeriod) => {
  * @param {object | string} d a date object
  */
 export const toISOYearFormat = d => {
+  if (!d) return ''
   const parsed = new Date(d);
   return parsed.getUTCFullYear() + '-' + addLeadingZeros(parsed.getUTCMonth() + 1) + '-' + addLeadingZeros(parsed.getDate());
 }
@@ -165,7 +171,7 @@ export const toISOYearFormat = d => {
  * Returns a string format describing the given date (i.e. Nov. 16, 2021).
  * @param {*} d date to be beautify
  */
-export const beautifyDate = d => beautifyDateStr(toISOYearFormat(d))
+export const beautifyDate = d => d ? beautifyDateStr(toISOYearFormat(d)) : ''
 
 /** 
  * Returns a string format describing the given date in string string form (i.e. Nov. 16, 2021).
@@ -179,7 +185,7 @@ export const beautifyDateStr = isoStr => {
 
 
 // ***  PRIVATE METHODS  ***
-const addLeadingZeros = d => ('0' + d).slice(-2)
+const addLeadingZeros = s => ('0' + s).slice(-2)
 
 // /** Returns given date into ISO format string excluding the hour. 
 //   * date.toISOYearFormat() returns the day after sometimes. 

@@ -38,8 +38,8 @@ exports.addPermission = (req, res, next) => {
         error.httpStatusCode = 400;
         throw error;
       } else {
-        const query = 'INSERT into permissions (code, email, last_update, permission_type) values ($1, $2, $3, $4) returning *';
-        return t.any(query, [code, email, last_update, permission_type]);
+        const q = 'INSERT into permissions (code, email, last_update, permission_type) values ($1, $2, $3, $4) returning *';
+        return t.any(q, [code, email, last_update, permission_type]);
       }
     });
   }).then(data => {
@@ -63,12 +63,12 @@ exports.checkPermission = (req, res, next) => {
   }
 
   // const query = "SELECT (count(*) = 1) as user_created FROM users WHERE code = $1;";
-  const query = "SELECT (count(*) = 1) as code_exists FROM permissions WHERE code = $1;";
-  const query1 = "SELECT permission_type FROM permissions WHERE code = $1;";
+  const q = "SELECT (count(*) = 1) as code_exists FROM permissions WHERE code = $1;";
+  const q1 = "SELECT permission_type FROM permissions WHERE code = $1;";
 
   return db.task(async t => {
     console.log(typeof code)
-    return t.one(query, code).then(data => {
+    return t.one(q, code).then(data => {
       console.log('data', data)
       if (!data.code_exists) {
         console.log('Privisional code doesn\'t exist')
@@ -77,7 +77,7 @@ exports.checkPermission = (req, res, next) => {
         throw error;
       } else {
         console.log('getting permission_type from permissions table')
-        return t.one(query1, code);
+        return t.one(q1, code);
       }
     });
   }).then(data1 => {
@@ -97,21 +97,21 @@ exports.checkPermission = (req, res, next) => {
 };
 
 
-exports.getAllPermissions = async (req, res, next) => {
+exports.getPermissionsAndUsers = async (req, res, next) => {
+  const q = `select first_name || ' ' || last_name as name, u.email, last_update, creation_date, u.user_type
+  from users AS u left join permissions AS p on u.email=p.email`;
+
   return db.task(async t => {
-    return t.one(query, code).then(data => {
-      console.log('data', data)
-      if (!data.code_exists) {
-        console.log('Privisional code doesn\'t exist')
-        error.message = "Invalid provisional code.";
-        error.httpStatusCode = 400;
-        throw error;
-      } else {
-        console.log('getting permission_type from permissions table')
-        return t.one(query1, code);
-      }
+    return t.any(q).then(async data => {
+      const q1 = `select * from permissions where email not in (select email from users)`;
+      return t.any(q1).then(data1 => {
+        data1.push(...data);
+        console.log('\ndata1', data1);
+        res.status(200).json({ data: data1 })
+      })
+    }).catch(err => {
+      next(err);
     });
-  }).catch(err => {
-    next(err);
-  });
+  })
+    .catch(err => { next(err) });
 };

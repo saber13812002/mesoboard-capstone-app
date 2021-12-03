@@ -12,7 +12,9 @@ import AddPermission from './manager/UserPermissionsManager/AddPermission';
 import DateRange from './manager/ScheduleManager/DateRange';
 import ScheduleButtons from './manager/ScheduleManager/ScheduleButtons';
 import ScheduleHoursBox from './shared/ScheduleShared/ScheduleHoursBox';
-import ProfileScheduleDetails from './shared/ProfileScheduleDetails';
+import ProfileScheduleDetails from './shared/Details/ProfileScheduleDetails';
+import EntityDetails from './shared/Details/EntityDetails';
+import DetailsCard from './shared/Details/DetailsCard';
 
 
 export {
@@ -30,4 +32,6 @@ export {
   ScheduleButtons,
   AddPermission,
   ProfileScheduleDetails,
+  EntityDetails,
+  DetailsCard
 }

@@ -73,6 +73,7 @@ exports.setUserSchedule = async (req, res, next) => {
         q += ','
     }
     q += ' returning *'
+    // console.log('dates', dates)
     // console.log(q);
 
     // res.status(200).json({ status: 'Developing...' })
@@ -84,7 +85,7 @@ exports.setUserSchedule = async (req, res, next) => {
 
 
 exports.getEmployeeSchedules = async (req, res, next) => {
-  console.log('getEmployeeSchedules', req.params)
+  // console.log('getEmployeeSchedules', req.params)
   const schedule_id = req.params.schedule_id;
 
   /*
@@ -114,7 +115,6 @@ exports.getEmployeeSchedules = async (req, res, next) => {
     }
   })
     .catch(err => {
-      console.log(err)
       next(err)
     })
 }
@@ -143,7 +143,7 @@ exports.getUserTurns = (req, res, next) => {
 
   // res.status(200).json({ status: 'success', message: 'Developing...' })
   return db.any(q, user_id).then(data => {
-    console.log('turns data', data)
+    // console.log('turns data', data)
     const turns = data.map((d, i) => {
       return {
         turnId: d.turn_id,

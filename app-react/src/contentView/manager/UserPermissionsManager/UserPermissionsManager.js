@@ -3,70 +3,106 @@ import './UserPermissionsManager.css';
 import axios from 'axios';
 import BootstrapTable from 'react-bootstrap-table-next';
 import { iconComponents, MButton } from '../../../components';
-import { AddPermission } from '../../';
+import { AddPermission, EntityDetails } from '../..';
 import { ServerRoutes as server } from '../../../services/apiService';
-
-const columns = [{
-  dataField: 'name',
-  text: 'Usuario',
-  sort: true
-}, {
-  dataField: 'email',
-  text: 'Correo Electronico'
-}, {
-  dataField: 'creation_date',
-  text: 'Fecha de creación',
-  sort: true,
-  // formatter: (cell, row) => types[cell]
-}, {
-  dataField: 'user_type',
-  text: 'Tipo de usuario',
-  sort: true,
-}];
+import { beautifyDate } from '../../../services/scheduleService';
 
 
+let columns = [];
 
 const UserPermissionsManager = () => {
   const [addingNewPermission, setAddingNewPermission] = useState(false);
-  const [employees, setEmployees] = useState([]);
-  console.log('UserPermissionsManager');
+  const [users, setUsers] = useState([]);
+  const [details, setDetails] = useState({});
 
   useEffect(() => {
-    console.log('useEffect')
-    const getAllEmployees = () => {
-      axios.get(server.getAllEmployees()).then(res => {
-        console.log('res.data.employees', res.data.employees)
-        setEmployees(res.data.employees)
+    if (users.length > 0)
+      return; //then don't fetch
+
+    columns = [{
+      dataField: 'name',
+      text: 'Nombre',
+      sort: true,
+      classes: 'nameTd',
+      // formatter: (name, data) => <>{name && <p className='name' onClick={() => setDetails(data)}>{name}</p>}</>
+      formatter: (name, data) => {
+        console.log('data', data);
+
+        if (data.creation_date)
+          return <>{name && <p className='name' onClick={() => setDetails(data)}>{name}</p>}</>
+        else if (data.last_update)
+          return <p className='name permissionName'>{'N/A'}</p>
+
+
+        // let nameToDisplay
+        // if (data.creation_date && name)
+        //   nameToDisplay = name;
+        // else if (data.last_update)
+        //   nameToDisplay = 'N/A';
+
+        // return <p className='name' onClick={() => setDetails(data)}>{nameToDisplay}</p>
+      }
+
+    }, {
+      dataField: 'email',
+      text: 'Correo Electronico'
+    }, {
+      dataField: 'creation_date',
+      text: 'Fecha de creación',
+      sort: true,
+      formatter: (date) => beautifyDate(date),
+    }, {
+      dataField: 'user_type',
+      text: 'Tipo de usuario',
+      sort: true,
+    }];
+
+    const getAllUsers = () => {
+      axios.get(server.getAllUsersAndPermissions()).then(res => {
+        console.log('res.data.data', res.data.data)
+        setUsers(res.data.data)
       })
     }
-    getAllEmployees()
+    getAllUsers()
   }, [])
 
-  const handleBack = () => {
-    setAddingNewPermission(false)
-  }
 
-  const handleAddNewPermission = () => {
-    setAddingNewPermission(true)
-  }
+  const defaultSorted = [{
+    dataField: 'user_type', // if dataField is not match to any column you defined, it will be ignored.
+    order: 'desc' // desc or asc
+  }];
+
 
   return (
     <>
-      {!addingNewPermission && <div className='userPermissionsManager'>
-        <BootstrapTable responsive bootstrap4 bordered={false} keyField='email' data={employees} columns={columns} />
-        <div style={{ marginTop: '-40px' }}>
-          <MButton
-            onClick={handleAddNewPermission}
-            IconComponent={iconComponents.Plus}
-            iconSize='sm'
-            text='Nuevo Permiso'
-            variant='primary'
-            size='sm'
-            className='ml-4'
-          />
-        </div>
-      </div>}
-      {addingNewPermission && <AddPermission onBack={handleBack} />}
+
+      {(Object.keys(details).length > 0) ?
+        <EntityDetails details={details} onBack={() => setDetails({})} />
+        : (
+          <>
+            {addingNewPermission && <AddPermission onBack={() => setAddingNewPermission(false)} />}
+            {!addingNewPermission && (<>
+              {(users.length > 0) &&
+                <div className='userPermissionsManager'>
+                  <BootstrapTable responsive bootstrap4 bordered={false} keyField='email'
+                    defaultSorted={defaultSorted}
+                    data={users}
+                    columns={columns}
+                  />
+                  <div style={{ marginTop: '-40px' }}>
+                    <MButton
+                      onClick={() => setAddingNewPermission(true)}
+                      IconComponent={iconComponents.Plus}
+                      iconSize='sm'
+                      text='Nuevo Permiso'
+                      variant='primary'
+                      size='sm'
+                      className='ml-4'
+                    />
+                  </div>
+                </div>}
+            </>)}
+          </>)}
     </>
   )
 }

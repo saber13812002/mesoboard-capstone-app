@@ -157,8 +157,8 @@ const ScheduleManager = () => {
     // set new properties of the user state
     let user = users.find((emp) => emp.userId === userToEdit.userId);
     user.weekDates = userToEdit.weekDates;
-    user.turnId = userToEdit.turnId;
-    console.log("user", user);
+    // user.turnId = userToEdit.turnId;
+    // console.log('user', user);
 
     // console.log('Now update the schedule of this user on the database')
     const setUserSchedule = async () => {
@@ -270,11 +270,8 @@ const ScheduleManager = () => {
       // enumerate in desc order
       turnClone.forEach((turn, i) => (turn.turnIndex = i + 1));
 
-      // store new turn id for fetch insert on useEffect
-      const turnIndex = getTurnIdByTime(lastTurn.timeStart);
+      const turnIndex = lastTurn.turnIndex
 
-      console.log("lastTurn", lastTurn);
-      // console.log('turnId', turnId)
       setNewTurn({
         turnIndex,
         turnId: getTurnIdByTime(lastTurn.timeStart),
