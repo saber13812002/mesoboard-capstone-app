@@ -21,6 +21,8 @@ const ProfileSection = ({ profileNameEl, onLogout }) => {
     });
   }
 
+
+
   return (
     <div className='profileSection' ref={profileNameEl} onMouseLeave={() => setProfileCardDimensions({})}>
       {Object.keys(profileCardDimensions).length > 0 && (

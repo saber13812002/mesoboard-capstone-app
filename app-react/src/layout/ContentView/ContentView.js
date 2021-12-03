@@ -3,6 +3,7 @@ import { getUrlSlug, urlSlugs } from '../../services/urlService'
 import { useRouteMatch } from 'react-router-dom'
 import { ContentHeader } from '../../components'
 import {
+  Profile,
   HomeManager,
   ScheduleManager,
   ProfilesManager,
@@ -13,8 +14,11 @@ import {
 
 /** returns the component to be viewed */
 const handleView = view => {
-  const { home, schedule, profiles, requests, memos, permissions } = urlSlugs;
+  const { profile, home, schedule, profiles, requests, memos, permissions } = urlSlugs;
+
   switch (view) {
+    case profile:
+      return <Profile />
     case home:
       return <HomeManager />
     case schedule:

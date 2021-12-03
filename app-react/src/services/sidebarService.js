@@ -107,10 +107,12 @@ export const allLinks = {
 
 export const setSidebarActiveItemNameByUrlPath = setter => {
   const pathname = window.location.pathname;
-  const { schedule, profiles, requests, memos, permissions } = urlSlugs;
+  const { home, schedule, profiles, requests, memos, permissions } = urlSlugs;
   const includes = slug => pathname.includes(`/${slug}`);
 
-  let activeItemName = sidebarItemNames.home;
+  let activeItemName = '';
+  if (includes(home))
+    activeItemName = sidebarItemNames.home;
   if (includes(schedule))
     activeItemName = sidebarItemNames.schedule;
   else if (includes(profiles))

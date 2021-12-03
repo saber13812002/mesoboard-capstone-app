@@ -5,10 +5,12 @@ import { ContentHeaderInfo } from '..'
 
 const ContentHeader = ({ view }) => {
   const [header, setHeader] = useState('')
-  const { home, schedule, profiles, requests, memos, permissions } = urlSlugs;
+  const { profile, home, schedule, profiles, requests, memos, permissions } = urlSlugs;
 
   useEffect(() => {
     switch (view) {
+      case profile:
+        return setHeader('Perfil'); break;
       case home:
         setHeader('Inicio'); break;
       case schedule:
