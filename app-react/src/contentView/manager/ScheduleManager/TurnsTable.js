@@ -72,8 +72,8 @@ const TurnsTable = ({ turns, onAddNewTurn, addingNewTurn, onSaveTurn, onCancel, 
                   <tr style={{ fontWeight: '500' }}>
                     {isValidIndex ? <td><strong>{turnIndex}</strong></td> : <td></td>}
                     <td><TimePicker start="04:00" end="18:00" format="12" step={30} onChange={handleSelectTimeStart} value={selectTimeStart} /></td>
-                    <td><TimePicker start={timeFromInt(selectTimeStart)} end="24:00" step={30} onChange={handleSelectTimeEnd} value={selectTimeEnd} /></td>
-                    <td><TimePicker start={timeFromInt(selectTimeStart+(30*60))} end={timeFromInt(selectTimeEnd)} step={30} onChange={handleSelectTimeLunch} value={selectTimeLunch} /></td>
+                    <td><TimePicker start={timeFromInt(selectTimeStart+(2 * 3600))} end="24:00" step={30} onChange={handleSelectTimeEnd} value={selectTimeEnd} /></td>
+                    <td><TimePicker start={timeFromInt(selectTimeStart+(30*60))} end={timeFromInt(selectTimeEnd-(30*60))} step={30} onChange={handleSelectTimeLunch} value={selectTimeLunch} /></td>
                     <td className='text-center align-middle' onClick={() => onSaveTurn(selectTimeStart, selectTimeEnd, selectTimeLunch)}>
                       <IIcon
                         name='checkmark'
