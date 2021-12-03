@@ -185,7 +185,7 @@ export const beautifyDateStr = isoStr => {
 
 
 // ***  PRIVATE METHODS  ***
-const addLeadingZeros = d => d ? ('0' + d).slice(-2) : ''
+const addLeadingZeros = s => ('0' + s).slice(-2)
 
 // /** Returns given date into ISO format string excluding the hour. 
 //   * date.toISOYearFormat() returns the day after sometimes. 
