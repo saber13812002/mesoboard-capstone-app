@@ -13,7 +13,9 @@ class UrlConstants {
   static VERIFY_TOKEN_GET_USER = 'auth/verifyToken/getUser';
   static SEND_RESET_PASSWORD = 'mailer/resetPassword';
   static ADD_PERMISSION = 'permissions/add';
-  static ALL_PERMISSIONS = 'permissions/all';
+  // static ALL_PERMISSIONS = 'permissions/all';
+  // static ALL_PERMISSIONS_AND_INFO_URL = 'permissions/allWithInfo';
+  static ALL_PERMISSIONS_AND_USERS = 'permissions/users/all';
   static USER_DATA = 'auth/userData';
   static SET_USER_SCHEDULES = 'schedule/week';
   static ALL_USER_SCHEDULES = 'schedule/week/all/<schedule_id>';
@@ -46,9 +48,17 @@ export class ServerRoutes {
   static getUserData() {
     return UrlConstants.PROTECTED + UrlConstants.USER_DATA;
   }
+
+
+  // PERMISSIONS
+  static getAllUsersAndPermissions() {
+    return UrlConstants.PROTECTED + UrlConstants.ALL_PERMISSIONS_AND_USERS;
+  }
   static addPermission() {
     return UrlConstants.PROTECTED + UrlConstants.ADD_PERMISSION;
   }
+
+  // SCHEDULE
   static setUserSchedule() {
     return UrlConstants.PROTECTED + UrlConstants.SET_USER_SCHEDULES;
   }

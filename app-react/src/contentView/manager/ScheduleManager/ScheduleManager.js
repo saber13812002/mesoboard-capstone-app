@@ -158,7 +158,7 @@ const ScheduleManager = () => {
     // set new properties of the user state
     let user = users.find(emp => emp.userId === userToEdit.userId);
     user.weekDates = userToEdit.weekDates;
-    user.turnId = userToEdit.turnId;
+    // user.turnId = userToEdit.turnId;
     console.log('user', user);
 
     // console.log('Now update the schedule of this user on the database')
@@ -259,11 +259,8 @@ const ScheduleManager = () => {
       // enumerate in desc order
       //turnClone.forEach((turn, i) => turn.turnIndex = i + 1)
 
-      // store new turn id for fetch insert on useEffect
-      const turnIndex = getTurnIdByTime(lastTurn.timeStart)
+      const turnIndex = lastTurn.turnIndex
 
-      console.log('lastTurn', lastTurn)
-      // console.log('turnId', turnId)
       setNewTurn({
         turnIndex,
         turnId: getTurnIdByTime(lastTurn.timeStart),
@@ -276,6 +273,8 @@ const ScheduleManager = () => {
       return turnClone
     })
   }
+
+
   const sortTurns = (turns) => {
     turns = turns.sort((a, b) => {
       let aHour = timeToInt(a.timeStart)
@@ -287,6 +286,8 @@ const ScheduleManager = () => {
     //console.log(turn)
     return turns
   }
+
+
   const deleteTurn = (turnId) => {
     if (addingNewTurn) { return; }
     setTurns(prev => {
@@ -370,19 +371,19 @@ const ScheduleManager = () => {
           <div className='d-flex align-items-start'>
             <MButton
               className='mr-2'
-              text='Template CSV'
-              variant='outline-primary'
+              text='Import CSV'
+              variant='secondary'
               size='sm'
-              IconComponent={iconComponents.Download}
+              IconComponent={iconComponents.Upload}
               iconSize='sm'
               iconColor='dark'
             />
             <MButton
               className='mr-2'
-              text='Import CSV'
-              variant='secondary'
+              text='Template CSV'
+              variant='outline-primary'
               size='sm'
-              IconComponent={iconComponents.Upload}
+              IconComponent={iconComponents.Download}
               iconSize='sm'
               iconColor='dark'
             />
