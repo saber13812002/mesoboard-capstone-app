@@ -47,11 +47,7 @@ const ProfilesManager = () => {
       sort: true,
       // formatter: (cell, row) => profiles[cell]
       classes: 'nameTd',
-      formatter: (name, data) => {
-        // console.log('name', name)
-        // console.log('data', data)
-        return <p className='name' onClick={() => setProfileDetails(data)}>{name}</p>
-      }
+      formatter: (name, data) => <p className='name' onClick={() => setProfileDetails(data)}>{name}</p>
     }, {
       dataField: 'totalHours',
       text: 'Horas Acumuladas',
