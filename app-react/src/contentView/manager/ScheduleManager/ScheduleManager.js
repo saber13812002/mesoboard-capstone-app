@@ -247,17 +247,16 @@ const ScheduleManager = () => {
         and after sorting, iterate and convert with timeFromInt
       */
       // sort by date start
-      turnClone = sortTurns(turnClone)
-      /* turnClone.sort((a, b) => {
+      turnClone.sort((a, b) => {
         // console.log('\n\n')
         let aHour = timeToInt(a.timeStart)
         let bHour = timeToInt(b.timeStart)
         console.log(aHour, bHour)
         return ('' + aHour).localeCompare(bHour)
       })
- */
+ 
       // enumerate in desc order
-      //turnClone.forEach((turn, i) => turn.turnIndex = i + 1)
+      turnClone.forEach((turn, i) => turn.turnIndex = i + 1)
 
       // store new turn id for fetch insert on useEffect
       const turnIndex = getTurnIdByTime(lastTurn.timeStart)
@@ -276,25 +275,13 @@ const ScheduleManager = () => {
       return turnClone
     })
   }
-  const sortTurns = (turns) => {
-    turns = turns.sort((a, b) => {
-      let aHour = timeToInt(a.timeStart)
-      let bHour = timeToInt(b.timeStart)
-      console.log(aHour, bHour)
-      return ('' + aHour).localeCompare(bHour)
-    })
-    turns.forEach((turn, i) => turn.turnIndex = i + 1)
-    //console.log(turn)
-    return turns
-  }
+  
   const deleteTurn = (turnId) => {
     if (addingNewTurn) { return; }
     setTurns(prev => {
       let turnClone = [...prev]
       turnClone.splice(turnId - 1, 1);
-      //turnClone = sortTurns(turnClone)
-      turnClone.forEach((turn, i) =>
-        turn.id = i + 1)
+      turnClone.forEach((turn, i) => turn.turnIndex = i + 1)
       return turnClone
     })
   }
