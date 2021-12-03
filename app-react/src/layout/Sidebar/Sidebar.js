@@ -46,9 +46,13 @@ const Sidebar = () => {
         scheduleItem.setNext(profilesItem);
         memosItem.setNext(permissionsItem);
         break;
+      case 'manager':
+        scheduleItem.setNext(profilesItem);
+        memosItem.setNext(permissionsItem);
       default:
         homeItem.setNext(scheduleItem);
         break;
+      
     }
     setSidebarItems(homeItem.toArray());
   }, [userType]);

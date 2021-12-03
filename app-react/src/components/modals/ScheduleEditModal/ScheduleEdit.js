@@ -6,7 +6,9 @@ import { Modal } from '../..'
 import { Icon, iconComponents, MButton } from '../..'
 import { ScheduleHoursBox } from '../../../contentView'
 import { getDayName, beautifyDate, get24HourFormatOfTime, toISOYearFormat } from '../../../services/scheduleService'
-
+import Dropdown from 'react-dropdown';
+import 'react-dropdown/style.css';
+import { timeFromInt } from 'time-number';
 
 const ScheduleEdit = ({ user, turns, dateStart, dateEnd, mCurrent, onSaveChanges, onCloseScheduleEdit }) => {
   const deepCopy = JSON.parse(JSON.stringify(user))
@@ -17,6 +19,7 @@ const ScheduleEdit = ({ user, turns, dateStart, dateEnd, mCurrent, onSaveChanges
   // const [selectedTurnIndex, setSelectedTurnIndex] = useState(undefined)
 
   const { name, weekDates } = userToEdit;
+  const ids = turns.map(turn => turn.turnIndex)
 
   useEffect(() => {
     setIsSameData(!hasDataChanged())
@@ -45,7 +48,9 @@ const ScheduleEdit = ({ user, turns, dateStart, dateEnd, mCurrent, onSaveChanges
    *  @param {Event} e the event containing the input value.
    */
   const updateHours = (day, e) => {
-    const turnId = e.target.value;
+    console.log(e.value)
+    //e.target.value
+    const turnId = e.value;
     if (!turnId || turnId <= 0 || turnId > turns.length)
       return;
 
@@ -97,6 +102,17 @@ const ScheduleEdit = ({ user, turns, dateStart, dateEnd, mCurrent, onSaveChanges
       return newUser;
     })
   }
+  const updateLunch = (e) => {
+    //console.log(e.target.checked)
+    setUserToEdit(emp => {
+      const newEmployee = { ...emp };
+      newEmployee.isHourLunch = e.target.checked;
+      console.log(newEmployee.isHourLunch)
+
+      return newEmployee;
+    })
+
+  }
 
   /**
    * finds the index of the turn with the same turn id as the one given.
@@ -106,7 +122,8 @@ const ScheduleEdit = ({ user, turns, dateStart, dateEnd, mCurrent, onSaveChanges
   const getTurnIndexByTurnId = turnId => turns.find(turn => turn.turnId === turnId)?.turnIndex;
 
   const portalElement = document.getElementById('navdrawer-portal');
-  // console.log('userToEdit', userToEdit)
+
+  // console.log('employeeToEdit', employeeToEdit)
   return (
     <Modal
       onClose={onCloseScheduleEdit}
@@ -138,7 +155,7 @@ const ScheduleEdit = ({ user, turns, dateStart, dateEnd, mCurrent, onSaveChanges
         <div className='scheduleEdit__data'>
           {weekDates.map((weekDate, day) => {
             if (weekDate) {
-              const turnIndex = getTurnIndexByTurnId(weekDate.turnId) || 0;
+              // const turnIndex = getTurnIndexByTurnId(weekDate.turnId) || 0;
               // console.log('turnIndex', turnIndex);
 
               return (
@@ -150,14 +167,18 @@ const ScheduleEdit = ({ user, turns, dateStart, dateEnd, mCurrent, onSaveChanges
                     onClick={() => removeWeekDateFromUser(day)}
                   />
                   <h4>{getDayName(day)}</h4>
-                  <input type='number' defaultValue={turnIndex} onChange={(e) => updateHours(day, e)} />
-                  <ScheduleHoursBox weekDate={weekDate} showLunchMins={true} />
+                  {<Dropdown options={ids} onChange={(e) => updateHours(day, e)} />}
+                  <ScheduleHoursBox isHourLunch={userToEdit.isHourLunch} weekDate={weekDate} showLunchMins={true} />
                 </div>
               )
             }
             return null
           })}
         </div>
+        <label className='mt-3 mb-2'>
+          <input type="checkbox" onClick={(e) => updateLunch(e)} />
+          1 hora de almuerzo
+        </label>
         {isSameData ? (
           <Button
             disabled={true}
