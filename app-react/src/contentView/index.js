@@ -10,6 +10,7 @@ import ScheduleTable from './manager/ScheduleManager/ScheduleTable';
 import TurnsTable from './manager/ScheduleManager/TurnsTable';
 import AddPermission from './manager/UserPermissionsManager/AddPermission';
 import DateRange from './manager/ScheduleManager/DateRange';
+import ScheduleButtons from './manager/ScheduleManager/ScheduleButtons';
 import ScheduleHoursBox from './shared/ScheduleShared/ScheduleHoursBox';
 import ProfileScheduleDetails from './shared/Details/ProfileScheduleDetails';
 import EntityDetails from './shared/Details/EntityDetails';
@@ -28,6 +29,7 @@ export {
   TurnsTable,
   ScheduleHoursBox,
   DateRange,
+  ScheduleButtons,
   AddPermission,
   ProfileScheduleDetails,
   EntityDetails,
