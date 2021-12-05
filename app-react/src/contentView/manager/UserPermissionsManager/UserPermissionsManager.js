@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect } from 'react';
 import './UserPermissionsManager.css';
 import axios from 'axios';
 import BootstrapTable from 'react-bootstrap-table-next';
@@ -6,7 +6,6 @@ import { iconComponents, MButton } from '../../../components';
 import { AddPermission, EntityDetails } from '../..';
 import { ServerRoutes as server } from '../../../services/apiService';
 import { beautifyDate } from '../../../services/scheduleService';
-
 
 let columns = [];
 
@@ -45,12 +44,12 @@ const UserPermissionsManager = () => {
     }];
 
     axios.get(server.getAllUsersAndPermissions()).then(res => {
-      console.log('res.data.data', res.data.data)
+      console.log('.users', res.data.data)
       setUsers(res.data.data)
     })
 
     axios.get(server.getAllRestaurants()).then(res => {
-      console.log('res.data', res.data.restaurants)
+      console.log('.restaurants', res.data.restaurants)
       setRestaurants(res.data.restaurants)
     })
   }, [addingNewPermission])

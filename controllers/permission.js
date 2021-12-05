@@ -1,8 +1,10 @@
 const db = require('../config/postgres')();
+const utils = require('../lib/utils');
 
 exports.addPermission = (req, res, next) => {
   console.log('res.body', req.body);
-  const { email, permission_type, code, restaurant_id, employee_id } = req.body;
+  const { email, permission_type, code, employee_id, restaurant_id } = req.body;
+  // const restaurant_id = req.body.restaurant_id;
   const is_assistant_manager = req.body.is_assistant_manager || false;
 
   // req.app.locals.permission_type = permission_type;
@@ -10,33 +12,23 @@ exports.addPermission = (req, res, next) => {
   // req.app.locals.restaurant_id = restaurant_id;
   // req.app.locals.is_assistant_manager = is_assistant_manager;
 
+  //check if required properties
   const error = new Error();
-  //check if email is empty
   if (!email) {
     error.message = "Malformed Query (missing email)";
     error.httpStatusCode = 400;
     return next(error);
   }
-
-  //check if permission is empty
   if (!permission_type) {
     error.message = "Malformed Query (missing permission type)";
     error.httpStatusCode = 400;
     return next(error);
   }
-
   if (!code) {
     error.message = "Malformed Query (missing provisional code)";
     error.httpStatusCode = 400;
     return next(error);
   }
-
-  if (!restaurant_id) {
-    error.message = "Malformed Query (missing provisional restaurant id)";
-    error.httpStatusCode = 400;
-    return next(error);
-  }
-
   if (!employee_id) {
     error.message = "Malformed Query (missing provisional employee number)";
     error.httpStatusCode = 400;
@@ -52,8 +44,15 @@ exports.addPermission = (req, res, next) => {
         throw error;
       } else {
         const last_update = new Date().toDateString();
-        const q = 'INSERT into permission (code, email, permission_type, restaurant_id, employee_id, last_update, is_assistant_manager) values ($1, $2, $3, $4, $5, $6, $7) returning *';
-        return t.one(q, [code, email, permission_type, restaurant_id, employee_id, last_update, is_assistant_manager]);
+        let validRestaurantId = '';
+        let lastParams = '$6'
+        if (restaurant_id) {
+          validRestaurantId = ', restaurant_id';
+          lastParams += ', $7'
+        }
+        const q = `INSERT into permission (code, email, permission_type, employee_id, last_update, is_assistant_manager${validRestaurantId}) values ($1, $2, $3, $4, $5, ${lastParams}) returning *`;
+        console.log('q', q)
+        return t.one(q, [code, email, permission_type, employee_id, last_update, is_assistant_manager, restaurant_id]);
       }
     });
   }).then(data => {
@@ -124,6 +123,9 @@ exports.getPermissionsAndUsers = async (req, res, next) => {
       const q1 = `select * from permission where email not in (select email from users)`;
       return t.any(q1).then(data1 => {
         data1.push(...data);
+        data1 = data1.map(d => {
+          return { ...d, user_type: utils.getUserTypeInSpanish(d.user_type) }
+        })
         // console.log('\ndata1', data1);
         res.status(200).json({ data: data1 })
       })

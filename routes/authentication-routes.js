@@ -19,9 +19,6 @@ module.exports = app => {
   app.route('/protected/auth/restaurant/all')
     .get(security.isAdminOrManager, auth.getAllRestaurants)
 
-  app.route('/api/auth/confirmEmail/:email/:token')
-    .get(auth.confirmEmail);
-
   // used for login and registering on the app
   app.route('/api/auth/verifyToken/getUser')
     .post(auth.checkTokenAndGetUser);
@@ -36,6 +33,6 @@ module.exports = app => {
   app.route('/api/auth/:user_id/reset_password/:pass_request_id')
     .get(auth.resetPassConfirmation);
 
-  // .get(tokens.removeExpiredTokens, tokens.checkToken, auth.getUserData);
-
+  // app.route('/api/auth/confirmEmail/:email/:token')
+  // .get(auth.confirmEmail);
 }

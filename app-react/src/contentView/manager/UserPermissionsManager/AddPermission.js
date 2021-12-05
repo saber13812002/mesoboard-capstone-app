@@ -100,9 +100,9 @@ const AddPermission = ({ onBack, restaurants }) => {
       // console.log('addPermissionFetch')
       axios.post(server.addPermission(), { email, permission_type, code: tempCode, restaurant_id, employee_id, is_assistant_manager: isAssistantManager })
     }
-    addPermissionFetch()
-    onBack()
-    e.preventDefault()
+    addPermissionFetch();
+    onBack();
+    e.preventDefault();
   }
 
   return (

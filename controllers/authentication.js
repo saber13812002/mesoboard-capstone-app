@@ -162,9 +162,9 @@ exports.createUser = (req, res, next) => {
         }
         else {
           //get restaurant_id for which the user belongs to
-          return t.manyOrNone('Select restaurant_id from restaurant where location=$1', location).then(data3 => {
+          return t.oneOrNone('Select restaurant_id from restaurant where location=$1', location).then(data3 => {
             restaurant_id = data3.restaurant_id;
-            // console.log('restaurant_id', restaurant_id);
+            console.log('\nrestaurant_id', restaurant_id);
 
             //user doesn't exist
             const saltHash = authUtils.genPassword(password);
@@ -249,10 +249,12 @@ exports.getUserData = async (req, res, next) => {
   console.log('req.jwt', req.jwt)
   const user_id = req.jwt.sub;
   // const user_type = req.jwt.user_type;
-  // console.log('\n\nuser_id', user_id);
+  console.log('\n\nuser_id', user_id);
 
   const q = `select user_id, first_name, last_name, email, user_type, gender, employee_id, location  
   from users inner join restaurant on users.restaurant_id=restaurant.restaurant_id where user_id=$1`;
+  // let q;
+  // if ()
 
   return db.one(q, user_id).then(data => {
     // console.log('data', data)
@@ -321,7 +323,7 @@ exports.resetPassConfirmation = async (req, res, next) => {
 };
 
 exports.getAllRestaurants = async (req, res, next) => {
-  return db.many('Select * from restaurant').then(data => {
+  return db.many('Select * from restaurant where restaurant_id > 0').then(data => {
     res.status(200).json({ restaurants: data });
     res.end();
   });

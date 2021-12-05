@@ -44,7 +44,7 @@ const AuthProvider = ({ children }) => {
       axios.post(server.login(), { email, password }).then(async res => {
         // console.log('res.data', res.data)
         const { user_id, token } = res.data
-        console.log(user_id)
+        // console.log(user_id)
         return verifyTokenAndGetUserInfoFetch(user_id, token, setRedirect)
       })
     }
@@ -72,7 +72,7 @@ const AuthProvider = ({ children }) => {
 
   const verifyTokenAndGetUserInfoFetch = async (user_id, token, setRedirectToApp) => {
     const verifyTokenGetUser = async () => {
-      console.log('verifyTokenGetUser', user_id)
+      // console.log('verifyTokenGetUser', user_id)
       axios.post(server.verifyTokenAndGetUser(), { user_id, token })
         .then(res => {
           // console.log('verifyTokenGetUser dispatch LOGIN', res.data)

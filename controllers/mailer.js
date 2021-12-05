@@ -136,19 +136,16 @@ exports.sendResetPasswordEmail = (req, res, next) => {
 exports.sendRegisterInvitationEmail = (req, res, next) => {
   const request_data = req.app.locals.permission_data;
   // console.log('sendRegisterInvitationEmail', request_data)
-  let type = request_data.permission_type;
-  let email = request_data.email;
-  if (type === 'employee')
-    type = ' Empleado';
-  else if (type === 'manager')
-    type = ' Supervisor';
-  else if (type === 'admin')
-    type = ' Administrador';
+  const email = request_data.email;
+  const code = request_data.code;
+  const userType = utils.getUserTypeInSpanish(request_data.permission_type);
+  const toAdd = ` ${userType}. Su codigo temporero es ${code}`;
 
-  let link = utils.getUrlByEnvironment(req, 'authenticate', 3000);
+  const link = utils.getUrlByEnvironment(req, 'authenticate', 3000);
   const html = attachLink("register-invitation/register-invitation1.html",
-    "register-invitation/register-invitation2.html", type) +
+    "register-invitation/register-invitation2.html", toAdd) +
     link + readFile(views_dir, "register-invitation/register-invitation3.html");
+
 
   console.log('link', link);
 
