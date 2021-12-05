@@ -84,26 +84,12 @@ exports.sendVerificationEmail = (req, res, next) => {
     });
   }
 
-  console.log('req', req.post)
-  let protocol = 'http';
-  if (!req.hostname.includes('localhost'))
-    protocol += 's';
-  const link = `${protocol}://${req.host}/api/auth/confirmEmail/${email}/${token}`;
+  const link = utils.getUrlByEnvironment(req, `api/auth/confirmEmail/${email}/${token}`);
+  console.log('link', link)
   const html = attachLink("confirm-email/confirm-email1.html", "confirm-email/confirm-email2.html", link);
   const mailInfo = preparations.prepareVerification(req, html);
-  // const transporter = setTransporter();
-  // const mailOptions = setMailOptions(mailInfo);
   const mailer = new Mailer(mailInfo);
-
-  //rror [ERR_HTTP_HEADERS_SENT]: Cannot set headers after they are sent to the client
-  // return transporter.sendMail(mailOptions).then(() => {
-  return mailer.sendMail(mailOptions).then(() => {
-    console.log('send email to ' + email)
-    res.end();
-  }).catch(error => {
-    console.log('error', error)
-    next(error);
-  });
+  mailer.sendMail(mailOptions);
 };
 
 
@@ -148,39 +134,31 @@ exports.sendResetPasswordEmail = (req, res, next) => {
 
 
 exports.sendRegisterInvitationEmail = (req, res, next) => {
-  // var request_data = req.app.locals.permission_data;
-  // var email = request_data.email;
-  // var type = request_data.permission_type;
-  const { email, type, code } = req.app.locals.permission_data
-  res.status(200).json({
-    status: 'Success',
-    message: `Added permission credentials of type ${type} with provisional code ${code} to ${email} successfully`
-    // email: email
-  });
-  res.end()
+  const request_data = req.app.locals.permission_data;
+  // console.log('sendRegisterInvitationEmail', request_data)
+  let type = request_data.permission_type;
+  let email = request_data.email;
+  if (type === 'employee')
+    type = ' Empleado';
+  else if (type === 'manager')
+    type = ' Supervisor';
+  else if (type === 'admin')
+    type = ' Administrador';
+
+  let link = utils.getUrlByEnvironment(req, 'authenticate', 3000);
+  const html = attachLink("register-invitation/register-invitation1.html",
+    "register-invitation/register-invitation2.html", type) +
+    link + readFile(views_dir, "register-invitation/register-invitation3.html");
+
+  console.log('link', link);
+
+  // req.app.locals.permission_type = permission_type;
+  req.app.locals.email = email;
+  // req.app.locals.restaurant_id = restaurant_id;
+  // req.app.locals.is_assistant_manager = is_assistant_manager;
+
+  const mailInfo = preparations.prepareVerification(req, html);
+  const mailer = new Mailer(mailInfo);
+  mailer.sendMail('Invitation email sent and permission added');
+  // Added permission credentials of type ${type} with provisional code ${code} to ${email} successfully
 };
-
-// exports.sendRegisterInvitationEmail = (req, res, next) => {
-//   const request_data = req.app.locals.permission_data;
-//   const email = req.app.locals.email;
-//   const type = req.app.locals.permission_type;
-
-//   const link = "https://" + req.hostname + "/authenticate";
-//   const html = attachLink("register-invitation/register-invitation1.html",
-//     "register-invitation/register-invitation2.html", type) +
-//     link + readFile(views_dir, "register-invitation/register-invitation3.html");
-//   const mailInfo = preparations.prepareInvitationEmail(email, html);
-//   const transporter = setTransporter();
-//   const mailOptions = setMailOptions(mailInfo);
-//   return transporter.sendMail(mailOptions).then(() => {
-//     res.status(200).json({
-//       message: "Invitation email sent and permission added",
-//       status: "success",
-//       data: request_data
-//     });
-//     // res.end();
-//   }).catch(error => {
-//     console.error("Something failed", error);
-//     res.end();
-//   });
-// };

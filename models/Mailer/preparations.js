@@ -6,7 +6,7 @@ exports.prepareVerification = (req, html) => {
   console.log('req.body.content', req.body.content, config.mailServiceCredentials.name)
   const mailInfo = {
     content: req.body.content, //text version of the email
-    subject: "Welcome To Mesoboard",
+    subject: 'Bienvenido a Mesoboard',
     cc: [req.app.locals.email],
     displayName: config.mailServiceCredentials.name,
     htmlContent: html
@@ -30,8 +30,8 @@ exports.prepareShout = (req, emails, html) => {
 
 exports.prepareResetEmail = (req, html) => {
   const mailInfo = {
-    content: "You Need to open the html version of this email", //text version of the email
-    subject: "Reset Your Password for Mesoboard",
+    content: 'Necesita abrir la versión html de este correo electrónico', //text version of the email
+    subject: 'Restablecer su contraseña para Mesoboard',
     cc: [req.body.email],
     displayName: config.mailServiceCredentials.name,
     htmlContent: html
@@ -43,7 +43,7 @@ exports.prepareResetEmail = (req, html) => {
 
 exports.prepareInvitationEmail = (email, html) => {
   const mailInfo = {
-    subject: "Register To Mesoboard",
+    subject: 'Registrarse en Mesoboard',
     cc: [email],
     displayName: config.mailServiceCredentials.name,
     htmlContent: html

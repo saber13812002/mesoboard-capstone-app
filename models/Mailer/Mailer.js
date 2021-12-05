@@ -9,15 +9,15 @@ class Mailer {
   }
 
   setMailOptions(mailInfo) {
-    console.log("Mailer.js - setMailOptions(mailInfo)");
-    let cc = "";
+    console.log('Mailer.js - setMailOptions(mailInfo)');
+    let cc = '';
     const dSize = mailInfo.cc.length;
 
     //converts array to string of recipients
     for (let d = 0; d < dSize; d++) {
       cc += mailInfo.cc[d];
       if (d < dSize - 1) {
-        cc += ",";
+        cc += ',';
       }
     }
 
@@ -54,13 +54,15 @@ class Mailer {
    * @returns 
    */
   sendMail(msg) {
+    console.log('sendMail', msg)
     // return this.transporter.sendMail(this.mailOptions);
     this.transporter.sendMail(this.mailOptions, (error, data) => {
       // console.log('-data', data)
+      // console.log('mailInfo', this.mailInfo)
       res.status(200).json({
-        data: data,
-        status: "Success",
-        message: 'Password Reset Email sent'
+        // data: data || '',
+        status: 'Success',
+        message: msg
       });
       res.end();
     });
