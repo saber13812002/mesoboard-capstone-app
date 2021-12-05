@@ -1,0 +1,13 @@
+.importCsvLabel {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 30.98px;
+  padding: 4px 8px;
+  font-size: 14px;
+  border-radius: 2px;
+  border: solid 1px #F5D40A;
+  margin-right: 16px;
+  cursor: pointer;
+  white-space: nowrap;
+}

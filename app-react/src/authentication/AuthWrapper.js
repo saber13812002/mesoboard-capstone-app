@@ -1,9 +1,9 @@
 import './Auth.css';
 import { Redirect } from 'react-router-dom';
-import { urlPaths } from '../services/urlService';
 
 import MesoboardBackgroundImg from '../assets/mesoboard_background.jpg';
 import { MesonLogo } from '../components';
+import { urlPaths } from '../services/urlService';
 
 const AuthWrapper = ({ children, redirectToApp }) => {
   return (

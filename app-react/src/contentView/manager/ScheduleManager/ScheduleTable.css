@@ -95,28 +95,9 @@
   vertical-align: middle;
 }
 
-td.nameTd {
-  width: 160px;
-  /* padding-left: 16px !important; */
-  text-align: left;
-}
-
-td.nameTd > .name {
-  display: inline-block;
-  font-size: 14px;
-  font-weight: 500;
-  background-color: #287f4e1e;
-  border-radius: 30px;
-  padding: 6px 12px;
-  cursor: pointer;
-  margin-bottom: auto;
-}
 
 
 @media only screen and (max-width: 1080px) {
-  td.nameTd {
-    width: initial !important;
-  }
   .scheduleTable {
     width: 36%;
     min-width: 400px;

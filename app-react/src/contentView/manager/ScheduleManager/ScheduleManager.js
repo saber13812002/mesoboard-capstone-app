@@ -1,46 +1,45 @@
-import { useState, useEffect, useContext } from 'react'
-import axios from 'axios'
-import moment from 'moment'
-import { AuthContext } from '../../../store'
-import { MButton } from '../../../components'
-import { ProfileScheduleDetails, ScheduleTable, TurnsTable } from '../..'
-import { Icon, iconComponents, ScheduleEdit } from '../../../components'
-import { timeFromInt, timeToInt } from 'time-number';
-import { DateRange } from '../..'
-import { ServerRoutes as server } from '../../../services/apiService'
+import './ScheduleButtons.css'
+import { useState, useEffect, useContext } from "react";
+import axios from "axios";
+import moment from "moment";
+import { AuthContext } from "../../../store";
+import { MButton } from "../../../components";
+import { ProfileScheduleDetails, ScheduleTable, TurnsTable } from "../..";
+import { Icon, iconComponents, ScheduleEdit } from "../../../components";
+import { timeFromInt, timeToInt } from "time-number";
+import { DateRange } from "../..";
+import { ServerRoutes as server } from "../../../services/apiService";
 import {
   getScheduleIdOfMoment,
   getTurnIdByTime,
   get24HourFormatOfTime,
-  calculateTotalHours
-} from '../../../services/scheduleService'
+  calculateTotalHours,
+} from "../../../services/scheduleService";
+import Papa from "papaparse";
 
-
-const m1 = moment()
-const m2 = moment()
-const sunday = m1.clone().startOf('week')
-const monday = m2.clone().startOf('week').add(1, 'day')
+const m1 = moment();
+const m2 = moment();
+const sunday = m1.clone().startOf("week");
+const monday = m2.clone().startOf("week").add(1, "day");
 // console.log('sunday', sunday)moment()
 // console.log('monday', monday)
 // console.log('m1.isSame(sunday)', m1.isSame(sunday, 'date'))
 
 let startOfThisWeek = moment().clone();
 let endOfThisWeek = moment().clone();
-if (m1.isSame(sunday, 'date')) {
+if (m1.isSame(sunday, "date")) {
   // console.log('decrementing...')
-  startOfThisWeek.add(-5, 'day') //tuesday
-  endOfThisWeek.add(1, 'day') //monday
-}
-else if (m2.isSame(monday, 'date')) {
+  startOfThisWeek.add(-5, "day"); //tuesday
+  endOfThisWeek.add(1, "day"); //monday
+} else if (m2.isSame(monday, "date")) {
   // console.log('MONDAY decrement')
-  startOfThisWeek.add(-6, 'day')
-}
-else {
-  startOfThisWeek = moment().clone().startOf('week').add(2, 'day');
-  endOfThisWeek = moment().clone().endOf('week').add(2, 'day')
+  startOfThisWeek.add(-6, "day");
+} else {
+  startOfThisWeek = moment().clone().startOf("week").add(2, "day");
+  endOfThisWeek = moment().clone().endOf("week").add(2, "day");
 }
 
-const mondayInTwoWeeks = endOfThisWeek.clone().add(7, 'day');
+const mondayInTwoWeeks = endOfThisWeek.clone().add(7, "day");
 // console.log('startOfThisWeek', startOfThisWeek)
 // console.log('endOfThisWeek', endOfThisWeek)
 // console.log('mondayInTwoWeeks', mondayInTwoWeeks)
@@ -52,9 +51,9 @@ const momentDisablePrevious = moment();
 const ScheduleManager = () => {
   // moment.js
   const [weekSchedule, setWeekSchedule] = useState([]); // array of moments of the current week
-  const [mCurrent, setMCurrent] = useState(moment()) // the current moment
-  const [mWeekStart, setMWeekStart] = useState(startOfThisWeek.clone()) //always a tuesday
-  const [mWeekEnd, setMWeekEnd] = useState(endOfThisWeek.clone()) //always a monday
+  const [mCurrent, setMCurrent] = useState(moment()); // the current moment
+  const [mWeekStart, setMWeekStart] = useState(startOfThisWeek.clone()); //always a tuesday
+  const [mWeekEnd, setMWeekEnd] = useState(endOfThisWeek.clone()); //always a monday
 
   // users
   const [users, setUsers] = useState([]); // array of users with their week date schedules
@@ -63,28 +62,26 @@ const ScheduleManager = () => {
   const [userToEdit, setUserToEdit] = useState(undefined); // the user with schedule to be modified
 
   // turns
-  const [turns, setTurns] = useState([]); // the turns of this manager entity 
-  const [addingNewTurn, setAddingNewTurn] = useState(false) // determines if a turn is being added
-  const [newTurn, setNewTurn] = useState({ turnId: -1, timeStart: undefined }) // the new turn being created
+  const [turns, setTurns] = useState([]); // the turns of this manager entity
+  const [addingNewTurn, setAddingNewTurn] = useState(false); // determines if a turn is being added
+  const [newTurn, setNewTurn] = useState({ turnId: -1, timeStart: undefined }); // the new turn being created
 
   // context
-  const { authState } = useContext(AuthContext)
+  const { authState } = useContext(AuthContext);
 
   /** Initializing the manager TURNS once. */
   const userId = authState.userId;
   useEffect(() => {
     const getUserTurns = async () => {
       const url = server.getUserTurns();
-      axios.get(url).then(res => {
-        console.log('res.turns', res.data.turns)
+      axios.get(url).then((res) => {
+        // console.log("res.turns", res.data.turns);
         setTurns(res.data.turns);
       })
-        .catch(err => console.log(err))
-    }
-    // setTimeout(() => getUserTurns(), 6000)
-    getUserTurns()
-  }, [])
-
+        .catch((err) => console.log(err));
+    };
+    getUserTurns();
+  }, []);
 
   /** Initializing array of USER schedules for the current week. */
   useEffect(() => {
@@ -96,11 +93,11 @@ const ScheduleManager = () => {
     // set the schedule of the week starting with mWeekStart
     const week = [];
     let currentDay = mWeekStart.clone();
-    const nextTuesday = mWeekEnd.clone().add(1, 'day');
-    while (currentDay.isBefore(nextTuesday, 'day')) {
+    const nextTuesday = mWeekEnd.clone().add(1, "day");
+    while (currentDay.isBefore(nextTuesday, "day")) {
       // console.log('currentDay', currentDay)
       week.push(currentDay.clone());
-      currentDay.add(1, 'day');
+      currentDay.add(1, "day");
     }
     // console.log('week', week);
     setWeekSchedule(week);
@@ -109,20 +106,20 @@ const ScheduleManager = () => {
       const scheduleId = getScheduleIdOfMoment(mWeekStart);
       const url = server.getUserSchedule(scheduleId);
       // console.log('url', url)
-      axios.get(url).then(res => {
-        if (res.data.userSchedulesData) {
-          const userSchedulesData = res.data.userSchedulesData;
-          // console.log('res.userSchedulesData', userSchedulesData);
-          setUsers(userSchedulesData);
-        }
-        else setUsers([]);
-      })
-        .catch(err => console.log(err))
-    }
+      axios
+        .get(url)
+        .then((res) => {
+          if (res.data.userSchedulesData) {
+            const userSchedulesData = res.data.userSchedulesData;
+            // console.log('res.userSchedulesData', userSchedulesData);
+            setUsers(userSchedulesData);
+          } else setUsers([]);
+        })
+        .catch((err) => console.log(err));
+    };
     // setTimeout(() => getWeekSchedule(), 2000)
     getWeekSchedule();
-  }, [mCurrent])
-
+  }, [mCurrent]);
 
   /** TURN has been created. */
   useEffect(() => {
@@ -130,36 +127,38 @@ const ScheduleManager = () => {
 
     // fetch create or update turn table
     const saveTurns = async () => {
-      const turnId = getTurnIdByTime(newTurn.timeStart)
-      const { timeStart, timeEnd, timeLunch } = newTurn
+      const turnId = getTurnIdByTime(newTurn.timeStart);
+      const { timeStart, timeEnd, timeLunch } = newTurn;
       // console.log('newTurn.timeStart', newTurn.timeStart)
       // console.log('userId', userId)
       const url = server.setTurn();
       // console.log('url', url)
-      // console.log('get24HourFormatOfTime(timeStart)', get24HourFormatOfTime(timeStart))
       axios.post(url, {
         user_id: userId,
         turn_id: turnId,
         time_start: get24HourFormatOfTime(timeStart),
         time_end: get24HourFormatOfTime(timeEnd),
-        time_lunch: get24HourFormatOfTime(timeLunch)
-      })
+        time_lunch: get24HourFormatOfTime(timeLunch),
+      });
       setNewTurn({ turnId: -1 });
-    }
-    saveTurns()
-  }, [turns])
-
+    };
+    saveTurns();
+  }, [turns]);
 
   /** Saving the changes made to the schedule of a particular user. */
   useEffect(() => {
     if (editingUser || !userToEdit) return;
+    // console.log('newTurn', newTurn)
 
-    console.log('userToEdit', userToEdit)
+    // console.log("----userToEdit", userToEdit);
     // set new properties of the user state
-    let user = users.find(emp => emp.userId === userToEdit.userId);
+    let user = users.find((emp) => emp.userId === userToEdit.userId);
+    // console.log('user', user)
     user.weekDates = userToEdit.weekDates;
-    user.turnId = userToEdit.turnId;
-    console.log('user', user);
+    user.isHourLunch = userToEdit.isHourLunch;
+
+    // user.turnId = userToEdit.turnId;
+    // console.log('user.weekDates', user.weekDates);
 
     // console.log('Now update the schedule of this user on the database')
     const setUserSchedule = async () => {
@@ -167,58 +166,61 @@ const ScheduleManager = () => {
       // const schedule_id = getScheduleIdOfDate(users[userIndex].weekDates[0]);
       const schedule_id = getScheduleIdOfMoment(mWeekStart);
       const user_id = user.userId;
-      const is_hour_lunch = false;
+      const is_hour_lunch = user.isHourLunch;
 
-      // console.log('schedule_id', schedule_id);
+      console.log('is_hour_lunch', is_hour_lunch);
       // console.log('user_id', user_id);
       const url = server.setUserSchedule(); ///protected/schedule/week
       // console.log('url', url);
-      // console.log('user.weekDates', user.weekDates)
+      console.log('user.weekDates', user.weekDates)
 
       axios.post(url, {
         user_id,
         schedule_id,
         is_hour_lunch,
-        ...user.weekDates
-      }).then(res => {
-        const newWeekDates = res.data.newWeekDates;
-        user.totalHours = calculateTotalHours(newWeekDates);
-        console.log('res.data.newWeekDates', res.data.newWeekDates, user.totalHours);
-        setUserToEdit(undefined);
+        ...user.weekDates,
       })
-    }
-    setUserSchedule()
-  }, [userToEdit])
-
+        .then((res) => {
+          const newWeekDates = res.data.newWeekDates;
+          user.totalHours = calculateTotalHours(newWeekDates, is_hour_lunch);
+          console.log(
+            "res.data.newWeekDates",
+            res.data.newWeekDates,
+            user.totalHours
+          );
+          setUserToEdit(undefined);
+        });
+    };
+    setUserSchedule();
+  }, [userToEdit]);
 
   /************************************************/
   /*              General Functions               */
   /************************************************/
 
   const goToPrevious = () => {
-    const oneWeekEarlier = mWeekStart.clone().add(-6, 'day'); //a moment of the previous week
+    const oneWeekEarlier = mWeekStart.clone().add(-6, "day"); //a moment of the previous week
     // const newWeekStart = mWeekStart.clone().add(-7, 'day');
     // console.log('oneWeekEarlier', oneWeekEarlier)
     // console.log('oneWeekEarlier.clone().startOf(week).add(2, day)', oneWeekEarlier.clone().startOf('week').add(2, 'day'))
-    setMWeekStart(oneWeekEarlier.clone().startOf('week').add(2, 'day'));
-    setMWeekEnd(oneWeekEarlier.clone().endOf('week').add(2, 'day'))
-    setMCurrent(oneWeekEarlier)
-  }
+    setMWeekStart(oneWeekEarlier.clone().startOf("week").add(2, "day"));
+    setMWeekEnd(oneWeekEarlier.clone().endOf("week").add(2, "day"));
+    setMCurrent(oneWeekEarlier);
+  };
 
   const goToNextWeek = () => {
     // console.log('-mWeekStart', mWeekStart)
     // console.log('mWeekEnd', mWeekEnd)
     // console.log('mWeekEnd.isBefore(mondayInTwoWeeks)', mWeekEnd.isBefore(mondayInTwoWeeks))
     if (mWeekEnd.isBefore(mondayInTwoWeeks)) {
-      setMCurrent(_ => {
-        const nextMoment = mWeekEnd.clone().add(1, 'day')
-        setMWeekStart(nextMoment.clone().startOf('week').add(2, 'day'));
-        setMWeekEnd(nextMoment.clone().endOf('week').add(2, 'day'))
-        return nextMoment
-      })
+      setMCurrent((_) => {
+        const nextMoment = mWeekEnd.clone().add(1, "day");
+        setMWeekStart(nextMoment.clone().startOf("week").add(2, "day"));
+        setMWeekEnd(nextMoment.clone().endOf("week").add(2, "day"));
+        return nextMoment;
+      });
     }
-  }
-
+  };
 
   /************************************************/
   /*           Schedule Turns Functions           */
@@ -226,17 +228,26 @@ const ScheduleManager = () => {
 
   const saveTurn = (timeStart, timeEnd, lunchHour) => {
     // console.log('saveTurn', timeStart, timeEnd, lunchHour)
-    setTurns(prev => {
-      let turnClone = [...prev]
-      const lastTurn = prev[prev.length - 1]
+    setTurns((prev) => {
+      let turnClone = [...prev];
+      const lastTurn = prev[prev.length - 1];
 
       // console.log('timeStart', timeStart)
       // console.log('timeEnd', timeEnd)
       // console.log('lunchHour', lunchHour)
 
-      lastTurn.timeStart = timeFromInt(timeStart, { format: 12, leadingZero: false })
-      lastTurn.timeEnd = timeFromInt(timeEnd, { format: 12, leadingZero: false })
-      lastTurn.timeLunch = timeFromInt(lunchHour, { format: 12, leadingZero: false })
+      lastTurn.timeStart = timeFromInt(timeStart, {
+        format: 12,
+        leadingZero: false,
+      });
+      lastTurn.timeEnd = timeFromInt(timeEnd, {
+        format: 12,
+        leadingZero: false,
+      });
+      lastTurn.timeLunch = timeFromInt(lunchHour, {
+        format: 12,
+        leadingZero: false,
+      });
 
       // console.log('lastTurn.start', lastTurn.timeStart)
       // console.log('lastTurn.end', lastTurn.end)
@@ -247,62 +258,54 @@ const ScheduleManager = () => {
         and after sorting, iterate and convert with timeFromInt
       */
       // sort by date start
-      turnClone = sortTurns(turnClone)
-      /* turnClone.sort((a, b) => {
+      turnClone.sort((a, b) => {
         // console.log('\n\n')
-        let aHour = timeToInt(a.timeStart)
-        let bHour = timeToInt(b.timeStart)
-        console.log(aHour, bHour)
-        return ('' + aHour).localeCompare(bHour)
-      })
- */
+        let aHour = timeToInt(a.timeStart);
+        let bHour = timeToInt(b.timeStart);
+        // console.log(aHour, bHour);
+        return ("" + aHour).localeCompare(bHour);
+      });
+
       // enumerate in desc order
-      //turnClone.forEach((turn, i) => turn.turnIndex = i + 1)
+      turnClone.forEach((turn, i) => (turn.turnIndex = i + 1));
 
-      // store new turn id for fetch insert on useEffect
-      const turnIndex = getTurnIdByTime(lastTurn.timeStart)
+      const turnIndex = lastTurn.turnIndex
+      const turnId = getTurnIdByTime(lastTurn.timeStart)
+      // console.log('turnClone', turnClone)
 
-      console.log('lastTurn', lastTurn)
-      // console.log('turnId', turnId)
       setNewTurn({
         turnIndex,
-        turnId: getTurnIdByTime(lastTurn.timeStart),
+        turnId,
         timeStart: lastTurn.timeStart,
         timeEnd: lastTurn.timeEnd,
-        timeLunch: lastTurn.timeLunch
-      })
+        timeLunch: lastTurn.timeLunch,
+      });
+      // console.log('weekDates[turnIndex-1]', turnClone[turnIndex - 1])
+      turnClone[turnIndex - 1].turnId = Number(turnId);
 
-      setAddingNewTurn(false)
-      return turnClone
-    })
-  }
-  const sortTurns = (turns) => {
-    turns = turns.sort((a, b) => {
-      let aHour = timeToInt(a.timeStart)
-      let bHour = timeToInt(b.timeStart)
-      console.log(aHour, bHour)
-      return ('' + aHour).localeCompare(bHour)
-    })
-    turns.forEach((turn, i) => turn.turnIndex = i + 1)
-    //console.log(turn)
-    return turns
-  }
-  const deleteTurn = (turnId) => {
-    if (addingNewTurn) { return; }
+      setAddingNewTurn(false);
+      return turnClone;
+    });
+  };
+
+  const deleteTurn = turnIndex => {
+    if (addingNewTurn) return;
+
     setTurns(prev => {
-      let turnClone = [...prev]
-      turnClone.splice(turnId - 1, 1);
-      //turnClone = sortTurns(turnClone)
-      turnClone.forEach((turn, i) =>
-        turn.id = i + 1)
-      return turnClone
-    })
-  }
+      const turnClone = [...prev];
+      turnClone.splice(turnIndex - 1, 1);
+      turnClone.forEach((turn, i) => (turn.turnIndex = i + 1));
+      return turnClone;
+    });
+
+    axios.delete(server.removeTurn(turns[turnIndex - 1].turnId));
+  };
+
   const removeAddedTurn = () => {
     turns.pop();
-    setTurns(turns)
-    setAddingNewTurn(false)
-  }
+    setTurns(turns);
+    setAddingNewTurn(false);
+  };
 
   const addNewTurn = () => {
     // setTurns(prev => {
@@ -310,37 +313,88 @@ const ScheduleManager = () => {
     //   setAddingNewTurn(true)
     //   return res
     // })
-    setTurns(prev => [...prev, { turnIndex: -1, timeStart: undefined, timeEnd: undefined, timeLunch: undefined }])
-    setAddingNewTurn(true)
-  }
-
+    setTurns((prev) => [
+      ...prev,
+      {
+        turnIndex: -1,
+        timeStart: undefined,
+        timeEnd: undefined,
+        timeLunch: undefined,
+      },
+    ]);
+    setAddingNewTurn(true);
+  };
 
   /************************************************/
   /*           Schedule Edit Functions            */
   /************************************************/
 
-  const openScheduleDetails = user => {
-    setUserDetails(user)
+  const openScheduleDetails = (user) => {
+    setUserDetails(user);
     // setShowUserDetails(true)
-  }
+  };
 
-  const openScheduleEdit = user => {
+  const openScheduleEdit = (user) => {
     // console.log('turns.length', turns.length)
     if (turns.length > 0 && turns[turns.length - 1].turnId === -1)
       removeAddedTurn();
     setUserToEdit(user);
     setEditingUser(true);
-  }
+  };
 
   const closeScheduleEdit = () => {
     setUserToEdit(undefined);
     setEditingUser(false);
-  }
+  };
 
-  const saveScheduleOfUser = emp => {
+
+  const saveScheduleOfUser = (emp) => {
+    console.log('emp', emp)
     setEditingUser(false);
     setUserToEdit(emp);
-  }
+  };
+
+
+  const handleFileUpload = (e) => {
+    console.log("e.target", e.target);
+    const files = e.target.files;
+    console.log(files);
+    if (files) {
+      console.log("files[0]", files[0]);
+      Papa.parse(files[0], {
+        complete: (results) => {
+          console.log("Finished:", results.data);
+        },
+      });
+    }
+  };
+
+
+  const handleFileExport = () => {
+    const data = users.map((user) => [user.userId, user.name, user.email]);
+    const fields = ["id", "name", "email"];
+    const csv = Papa.unparse({
+      data,
+      fields,
+    });
+    console.log("users", users);
+    console.log("csv", csv);
+    const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+    const exportFilename = "download.csv";
+    //const a = document.createElement('a');
+    if (navigator.msSaveBlob) {
+      navigator.msSaveBlob(blob, exportFilename);
+    } else {
+      //In FF link must be added to DOM to be clicked
+      var link = document.createElement("a");
+      link.href = window.URL.createObjectURL(blob);
+      link.setAttribute("download", exportFilename);
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
+  };
+
 
   // console.log('mCurrent', mCurrent)
   return (
@@ -353,10 +407,10 @@ const ScheduleManager = () => {
           onBack={() => setUserDetails(undefined)}
         />
       )}
-      {!userDetails && <>
-        <div className='d-flex justify-content-between mb-3'>
-          {
-            (weekSchedule.length > 0) && (
+      {!userDetails && (
+        <>
+          <div className="d-flex justify-content-between mb-3">
+            {weekSchedule.length > 0 && (
               <DateRange
                 dateStart={weekSchedule[0].toDate()}
                 dateEnd={weekSchedule[6].toDate()}
@@ -365,68 +419,79 @@ const ScheduleManager = () => {
                 onGoToNextWeek={goToNextWeek}
                 onGoToPrevious={goToPrevious}
               />
+            )}
+            <div className="d-flex align-items-start">
+              <label htmlFor="upload" className="btn-secondary importCsvLabel">
+                <Icon
+                  IconComponent={iconComponents.Upload}
+                  size="sm"
+                  color="dark"
+                  className="mt-1 mr-1 mb-1"
+                />
+                <span>Import CSV</span>
+              </label>
+              <input
+                type="file"
+                id="upload"
+                style={{ display: "none" }}
+                accept=".csv,.xlsx,.xls"
+                onChange={(e) => handleFileUpload(e)}
+              />
+              <MButton
+                className="mr-2"
+                text="Template CSV"
+                variant="outline-primary"
+                size="sm"
+                IconComponent={iconComponents.Download}
+                iconSize="sm"
+                iconColor="dark"
+                onClick={handleFileExport}
+              />
+              <Icon
+                IconComponent={iconComponents.Download}
+                size="lg"
+                color="primary"
+                className="mt-1"
+              />
+            </div>
+          </div>
+
+          <section className="mb-4">
+            <ScheduleTable
+              users={users}
+              onOpenScheduleEdit={openScheduleEdit}
+              onOpenScheduleDetails={openScheduleDetails}
+              isEditable={turns.length > 0 && turns[0].turnIndex > 0}
+            />
+          </section>
+
+          <TurnsTable
+            turns={turns}
+            onAddNewTurn={addNewTurn}
+            addingNewTurn={addingNewTurn}
+            onSaveTurn={saveTurn}
+            onCancel={removeAddedTurn}
+            onDeleteTurn={deleteTurn}
+          />
+
+          {/* section for the ScheduleEditModal portal component */}
+          {
+            editingUser && (
+              <ScheduleEdit
+                turns={turns}
+                dateStart={mWeekStart.toDate()}
+                dateEnd={mWeekEnd.toDate()}
+                user={userToEdit}
+                mCurrent={mCurrent}
+                onSaveChanges={modifiedEmp => saveScheduleOfUser(modifiedEmp)}
+                onCloseScheduleEdit={closeScheduleEdit}
+              />
             )
           }
-          <div className='d-flex align-items-start'>
-            <MButton
-              className='mr-2'
-              text='Template CSV'
-              variant='outline-primary'
-              size='sm'
-              IconComponent={iconComponents.Download}
-              iconSize='sm'
-              iconColor='dark'
-            />
-            <MButton
-              className='mr-2'
-              text='Import CSV'
-              variant='secondary'
-              size='sm'
-              IconComponent={iconComponents.Upload}
-              iconSize='sm'
-              iconColor='dark'
-            />
-            <Icon
-              IconComponent={iconComponents.Download}
-              size='lg'
-              color='primary'
-              className='mt-1'
-            />
-          </div>
-        </div>
-
-        <section className='mb-4'>
-          <ScheduleTable
-            users={users}
-            onOpenScheduleEdit={openScheduleEdit}
-            onOpenScheduleDetails={openScheduleDetails}
-            isEditable={turns.length > 0 && turns[0].turnIndex > 0}
-          />
-        </section>
-
-        <TurnsTable
-          turns={turns}
-          onAddNewTurn={addNewTurn}
-          addingNewTurn={addingNewTurn}
-          onSaveTurn={saveTurn}
-          onCancel={removeAddedTurn}
-          deleteTurn={deleteTurn}
-        />
-
-        {/* section for the ScheduleEditModal portal component */}
-        {editingUser &&
-          <ScheduleEdit
-            turns={turns}
-            dateStart={mWeekStart.toDate()}
-            dateEnd={mWeekEnd.toDate()}
-            user={userToEdit}
-            mCurrent={mCurrent}
-            onSaveChanges={modifiedEmp => saveScheduleOfUser(modifiedEmp)}
-            onCloseScheduleEdit={closeScheduleEdit}
-          />}
-      </>}
+        </>
+      )}
     </>
-  )
-}
+  );
+};
 
-export default ScheduleManager
+export default ScheduleManager;

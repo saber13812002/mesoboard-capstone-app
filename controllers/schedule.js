@@ -16,9 +16,10 @@ exports.setUserSchedule = async (req, res, next) => {
   const monday = req.body['6'];
   console.log('user_id:', user_id)
   console.log('schedule_id:', schedule_id)
+  console.log('is_hour_lunch', is_hour_lunch)
 
   const datesArray = [tuesday, wednesday, thursday, friday, saturday, sunday, monday]
-  // console.log('datesArray', datesArray)
+  console.log('datesArray', datesArray)
   /**   
     EXPECTED RESULT:
     dates = [
@@ -46,45 +47,47 @@ exports.setUserSchedule = async (req, res, next) => {
   else {
     /*
       EXPECTED RESULT:
-      q = INSERT INTO user_schedule(user_id, schedule_id, date_start, date_end, date_lunch, is_hour_lunch)
+      q = INSERT INTO user_schedule(user_id, schedule_id, is_hour_lunch, turn_id, date_start, date_end, date_lunch)
           VALUES 
-            ($1,$2,$3,$4,$5,false),
-            ($1,$2,$6,$7,$8,false),
-            ($1,$2,$9,$10,$11,false) returning *;
+            ($1,$2,$3,$4,$5,$6,$7,false),
+            ($1,$2,$3,$8,$9,$10,$11,false),
+            ($1,$2,$3,$12,$13,$14,$15,false) returning *;
       `
     */
     let q = `WITH del AS (${deleteQuery})
-    INSERT INTO user_schedule(user_id, schedule_id, turn_id, date_start, date_end, date_lunch, is_hour_lunch)
+    INSERT INTO user_schedule(user_id, schedule_id, is_hour_lunch, turn_id, date_start, date_end, date_lunch)
     VALUES `;
 
     const nColumnToInject = 4;
     for (let i = 0; i < dates.length; i += nColumnToInject) {
-      // to inject user_id and schedule_id
-      q += '($1,$2,'
+      // to inject user_id, schedule_id, is_hour_lunch
+      q += '($1,$2,$3,'
 
       // creating injection indexes for date_start, date_end, and date_lunch
-      for (let k = i; k < (i + nColumnToInject); k++)
-        q += `$${k + 3},`
+      for (let k = i; k < (i + nColumnToInject); k++) {
+        const reachedLastParam = (k === i + nColumnToInject - 1);
+        q += `$${k + 4}${reachedLastParam ? '' : ','}`
+      }
 
-      // set is_hour_lunch as false
-      q += 'false)'
-
+      q += ')'
       if (i < dates.length - nColumnToInject && dates.length > nColumnToInject)
         q += ','
     }
     q += ' returning *'
+    // console.log('dates', dates)
     // console.log(q);
 
     // res.status(200).json({ status: 'Developing...' })
-    return db.any(q, [user_id, schedule_id, ...dates]).then(data => {
+    return db.any(q, [user_id, schedule_id, is_hour_lunch, ...dates]).then(data => {
       res.status(200).json({ newWeekDates: data })
     })
+      .catch(error => { next(error) })
   }
 }
 
 
 exports.getEmployeeSchedules = async (req, res, next) => {
-  console.log('getEmployeeSchedules', req.params)
+  // console.log('getEmployeeSchedules', req.params)
   const schedule_id = req.params.schedule_id;
 
   /*
@@ -114,7 +117,6 @@ exports.getEmployeeSchedules = async (req, res, next) => {
     }
   })
     .catch(err => {
-      console.log(err)
       next(err)
     })
 }
@@ -143,7 +145,7 @@ exports.getUserTurns = (req, res, next) => {
 
   // res.status(200).json({ status: 'success', message: 'Developing...' })
   return db.any(q, user_id).then(data => {
-    console.log('turns data', data)
+    // console.log('turns data', data)
     const turns = data.map((d, i) => {
       return {
         turnId: d.turn_id,
@@ -157,6 +159,14 @@ exports.getUserTurns = (req, res, next) => {
     res.status(200).json({ turns, status: 'success' })
   })
     .catch(err => next(err))
+}
+
+exports.removeUserTurn = (req, res, next) => {
+  var user_id = req.jwt.sub;
+  var turn_id = Number(req.params.turn_id);
+
+  const q = `delete from turn where user_id=$1 and turn_id=$2`;
+  return db.any(q, [user_id, turn_id])
 }
 
 

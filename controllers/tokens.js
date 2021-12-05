@@ -53,11 +53,10 @@ exports.addToken = (req, res, next) => {
   let { token, exp } = authUtils.issueJWT(user_id, user_type);
   token = token.split(' ')[1] //exclude the Bearer part of the token
 
-  const query =
-    `INSERT into tokens (token, user_id, expiration_date, user_type) 
-     values($1, $2, current_timestamp + interval '48 hours', $3) returning user_id, token, user_type;`;
+  const q = `INSERT into tokens (token, user_id, expiration_date, user_type) 
+    values($1, $2, current_timestamp + interval '48 hours', $3) returning user_id, token, user_type;`;
 
-  return db.one(query, [token, user_id, user_type]).then(data => {
+  return db.one(q, [token, user_id, user_type]).then(data => {
     data['token'] = token;
     data['exp'] = exp;
     if (req.path == '/api/auth/login') {

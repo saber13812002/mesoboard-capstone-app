@@ -77,12 +77,14 @@ input[type=number] {/* Firefox */
   color: #767676;
   display: flex;
   justify-content: space-between;
+  width: 100%;
 }
-.dropdown > button.dropdown-toggle.btn::after {
+.dropdown > button.dropdown-toggle::after {
   margin: auto 0;
 }
 
 /* bootstrap button theme */
+
 /* btn-primary */
 .btn-check:active+.btn-primary:focus, .btn-check:checked+.btn-primary:focus, .btn-primary.active:focus, .btn-primary:active:focus, .show>.btn-primary.dropdown-toggle:focus {
   box-shadow: 0 0 0 0.25rem rgb(40 127 78 / 40%) !important;
@@ -158,4 +160,44 @@ input[type=number] {/* Firefox */
 .react-bootstrap-table > .table > thead,
 .react-bootstrap-table > .table > tbody {
   border: 1.5px solid #d8d8d8;
+}
+
+td.nameTd {
+  width: 160px;
+  text-align: left;
+}
+
+td.nameTd > .name {
+  display: inline-block;
+  font-size: 14px;
+  font-weight: 500;
+  background-color: #287f4e1e;
+  border-radius: 30px;
+  padding: 6px 12px;
+  cursor: pointer;
+  margin-bottom: auto;
+}
+
+
+@media only screen and (max-width: 1080px) {
+  td.nameTd {
+    width: initial !important;
+  }
+}
+
+
+
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 10px;
+}
+::-webkit-scrollbar-thumb {
+  background: #c7c7c7;
+  border-radius: 10px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #888;
 }

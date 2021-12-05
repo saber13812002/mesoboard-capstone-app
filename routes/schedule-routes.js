@@ -11,23 +11,15 @@ module.exports = app => {
     .get(security.isAdminOrManager, schedule.getEmployeeSchedules)
 
   // app.route('/protected/schedule/turn/:turn_id/:user_id')
-  app.route('/protected/schedule/turn/all')
-    .post(schedule.insertUserTurn)
-
   app.route('/protected/schedule/turn')
-    .get(schedule.getUserTurns)
+    .post(security.isManager, schedule.insertUserTurn)
+
+  app.route('/protected/schedule/turn/all')
+    .get(security.isManager, schedule.getUserTurns)
+
+  app.route('/protected/schedule/turn/:turn_id/remove')
+    .delete(security.isManager, schedule.removeUserTurn)
   // app.route('/api/schedule/week') //for testing purposes
   //   .get(schedule.getWeekSchedule) //will not be used
 
 };
-
-// module.exports = app => {
-//   // app.route('/api/permissions/all')
-//   //   .get(tokens.removeExpiredTokens, tokens.checkToken, security.isAdminOrManager, permissions.getAllPermissions);
-
-//   app.route('/api/permissions/add')
-//     .post(tokens.removeExpiredTokens, tokens.checkToken, security.isAdminOrManager, permissions.addPermission);
-
-//   app.route('/api/permissions/verify')
-//     .post(permissions.checkPermission);
-// };

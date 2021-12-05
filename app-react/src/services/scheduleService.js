@@ -34,16 +34,20 @@ export const getDayName = day => DAY_NAME[day];
 /**
  * calculate the total hours of a particular week
  * @param weekDates days of the week to calculate total hours
+ * @param isHourLunch determines if substracting either 30 or 60 minutes (1 or 0.5 hours)
  * @return the total hours of the given week dates
  */
-export const calculateTotalHours = weekDates => {
+export const calculateTotalHours = (weekDates, isHourLunch) => {
+  if (!weekDates) return 0
+
   // calculate and set the total hours of a particular week
   let totalHours = 0;
   for (let dates of weekDates) {
     if (dates) {
-      const dateStart = dates.dateStart ? dates.dateStart : dates.date_start
-      const dateEnd = dates.dateEnd ? dates.dateEnd : dates.date_end
-      totalHours += Math.abs(new Date(dateEnd) - new Date(dateStart)) / 36e5;
+      const dateStart = new Date(dates.dateStart ? dates.dateStart : dates.date_start)
+      const dateEnd = new Date(dates.dateEnd ? dates.dateEnd : dates.date_end)
+      const diff = Math.abs(dateEnd - dateStart);
+      totalHours += (diff / 36e5) - (isHourLunch ? 1 : 0.5)
     }
   }
   return totalHours;
@@ -76,6 +80,7 @@ export const getTurnIdByTime = t => get24HourFormatOfTime(t).replace(':', '');
  * @param {string} d a date object.
  */
 export const get24HourFormatOfDate = d => {
+  if (!d) return ''
   const date = new Date(d);
   let hour = date.getUTCHours();
   const minute = addLeadingZeros(date.getUTCMinutes());
@@ -109,6 +114,8 @@ export const get12HourFormatOfDate = (d, spaceBeforePeriod) => {
  * @param {boolean} zeroOnHour determines adding leading zero to the hour.
  */
 export const get24HourFormatOfTime = (t, zeroOnHour) => {
+  if (!t) return ''
+
   t = String(t);
   const split = t.split(':');
 
@@ -156,6 +163,7 @@ export const get12HourFormatByTurnId = (tid, spaceBeforePeriod) => {
  * @param {object | string} d a date object
  */
 export const toISOYearFormat = d => {
+  if (!d) return ''
   const parsed = new Date(d);
   return parsed.getUTCFullYear() + '-' + addLeadingZeros(parsed.getUTCMonth() + 1) + '-' + addLeadingZeros(parsed.getDate());
 }
@@ -165,7 +173,7 @@ export const toISOYearFormat = d => {
  * Returns a string format describing the given date (i.e. Nov. 16, 2021).
  * @param {*} d date to be beautify
  */
-export const beautifyDate = d => beautifyDateStr(toISOYearFormat(d))
+export const beautifyDate = d => d ? beautifyDateStr(toISOYearFormat(d)) : ''
 
 /** 
  * Returns a string format describing the given date in string string form (i.e. Nov. 16, 2021).
@@ -179,21 +187,4 @@ export const beautifyDateStr = isoStr => {
 
 
 // ***  PRIVATE METHODS  ***
-const addLeadingZeros = d => ('0' + d).slice(-2)
-
-// /** Returns given date into ISO format string excluding the hour. 
-//   * date.toISOYearFormat() returns the day after sometimes. 
-//   */
-// export const toISOYearFormat = d => d.toISOString().slice(0, 10) 
-
-// const get12HourFormat = (h, withPeriod) => {
-//   h = String(h)
-//   return h.substr(0, h.length - 2).replace(':', '')
-// }
-
-// export const getDateId = d => {
-//   const s = toISOYearFormat(d)
-//   // const split = s.split('-');
-//   console.log('-s', s.replaceAll('-', ''))
-//   // const [nYear, nMonth, nDay] = split
-// }
+const addLeadingZeros = s => ('0' + s).slice(-2)

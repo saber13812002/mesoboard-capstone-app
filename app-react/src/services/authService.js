@@ -33,3 +33,23 @@ const getExpiration = () => {
   const expiresAt = JSON.parse(expiration);
   return moment(expiresAt);
 }
+
+export const userTypeObj = {
+  admin: {
+    label: 'Administrator',
+    value: 'admin',
+    // dbValue: 'admin'
+  },
+  manager: {
+    label: 'Supervisor',
+    value: 'manager',
+    // dbValue: 'manager'
+  },
+  employee: {
+    label: 'Empleado',
+    value: 'employee',
+    // dbValue: 'employee'
+  }
+}
+
+export const truncateLocation = l => (l.length < 26) ? l : l.substr(0, 24) + '...'

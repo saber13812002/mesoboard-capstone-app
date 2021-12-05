@@ -9,6 +9,9 @@ const AuthProvider = ({ children }) => {
 
   const initState = {
     userId: undefined,
+    employeeId: undefined,
+    restaurantId: undefined,
+    location: undefined,
     firstName: '',
     lastName: '',
     email: '',
@@ -41,7 +44,7 @@ const AuthProvider = ({ children }) => {
       axios.post(server.login(), { email, password }).then(async res => {
         // console.log('res.data', res.data)
         const { user_id, token } = res.data
-        console.log(user_id)
+        // console.log(user_id)
         return verifyTokenAndGetUserInfoFetch(user_id, token, setRedirect)
       })
     }
@@ -50,20 +53,13 @@ const AuthProvider = ({ children }) => {
 
   const signupFetch = async (userInfo, codeToRemove, setRedirectToApp) => {
     const signup = async () => {
-      // console.log('-------------------------')
-      // var email = req.body.email;
-      // var password = req.body.password;
-      // var gender = req.body.gender;
-      // var first_name = req.body.first_name;
-      // var last_name = req.body.last_name;
-      // var user_type = "";
-      userInfo['code'] = codeToRemove
+      userInfo['code'] = codeToRemove;
 
-      // return axios.post('/api/auth/signup', userInfo)
-      return axios.post(server.signup(), userInfo)
+      axios.post(server.signup(), userInfo)
         .then(res => {
+          // console.log('res', res.data)
           const { user_id, token } = res.data
-          return verifyTokenAndGetUserInfoFetch(user_id, token, setRedirectToApp)
+          verifyTokenAndGetUserInfoFetch(user_id, token, setRedirectToApp)
         })
         .catch(err => {
           console.log('err', err)
@@ -76,10 +72,10 @@ const AuthProvider = ({ children }) => {
 
   const verifyTokenAndGetUserInfoFetch = async (user_id, token, setRedirectToApp) => {
     const verifyTokenGetUser = async () => {
-      console.log('verifyTokenGetUser', user_id)
+      // console.log('verifyTokenGetUser', user_id)
       axios.post(server.verifyTokenAndGetUser(), { user_id, token })
         .then(res => {
-          // console.log('dispatch LOGIN', res.data)
+          // console.log('verifyTokenGetUser dispatch LOGIN', res.data)
           dispatchAuthAction({
             type: 'LOGIN',
             payload: { ...res.data },
@@ -99,19 +95,21 @@ const AuthProvider = ({ children }) => {
     verifyTokenGetUser()
   }
 
-  const verifyPermissionFetch = async (code) => {
+  const verifyPermissionFetch = async (email, code) => {
     const verifyPermission = async () => {
       // console.log('code', code)
       //Will be modified to search for already created users
-      axios.post(server.verifyPermission(), { code }).then(res => {
+      return axios.post(server.verifyPermission(), { email, code }).then(res => {
         dispatchAuthAction({
           type: 'VERIFY',
           payload: res.data
         })
+        // console.log('res.data', res.data)
+        return res.data;
       })
         .catch(err => console.log('err', err))
     }
-    verifyPermission()
+    return verifyPermission()
   }
 
   const logoutFetch = () => {
@@ -125,7 +123,6 @@ const AuthProvider = ({ children }) => {
     }
     return logout()
   }
-
 
   const authContext = {
     authState,

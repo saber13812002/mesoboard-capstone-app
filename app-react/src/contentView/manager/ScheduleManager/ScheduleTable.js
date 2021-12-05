@@ -6,12 +6,12 @@ import { IIcon, iconComponents, MButton } from '../../../components'
 const tableHeaders = ['Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo', 'Lunes', 'Horas Asignadas']
 
 const ScheduleTable = ({ users, isEditable, onOpenScheduleEdit, onOpenScheduleDetails }) => {
-  // console.log('users', users)
   /** Displays the user schedule hours for each day of the week within one row.
    * @param user user with schedule information
    */
   const handleRow = (user, key) => {
-    const { name, weekDates, totalHours } = user;
+    const { name, weekDates, totalHours, isHourLunch } = user;
+    // console.log('isHourLunch', isHourLunch)
 
     /** Array of weekDate objects where the indexes represent the day in number form. */
     // let weekDatesArr = [0, 1, 2, 3, 4, 5, 6].map(day => weekDates[day] ? weekDates[day] : null)
@@ -37,7 +37,7 @@ const ScheduleTable = ({ users, isEditable, onOpenScheduleEdit, onOpenScheduleDe
         {(window.innerWidth > 1080) && weekDates.map((weekDate, i) => weekDate
           ? (
             <td key={key + i} className='hoursBox'>
-              <ScheduleHoursBox weekDate={weekDate} />
+              <ScheduleHoursBox weekDate={weekDate} isHourLunch={isHourLunch} />
             </td>
           )
           : <td key={i}></td>
@@ -48,7 +48,7 @@ const ScheduleTable = ({ users, isEditable, onOpenScheduleEdit, onOpenScheduleDe
     )
   }
 
-  console.log('users', users)
+  // console.log('users', users)
   return (
     <div className='scheduleTable'>
       <Table responsive size="sm" className='scheduleTable__table'>

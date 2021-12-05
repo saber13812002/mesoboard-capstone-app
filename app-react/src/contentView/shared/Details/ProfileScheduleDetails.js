@@ -1,10 +1,10 @@
 import './ProfileScheduleDetails.css';
 import { useState, useEffect } from 'react'
-import { BackButton } from '../../components';
-import { get12HourFormatOfDate, getDayName, getScheduleIdOfMoment } from '../../services/scheduleService';
+import { BackButton } from '../../../components';
+import { DetailsCard } from '../..'
+import { get12HourFormatOfDate, getDayName, getScheduleIdOfMoment } from '../../../services/scheduleService';
 import axios from 'axios';
 import moment from 'moment';
-import { ServerRoutes as server } from '../../services/apiService';
 
 const ProfileScheduleDetails = ({ userScheduleData, currentMoment, weekStartMoment, onBack }) => {
   const [mCurrent, setMCurrent] = useState(currentMoment ? currentMoment.clone() : moment()) // the current moment
@@ -26,18 +26,14 @@ const ProfileScheduleDetails = ({ userScheduleData, currentMoment, weekStartMome
   //   getUserWithSchedule();
   // }, []);
 
-  const { name, weekDates } = userScheduleData;
+  const { weekDates } = userScheduleData;
   console.log('---userScheduleData', userScheduleData);
-  console.log('name', name);
 
   return (
     <>
       {(Object.keys(userScheduleData).length > 0) && <>
         <BackButton onClick={onBack} />
-        <div className='scheduleDetails__profileInfo mb-3 p-3'>
-          <h4>{name}</h4>
-          <h3>Información del usuario va aqui</h3>
-        </div>
+        <DetailsCard data={userScheduleData} />
 
         <div className='d-flex flex-wrap gap-3'>
           {weekDates.length === 0 && (

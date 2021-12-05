@@ -47,19 +47,15 @@ const ProfilesManager = () => {
       sort: true,
       // formatter: (cell, row) => profiles[cell]
       classes: 'nameTd',
-      formatter: (name, data) => {
-        // console.log('name', name)
-        // console.log('data', data)
-        return <p className='name' onClick={() => setProfileDetails(data)}>{name}</p>
-      }
+      formatter: (name, data) => <p className='name' onClick={() => setProfileDetails(data)}>{name}</p>
     }, {
-      dataField: 'totalHours',
+      dataField: 'assigned_hours',
       text: 'Horas Acumuladas',
       sort: true,
       headerAlign: 'center',
       align: 'center',
     }, {
-      dataField: 'assigned_hours',
+      dataField: 'totalHours',
       text: 'Horas Asignadas',
       sort: true,
       headerAlign: 'center',

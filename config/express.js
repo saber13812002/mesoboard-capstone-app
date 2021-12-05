@@ -47,7 +47,7 @@ module.exports = function () {
   /***************************/
   require('../routes/authentication-routes')(app);
   require('../routes/mailer-routes')(app);
-  require('../routes/permissions-routes')(app);
+  require('../routes/permission-routes')(app);
   require('../routes/schedule-routes')(app);
   require('../routes/profiles-routes')(app);
 
