@@ -1,82 +1,52 @@
+import { useState, useEffect } from 'react'
 import './SidebarList.css'
-import SidebarListItem from './SidebarListItem'
 import { NavLink } from 'react-router-dom'
-import {
-    Icon,
-    ICON_OPTIONS
-} from '../../components'
+import { Icon } from '../../components'
+import { sidebarItemNames, setSidebarActiveItemNameByUrlPath } from '../../services/sidebarService'
 
+const SidebarList = ({ sidebarItems }) => {
+  const [activeItemName, setActiveItemName] = useState(sidebarItemNames.home)
+  const [hoveredItemName, setHoveredItemName] = useState(undefined)
 
-const SidebarList = () => {
+  useEffect(() => {
+    // console.log('sidebarItems', sidebarItems)
+    setSidebarActiveItemNameByUrlPath(setActiveItemName)
+  }, [])
 
-    const styles = {
-        className: 'cname',
-        activeClassName: 'acn'
-    }
-    const links = [
-        {
-            className: styles.className,
-            activeClassName: styles.activeClassName,
-            to: '/app/home',
-            name: 'Home',
-            icon: ICON_OPTIONS.home,
-        },
-        {
-            className: styles.className,
-            activeClassName: styles.activeClassName,
-            to: '/app/schedule',
-            name: 'Schedule',
-            icon: ICON_OPTIONS.clock,
-        },
-        {
-            className: styles.className,
-            activeClassName: styles.activeClassName,
-            to: '/app/profiles',
-            name: 'Perfiles',
-            icon: ICON_OPTIONS.user,
-        },
-        {
-            className: styles.className,
-            activeClassName: styles.activeClassName,
-            to: '/app/checks',
-            name: 'Talonarios',
-            icon: ICON_OPTIONS.money,
-        },
-        {
-            className: styles.className,
-            activeClassName: styles.activeClassName,
-            to: '/app/request',
-            name: 'Solicitudes',
-            icon: ICON_OPTIONS.pencil,
-        },
-        {
-            className: styles.className,
-            activeClassName: styles.activeClassName,
-            to: '/app/memo',
-            name: 'Memorandos',
-            icon: ICON_OPTIONS.note,
-        },
+  const styles = {
+    activeClassName: 'activeClassName'
+  }
 
-    ]
-
-
-
-
-
-    return (
-        <div className="sidebarList">
-            <ul>
-                {links.map(({ className, activeClassName, to, icon, name }, i) =>
-                    <li key={i}>
-                        <NavLink id="link" className={className} activeClassName={activeClassName} to={to}>
-                            <Icon icon={icon} className='mr-2' />
-                            <span>{name}</span>
-                        </NavLink>
-                    </li>
-                )}
-            </ul>
-        </div>
-    )
+  return (
+    <div className="sidebarList">
+      <ul>
+        {sidebarItems.map(({ to, IconComponent, name }, i) =>
+          <li
+            key={i}
+            onMouseEnter={() => setHoveredItemName(name)}
+            onMouseLeave={() => setHoveredItemName(undefined)}
+          >
+            <NavLink
+              to={to}
+              activeClassName={styles.activeClassName}
+              onClick={() => setActiveItemName(name)}
+            >
+              <div className='d-flex align-items-center'>
+                <Icon
+                  IconComponent={IconComponent}
+                  color='grey'
+                  size='md'
+                  isSidebarItemActive={(activeItemName === name) || (hoveredItemName === name)}
+                  className='mr-2'
+                />
+                <span>{name}</span>
+              </div>
+            </NavLink>
+          </li>
+        )}
+      </ul>
+    </div>
+  )
 }
 
 export default SidebarList

@@ -5,16 +5,6 @@
   min-height: 80px;
 }
 
-.navbar > .navbar__icon > svg {
-  position: absolute;
-  top: 42%;
-  transform: translate(-150%,-50%);
-}
-
-.navbar__bellIcon > svg > path {
-  fill: #287F4E !important;
-}
-
 
 
 @media only screen and (max-width: 425px) {
@@ -26,10 +16,4 @@
     display: flex;
     justify-content: space-between;
   }
-  
-  .navbar > .navbar__icon > svg {
-    position: relative;
-    top: none;
-    transform: translate(-50%,-30%);
-  }  
 }

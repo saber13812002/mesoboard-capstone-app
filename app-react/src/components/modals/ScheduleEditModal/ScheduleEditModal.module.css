@@ -14,7 +14,7 @@
   left: 50%;
   transform: translate(-50%, -50%);
   width: 540px;
-  height: 70vh;
   z-index: 21;
   background: white;
+  border-radius: 8px
 }

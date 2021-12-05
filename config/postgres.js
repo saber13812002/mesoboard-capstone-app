@@ -2,7 +2,7 @@
 const config = require('./config');
 
 /* http://bluebirdjs.com/docs/getting-started.html
-  this replaces ES6 promises, it's supposed to be better.
+  replace ES6 promises
 */
 const promise = require('bluebird');
 

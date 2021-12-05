@@ -1,19 +1,45 @@
 .scheduleEdit {
   margin: 20px;
+  max-height: 430px;
+  overflow-y: auto;
+  overflow-x: hidden;
 }
 
-.scheduleEdit__data {
-  width: 150px;
+.scheduleEdit > h4 {
+  color: #287F4E;
+  font-weight: 900;
+  margin-bottom: 2px;
 }
 
-.scheduleEdit__data > h4 {
-  width: 140px
+.scheduleEdit > small {
+  font-size: .975em;
 }
 
-.scheduleEdit__data > input {
-  width: 50px;
+.scheduleEdit__row {
+  display: grid;
+  grid-template-columns: 24px 4fr 92.61px 4fr;
+  align-items: center;
+  gap: 4px;
 }
 
-.scheduleEdit__data > .scheduleHoursBox {
-  font-size: 14px
+.scheduleEdit__row > h4 {
+  justify-self: start;
+  padding-left: 20px;
+}
+
+.scheduleEdit__row > input {
+  height: 100px !important;
+}
+
+.scheduleEdit__row > .scheduleHoursBox {
+  font-size: 14px;
+  justify-self: end;
+}
+
+.Dropdown-menu {
+  max-height: 124px;
+}
+
+.Dropdown-root, .Dropdown-control {
+  height: 42.97px !important;
 }

@@ -1,5 +1,7 @@
-import Signin from "./Signin";
-import VerifyPermission from "./VerifyPermission";
 import AuthWrapper from './AuthWrapper'
+import Signin from "./Signin";
+import Authenticate from "./Authenticate";
+import Register from './Register'
+import ForgotPassword from './ForgotPassword'
 
-export { Signin, VerifyPermission, AuthWrapper }
+export { AuthWrapper, Signin, Authenticate, Register, ForgotPassword }

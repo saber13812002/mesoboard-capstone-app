@@ -31,6 +31,6 @@ To start the app, you will need to run both an Express server and the React serv
 node app.js
 
 # Start the react server (http://localhost:3000)
-cd mesoboard-app
+cd app-react
 npm start
 ```

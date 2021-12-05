@@ -1,62 +1,32 @@
-import React, { useState, useEffect, useContext } from 'react'
-import './AuthWrapper.css'
-import { Redirect, useLocation, Link } from 'react-router-dom'
-// import { Form, Button } from 'react-bootstrap';
+import './Auth.css';
+import { Redirect } from 'react-router-dom';
 
-import MesoboardBackgroundImg from '../assets/mesoboard_background.jpg'
-import { MesonLogo } from '../components'
-import { AuthContext } from '../store'
-import { Signin } from '../authentication'
+import MesoboardBackgroundImg from '../assets/mesoboard_background.jpg';
+import { MesonLogo } from '../components';
+import { urlPaths } from '../services/urlService';
 
-const AuthWrapper = ({ children }) => {
-  const [isTokenValid, setIsValidToken] = useState(false)
-  const { state } = useLocation()
-  const { token } = useContext(AuthContext)
-
-  useEffect(() => {
-    if (token)
-      setIsValidToken(true)
-  }, [token])
-
-  if (isTokenValid) {
-    return <Redirect to={state?.from || '/app/home'} />
-  }
-
-  // const handleSignin = (e) => {
-  //   console.log('handleSignin')
-  //   signin()
-  //   e.preventDefault()
-  // }
-
-  // function doSomething(handler) {
-  //   console.log("doSomething called by child with handler:", handler);
-  // }
-
-  // const childrenWithProps = React.Children.map(children, child => {
-  //   // Checking isValidElement is safe
-  //   if (React.isValidElement(child)) {
-  //     return React.cloneElement(child, { doSomething });
-  //   }
-  //   return child;
-  // });
-
+const AuthWrapper = ({ children, redirectToApp }) => {
+  // console.log('redirectToApp', redirectToApp)
 
   return (
-    <div className='authWrapper'>
-      <div className='authWrapper__left'>
-        <div className='authWrapper__formContainer'>
-          {children}
-        </div>
-      </div>
+    <>
+      {redirectToApp && <Redirect to={urlPaths.home} />}
+      {!redirectToApp && (
+        <div className='auth'>
+          <div className='auth__left'>
+            <div className='auth__formContainer'>
+              {children}
+            </div>
+          </div>
 
-      {/* {childrenWithProps} */}
-      <div className='authWrapper__right'>
-        <img className='authWrapper__backImg' src={MesoboardBackgroundImg} />
-        <Link to='/'>
-          <MesonLogo className='authWrapper__logo' height={200} />
-        </Link>
-      </div>
-    </div>
+          {/* {childrenWithProps} */}
+          <div className='auth__right'>
+            <img className='auth__backImg' src={MesoboardBackgroundImg} alt='background img' />
+            <MesonLogo className='auth__logo' height={200} />
+          </div>
+        </div>
+      )}
+    </>
   )
 }
 

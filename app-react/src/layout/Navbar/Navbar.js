@@ -1,10 +1,6 @@
 import { useState } from 'react'
 import './Navbar.css'
-import {
-  NavDrawer,
-  Icon,
-  ICON_OPTIONS
-} from '../../components'
+import { Icon, iconComponents, NavDrawer } from '../../components'
 
 // const amountNotificationLabel = () => {
 //   const [notificationAmount, setNotificationAmount] = useState(0)
@@ -30,12 +26,22 @@ const Navbar = () => {
   return (
     <div className='navbar'>
       {window.innerWidth <= 425 && (
-        <div className='navbar__icon navbar__barsIcon' onClick={openNavDrawer}>
-          <Icon icon={ICON_OPTIONS.bars} />
+        <div onClick={openNavDrawer}>
+          <Icon
+            IconComponent={iconComponents.Bars}
+            size='md'
+            color='dark'
+            className='mb-1'
+          />
         </div>
       )}
-      <div className='navbar__icon navbar__bellIcon'>
-        <Icon icon={ICON_OPTIONS.bell} />
+      <div className='navbar__icon'>
+        <Icon
+          IconComponent={iconComponents.Bell}
+          size='lg'
+          color='primary'
+          className='mb-1'
+        />
       </div>
       {displayNavDrawer && (
         <NavDrawer

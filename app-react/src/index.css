@@ -7,6 +7,7 @@
   margin: 0;
   padding: 0;
 }
+code { font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',monospace }
 
 ul {
   padding: 0 !important;
@@ -17,10 +18,6 @@ ul {
   color: initial !important;
 } */
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
-}
 
 li, a, button {
   text-decoration: none !important;
@@ -37,6 +34,61 @@ hr {
   color: #d8d8d8 !important;
 }
 
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+input[type=number] {/* Firefox */
+  -moz-appearance: textfield;
+}
+
+.dark-gray { color: #4C4C4C !important; }
+.bg-light-gray { background-color: #E4E4E4; }
+
+.circular-btn {
+  padding: 5px 10px 5px 10px;
+  border-radius: 20px;
+  cursor: pointer;
+}
+.circular-btn:hover { background-color: #38353510 }
+
+.card {
+  border: 1px solid #ccc;
+  box-shadow: 2px 2px 6px 0px  rgba(0,0,0,0.3);
+} 
+
+/* forms */
+.form-control {
+  border: 1px solid #287F4E;
+}
+.form-control:focus {
+  box-shadow: 0 0 0 0.25rem rgb(40 127 78 / 25%) !important;
+}
+
+.dropdown-toggle:focus {
+  box-shadow: 0 0 0 0.25rem rgb(40 127 78 / 25%) !important;
+}
+
+
+/* dropdown button as design */
+.dropdown > button.dropdown-toggle.btn {
+  background-color: inherit !important;
+  color: #767676;
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+}
+.dropdown > button.dropdown-toggle::after {
+  margin: auto 0;
+}
+
+/* bootstrap button theme */
+
+/* btn-primary */
+.btn-check:active+.btn-primary:focus, .btn-check:checked+.btn-primary:focus, .btn-primary.active:focus, .btn-primary:active:focus, .show>.btn-primary.dropdown-toggle:focus {
+  box-shadow: 0 0 0 0.25rem rgb(40 127 78 / 40%) !important;
+}
 .btn-primary {
   background: #287F4E !important;
   border-color: #287F4E !important;
@@ -45,26 +97,107 @@ hr {
   background: #287F4ECC !important;
   border-color: #287F4ECC !important;
 }
+.btn-primary:active:focus {
+  box-shadow: 0 0 0 0.25rem rgb(40 127 78 / 40%) !important;
+}
 
+/* btn-outline-primary */
+.btn-outline-primary:active {
+  background: #287f4e49 !important;
+}
+.btn-outline-primary:focus {
+  box-shadow: 0 0 0 0.25rem rgb(40 127 78 / 25%) !important;
+}
+
+/* btn-secondary */
 .btn-secondary {
   color: black !important;
   background: #F5D40A80 !important;
   border-color: #F5D40A80 !important;
 }
-
 .btn-secondary:hover {
   background: #F5D40A !important;
 }
 
+/* btn-outline-primary */
 .btn-outline-primary {
   color: black !important;
   /* background: #287F4E !important; */
   border-color: #287F4E !important;
 }
-
 .btn-outline-primary:hover {
   color: white !important;
   background: #287F4E !important;
-  /* border-color: #287F4E !important; */
 }
 
+/* btn-light */
+.btn-light:hover {
+  background: #e7e7e7 !important;
+}
+
+
+
+/* react-bootstrap-table-next */
+.react-bootstrap-table {
+  box-shadow: rgba(50, 50, 93, 0.25) 0px 6px 12px -2px, rgba(0, 0, 0, 0.3) 0px 3px 7px -3px;
+  background: white;
+  padding: 0 0 55px;
+  /* margin-top: -40px; */
+  /* margin-bottom: -10px !important; */
+}
+
+.react-bootstrap-table > .table {
+  width: 96%;
+  margin: 0 auto;
+  border-collapse: initial !important;
+  padding-bottom: -10px !important;
+}
+
+.react-bootstrap-table > .table > tbody {
+  padding-bottom: -10px !important;
+}
+
+.react-bootstrap-table > .table > thead,
+.react-bootstrap-table > .table > tbody {
+  border: 1.5px solid #d8d8d8;
+}
+
+td.nameTd {
+  width: 160px;
+  text-align: left;
+}
+
+td.nameTd > .name {
+  display: inline-block;
+  font-size: 14px;
+  font-weight: 500;
+  background-color: #287f4e1e;
+  border-radius: 30px;
+  padding: 6px 12px;
+  cursor: pointer;
+  margin-bottom: auto;
+}
+
+
+@media only screen and (max-width: 1080px) {
+  td.nameTd {
+    width: initial !important;
+  }
+}
+
+
+
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 10px;
+}
+::-webkit-scrollbar-thumb {
+  background: #c7c7c7;
+  border-radius: 10px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #888;
+}

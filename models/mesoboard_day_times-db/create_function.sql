@@ -1,0 +1,7 @@
+CREATE OR REPLACE FUNCTION get_time_primary_key(ts timestamp) RETURNS integer AS $$
+BEGIN
+	RETURN 100 * EXTRACT(HOUR FROM ts)
+		+ 1 * EXTRACT(MINUTE FROM ts)
+		+ EXTRACT(SECOND FROM ts);
+END;
+$$ LANGUAGE plpgsql;

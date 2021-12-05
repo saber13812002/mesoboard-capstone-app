@@ -1,44 +1,47 @@
-import { useState } from 'react'
 import './ContentView.css'
-import { urlSlug } from '../../helpers/url'
+import { getUrlSlug, urlSlugs } from '../../services/urlService'
 import { useRouteMatch } from 'react-router-dom'
 import { ContentHeader } from '../../components'
 import {
   HomeManager,
   ScheduleManager,
-  CheckManager,
-  ProfileManager,
+  ProfilesManager,
   MemoManager,
-  RequestManager
-} from '../../content'
+  RequestManager,
+  UserPermissionsManager
+} from '../../contentView'
 
 /** returns the component to be viewed */
 const handleView = view => {
+  const { home, schedule, profiles, requests, memos, permissions } = urlSlugs;
   switch (view) {
-    case 'home':
+    case home:
       return <HomeManager />
-    case 'schedule':
+    case schedule:
       return <ScheduleManager />
-    case 'checks':
-      return <CheckManager />
-    case 'profiles':
-      return <ProfileManager />
-    case 'request':
+    case profiles:
+      return <ProfilesManager />
+    case requests:
       return <RequestManager />
-    case 'memo':
+    case memos:
+      return <MemoManager />
+    case permissions:
+      return <UserPermissionsManager />
+    default:
       return <MemoManager />
   }
 }
 
 const ContentView = () => {
   let { url } = useRouteMatch();
+  const slug = getUrlSlug(url)
   // console.log('url', urlSlug(url))
 
   return (
     <div className='body'>
-      <ContentHeader view={urlSlug(url)} />
+      <ContentHeader view={slug} />
       <div className='body__content'>
-        {handleView(urlSlug(url))}
+        {handleView(slug)}
       </div>
     </div>
   )
