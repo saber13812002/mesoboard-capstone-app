@@ -46,13 +46,13 @@ const TurnsTable = ({ turns, onAddNewTurn, addingNewTurn, onSaveTurn, onCancel, 
           </tr>
         </thead>
         <tbody className={`${turns.length === 0 ? 'disableBorder' : ''}`}>
-          {turns.map((turn) => {
+          {turns.map((turn, i) => {
             // console.log('-------', turn)
             const { turnIndex, timeStart, timeEnd, timeLunch } = turn;
             const isValidIndex = turnIndex >= 0
             // console.log('turnIndex', turnIndex)
             return (
-              <Fragment key={turnIndex}>
+              <Fragment key={turnIndex + i + 20}>
                 {isValidIndex && <tr style={{ fontWeight: '500' }}>
                   <td><strong>{turnIndex}</strong></td>
                   <td>{timeStart}</td>

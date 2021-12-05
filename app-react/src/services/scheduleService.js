@@ -34,18 +34,20 @@ export const getDayName = day => DAY_NAME[day];
 /**
  * calculate the total hours of a particular week
  * @param weekDates days of the week to calculate total hours
+ * @param isHourLunch determines if substracting either 30 or 60 minutes (1 or 0.5 hours)
  * @return the total hours of the given week dates
  */
-export const calculateTotalHours = weekDates => {
+export const calculateTotalHours = (weekDates, isHourLunch) => {
   if (!weekDates) return 0
 
   // calculate and set the total hours of a particular week
   let totalHours = 0;
   for (let dates of weekDates) {
     if (dates) {
-      const dateStart = dates.dateStart ? dates.dateStart : dates.date_start
-      const dateEnd = dates.dateEnd ? dates.dateEnd : dates.date_end
-      totalHours += Math.abs(new Date(dateEnd) - new Date(dateStart)) / 36e5;
+      const dateStart = new Date(dates.dateStart ? dates.dateStart : dates.date_start)
+      const dateEnd = new Date(dates.dateEnd ? dates.dateEnd : dates.date_end)
+      const diff = Math.abs(dateEnd - dateStart);
+      totalHours += (diff / 36e5) - (isHourLunch ? 1 : 0.5)
     }
   }
   return totalHours;
@@ -186,20 +188,3 @@ export const beautifyDateStr = isoStr => {
 
 // ***  PRIVATE METHODS  ***
 const addLeadingZeros = s => ('0' + s).slice(-2)
-
-// /** Returns given date into ISO format string excluding the hour. 
-//   * date.toISOYearFormat() returns the day after sometimes. 
-//   */
-// export const toISOYearFormat = d => d.toISOString().slice(0, 10) 
-
-// const get12HourFormat = (h, withPeriod) => {
-//   h = String(h)
-//   return h.substr(0, h.length - 2).replace(':', '')
-// }
-
-// export const getDateId = d => {
-//   const s = toISOYearFormat(d)
-//   // const split = s.split('-');
-//   console.log('-s', s.replaceAll('-', ''))
-//   // const [nYear, nMonth, nDay] = split
-// }

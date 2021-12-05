@@ -47,15 +47,13 @@ const ScheduleEdit = ({ user, turns, dateStart, dateEnd, mCurrent, onSaveChanges
    *  @param {Event} e the event containing the input value.
    */
   const updateHours = (day, e) => {
-    console.log(e.value)
-    //e.target.value
-    const turnId = e.value;
-    if (!turnId || turnId <= 0 || turnId > turns.length)
+    // console.log(e.value)
+    const turnIndex = e.value;
+    if (!turnIndex || turnIndex <= 0 || turnIndex > turns.length)
       return;
 
-    // const selectedTurn = turns[turnId];
     const dateToModify = userToEdit.weekDates[day].dateStart;
-    setTimeOfWeekDate(day, turnId - 1, dateToModify);
+    setTimeOfWeekDate(day, turnIndex, dateToModify);
   }
 
 
@@ -64,20 +62,23 @@ const ScheduleEdit = ({ user, turns, dateStart, dateEnd, mCurrent, onSaveChanges
    */
   const setWeekDateIntoUser = day => {
     if (turns.length > 0) {
-      const turnId = 0;
+      const turnIndex = 1;
       const dateToModify = mCurrent.clone().startOf('week').isoWeekday(day + 2).toDate();
-      setTimeOfWeekDate(day, turnId, dateToModify);
+      setTimeOfWeekDate(day, turnIndex, dateToModify);
     }
   }
 
 
   /** Sets the hours of the week date schedule of the user by the given selected turn times.
    *  @param {number} day the day in number form that represents the day of the week to modify.
-   *  @param {object} turnId the id of the turn object containing the new times.
+   *  @param {object} turnIndex the id of the turn object containing the new times.
    *  @param {string} dateToModify the date of the week to be modified.
    */
-  const setTimeOfWeekDate = (day, turnId, dateToModify) => {
-    const turn = turns[turnId];
+  const setTimeOfWeekDate = (day, turnIndex, dateToModify) => {
+    // console.log('turnIndex', turnIndex)
+    const turn = turns[turnIndex - 1];
+    // console.log('turn', turn)
+
     const newTimeStart = get24HourFormatOfTime(turn.timeStart, true);
     const newTimeEnd = get24HourFormatOfTime(turn.timeEnd, true);
     const newTimeLunch = get24HourFormatOfTime(turn.timeLunch, true);
@@ -104,13 +105,11 @@ const ScheduleEdit = ({ user, turns, dateStart, dateEnd, mCurrent, onSaveChanges
   const updateLunch = (e) => {
     //console.log(e.target.checked)
     setUserToEdit(emp => {
-      const newEmployee = { ...emp };
-      newEmployee.isHourLunch = e.target.checked;
-      console.log(newEmployee.isHourLunch)
-
-      return newEmployee;
+      const newUser = { ...emp };
+      newUser.isHourLunch = e.target.checked;
+      console.log(newUser.isHourLunch)
+      return newUser;
     })
-
   }
 
   /**
@@ -119,20 +118,10 @@ const ScheduleEdit = ({ user, turns, dateStart, dateEnd, mCurrent, onSaveChanges
    * @returns the turn index found or undefined turn id does not exist within the turns array
    */
   const getTurnIndexByTurnId = turnId => turns.find(turn => turn.turnId === turnId)?.turnIndex;
-  // const getTurnIndexByTurnId = turnId => {
-  //   console.log('turnId', turnId)
-  //   // turns.find(turn => turn.turnId === turnId)?.turnIndex;
-  //   const res = turns.find(turn => {
-  //     return turn.turnId === turnId
-  //   });
-  //   console.log('res', res);
-  //   console.log(res?.turnIndex)
-  //   return res?.turnIndex
-  // }
 
   const portalElement = document.getElementById('navdrawer-portal');
 
-  // console.log('employeeToEdit', employeeToEdit)
+  // console.log('userToEdit', userToEdit)
   return (
     <Modal
       onClose={onCloseScheduleEdit}
@@ -147,7 +136,7 @@ const ScheduleEdit = ({ user, turns, dateStart, dateEnd, mCurrent, onSaveChanges
             if (!weekDate) {
               return (
                 <MButton
-                  key={day}
+                  key={day + name}
                   IconComponent={iconComponents.Plus}
                   iconColor='dark'
                   text={getDayName(day)}
@@ -168,7 +157,7 @@ const ScheduleEdit = ({ user, turns, dateStart, dateEnd, mCurrent, onSaveChanges
               // console.log('turnIndex', turnIndex);
 
               return (
-                <div key={day} className='scheduleEdit__row w-100 mt-2'>
+                <div key={day + turnIndex} className='scheduleEdit__row w-100 mt-2'>
                   <Icon
                     IconComponent={iconComponents.Trash}
                     size='md'
@@ -180,6 +169,7 @@ const ScheduleEdit = ({ user, turns, dateStart, dateEnd, mCurrent, onSaveChanges
                     value={turnIndex}
                     options={ids}
                     onChange={(e) => updateHours(day, e)}
+                    arrowOpen={<span className="arrow-open" />}
                   />}
                   <ScheduleHoursBox isHourLunch={userToEdit.isHourLunch} weekDate={weekDate} showLunchMins={true} />
                 </div>
@@ -188,9 +178,9 @@ const ScheduleEdit = ({ user, turns, dateStart, dateEnd, mCurrent, onSaveChanges
             return null
           })}
         </div>
-        <label className='mt-3 mb-2'>
-          <input type="checkbox" onClick={(e) => updateLunch(e)} />
-          1 hora de almuerzo
+        <label className='mt-4 mb-1'>
+          <input type="checkbox" onChange={(e) => updateLunch(e)} checked={userToEdit.isHourLunch} />
+          <span className='ml-1'>1 hora de almuerzo</span>
         </label>
         {isSameData ? (
           <Button

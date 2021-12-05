@@ -1,5 +1,8 @@
 .scheduleEdit {
   margin: 20px;
+  max-height: 430px;
+  overflow-y: auto;
+  overflow-x: hidden;
 }
 
 .scheduleEdit > h4 {
@@ -33,26 +36,9 @@
   justify-self: end;
 }
 
-.scheduleEdit__data {
-  max-height: 330px;
-  overflow-y: auto;
+.Dropdown-menu {
+  max-height: 124px;
 }
-
-.scheduleEdit__data::-webkit-scrollbar {
-  width: 8px;
-}
-.scheduleEdit__data::-webkit-scrollbar-track {
-  background: #f1f1f1;
-  border-radius: 10px;
-}
-.scheduleEdit__data::-webkit-scrollbar-thumb {
-  background: #c7c7c7;
-  border-radius: 10px;
-}
-.scheduleEdit__data::-webkit-scrollbar-thumb:hover {
-  background: #888;
-}
-
 
 .Dropdown-root, .Dropdown-control {
   height: 42.97px !important;

@@ -23,14 +23,3 @@ module.exports = app => {
   //   .get(schedule.getWeekSchedule) //will not be used
 
 };
-
-// module.exports = app => {
-//   // app.route('/api/permissions/all')
-//   //   .get(tokens.removeExpiredTokens, tokens.checkToken, security.isAdminOrManager, permissions.getAllPermissions);
-
-//   app.route('/api/permissions/add')
-//     .post(tokens.removeExpiredTokens, tokens.checkToken, security.isAdminOrManager, permissions.addPermission);
-
-//   app.route('/api/permissions/verify')
-//     .post(permissions.checkPermission);
-// };
