@@ -6,17 +6,18 @@ class UrlConstants {
   static PROTECTED = '/protected/';
 
   // exports
-  static VERIFY_PERMISSION = 'permissions/verify';
+  static VERIFY_PERMISSION = 'permission/verify';
   static SIGNUP = 'auth/signup';
   static LOGIN = 'auth/login';
   static LOGOUT = 'auth/logout';
   static VERIFY_TOKEN_GET_USER = 'auth/verifyToken/getUser';
   static SEND_RESET_PASSWORD = 'mailer/resetPassword';
-  static ADD_PERMISSION = 'permissions/add';
-  // static ALL_PERMISSIONS = 'permissions/all';
-  // static ALL_PERMISSIONS_AND_INFO_URL = 'permissions/allWithInfo';
-  static ALL_PERMISSIONS_AND_USERS = 'permissions/users/all';
+  static ADD_PERMISSION = 'permission/add';
+  // static ALL_PERMISSIONS = 'permission/all';
+  // static ALL_PERMISSIONS_AND_INFO_URL = 'permission/allWithInfo';
+  static ALL_PERMISSIONS_AND_USERS = 'permission/users/all';
   static USER_DATA = 'auth/userData';
+  static ALL_RESTAURANTS = 'auth/restaurant/all'
   static SET_USER_SCHEDULES = 'schedule/week';
   static ALL_USER_SCHEDULES = 'schedule/week/all/<schedule_id>';
   static GET_TURNS = 'schedule/turn/all';
@@ -48,6 +49,9 @@ export class ServerRoutes {
   }
   static getUserData() {
     return UrlConstants.PROTECTED + UrlConstants.USER_DATA;
+  }
+  static getAllRestaurants() {
+    return UrlConstants.PROTECTED + UrlConstants.ALL_RESTAURANTS;
   }
 
 

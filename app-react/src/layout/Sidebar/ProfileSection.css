@@ -1,17 +1,19 @@
 .profileSection {
-  margin: 22px;
-  font-size: 15px;
+  margin: 22px 22px 8px;
+  font-size: 14px;
   display: inline-block;
 }
 
+
 .profileSection p {
   margin-bottom: 4px;
-  font-weight: 300;
+  font-weight: 400;
 }
 
 .profileSection__clickableName {
   display: flex;
   cursor: pointer;
+  font-size: 15px;
 }
 
 .profileSection__clickableName > p {

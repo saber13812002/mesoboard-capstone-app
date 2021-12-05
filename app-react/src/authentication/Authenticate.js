@@ -8,81 +8,97 @@ import { NavLink } from 'react-router-dom';
 const minCodeLength = 6;
 
 const Authenticate = () => {
-  const [redirectToApp, setRedirectToApp] = useState(isLoggedIn())
-  const [code, setCode] = useState('')
-  // const [code, setCode] = useState('654321')
-  const [verificationFetch, setVerificationFetch] = useState(undefined)
-  const [userInfo, setUserInfo] = useState({})
+  const [redirectToApp, setRedirectToApp] = useState(isLoggedIn());
+  const [code, setCode] = useState('');
+  const [email, setEmail] = useState('');
+  const [verificationFetch, setVerificationFetch] = useState(undefined);
+  const [userInfo, setUserInfo] = useState({});
 
   // context
-  const { authState, verifyPermission, signup, resetState } = useContext(AuthContext)
-  const { userType } = authState
+  const { authState, verifyPermission, signup, resetState } = useContext(AuthContext);
+  const { userType } = authState;
 
   // behaviours
   useEffect(() => {
-    console.log('verificationFetch boolean', verificationFetch)
-    if (verificationFetch !== undefined && verificationFetch) {
-      console.log('about to fetch with code: ', code)
-      verifyPermission(code)
-      setVerificationFetch(false)
-    }
+    if (!verificationFetch) return;
+    verifyPermission(email, code)
+    setVerificationFetch(false);
   }, [verificationFetch]) // quizas funciona sin tener que usar verificatoinFetch
 
   useEffect(() => {
-    if (Object.keys(userInfo).length > 0) {
-      signup(userInfo, code, setRedirectToApp)
-    }
+    if (Object.keys(userInfo).length === 0) return;
+
+    signup(userInfo, code, setRedirectToApp);
   }, [userInfo])
 
 
-  const handleCancel = (cachedCode) => {
+  const handleCancel = (cachedEmail, cachedCode) => {
     resetState()
     setVerificationFetch(undefined)
     setCode(cachedCode)
+    setEmail(cachedEmail)
     // maybe add a state and use it along with the userType in context 
     // to speed up the switch
   }
 
   const handleVerifyPermission = async (e) => {
-    // console.log('handleVerifyPermission')
-    const codeValue = e.target[0].value           //|| '654321' //for testing purposes
-    console.log(codeValue.length)
+    const email = e.target[0]?.value;
+    const codeValue = e.target[1]?.value;
+    console.log(email, codeValue);
 
-    if (codeValue.length > 0) {
-      setVerificationFetch(true)
-
-
-      // setVerificationFetch(prev => (prev == undefined) ? true : !prev)
-
-      // if (!verificationFetch) {
-      //   setVerificationFetch(prev => (prev == undefined) ? true : !prev)
-      // }
+    if (codeValue.length > 0 && email.includes('@')) {
+      setVerificationFetch(true);
     }
     e.preventDefault()
   }
 
-  const handleRegistration = (e) => {
-    console.log('handleRegistration')
-    // to register a manager - hardcoded
+  const handleRegistration = (e, dataToRegister) => {
+    console.log('dataToRegister', dataToRegister)
+    // const { code, email, password, first_name, last_name, gender, phone, location, employee_id } = dataToRegister
+
+    // data from outside the input forms
+    // const gender = dataToRegister.gender;
+    // const user_type = dataToRegister.userType;
+
     // const userForm = {
-    //   email: 'kevin.ramirez3@upr.edu',
+    //   code,
+    //   email,
+    //   password,
+    //   first_name,
+    //   last_name,
+    //   gender,
+    //   phone,
+    //   location,
+    //   employee_id,
+    // }
+
+    // // to register a manager - hardcoded
+    // const userForm = {
+    // email: authState.email,
+    // location: authState.location,
+    // employee_id: authState.employeeId,
+    //   password: 'meso2021',
+    //   gender: 'male',
+    //   first_name: 'Manager',
+    //   last_name: 'Entity',
+    //   phone: '7874307478'
+    // }
+
+    // // to register an employee - hardcoded
+    // const userForm = {
+    //   email: authState.email,
+    //   location: authState.location,
+    //   employee_id: authState.employeeId,
     //   password: 'meso2021',
     //   gender: 'male',
     //   first_name: 'Kevin',
     //   last_name: 'Ramirez',
+    //   phone: '7874307478'
     // }
 
-    // to register an employee - hardcoded
-    const userForm = {
-      email: 'employee@gmail.com', last_name: 'Entity',
-      // email: 'employee2@gmail.com', last_name: 'Entity2',
-      password: 'meso2021',
-      gender: 'female',
-      first_name: 'Employee',
-    }
-    if (userForm) {
-      setUserInfo(userForm)
-    }
+    // console.log('userForm', userForm)
+    if (dataToRegister)
+      setUserInfo(dataToRegister);
     e.preventDefault()
   }
 
@@ -91,13 +107,16 @@ const Authenticate = () => {
       {(userType.length === 0) && (
         <Form onSubmit={handleVerifyPermission}>
           <h2 style={{ color: '#287F4E' }}>Registración</h2>
+          <Form.Control type='text' placeholder='Correo Electrónico'
+            className='mt-4'
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+          />
           <Form.Control type='text' placeholder='Código de verificación'
             className='mt-4'
             value={code}
             onChange={(e) => setCode(e.target.value)}
           />
-          {/* <Form.Control type='text' placeholder='Correo electrónico' />
-          <br /> */}
 
           {(code.length < minCodeLength) && <Button disabled className='w-100 mt-3'>Verificar</Button>}
           {(code.length >= minCodeLength) && (
@@ -111,14 +130,15 @@ const Authenticate = () => {
         <Register
           userType={userType}
           cachedCode={code}
+          cachedEmail={email}
           onCancel={handleCancel}
           onRegister={handleRegistration}
         />
       )}
       <p className='auth__redirect'>
-        ¿No tienes una cuenta?
+        ¿Ya tienes una cuenta?
         <NavLink to={'signin'} className='ml-1' onClick={() => resetState()}>
-          Accesar
+          Iniciar
         </NavLink>
       </p>
     </AuthWrapper>

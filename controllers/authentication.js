@@ -53,27 +53,35 @@ exports.checkTokenAndGetUser = (req, res, next) => {
   console.log('checkTokenAndGetUser')
   const { user_id, token } = req.body
 
-  const query = `select users.user_id, first_name, last_name, email, password, users.user_type, gender, is_deleted, token 
-    from users inner join tokens on users.user_id = tokens.user_id where users.user_id=$1 and tokens.token=$2`
+  const q = `select users.user_id, first_name, last_name, email, password, users.user_type, gender, employee_id, restaurant_id, 
+    is_deleted, token from users inner join tokens on users.user_id=tokens.user_id where users.user_id=$1 and tokens.token=$2`
 
-  return db.one(query, [user_id, token]).then(data => {
-    if (!data || data.is_deleted) {
-      error.httpStatusCode = 404;
-      error.message = "Invalid user metadata";
-      return next(error);
-    }
-    else {
-      data['exp'] = '2'; //amount of days
-      res.status(200)
-        .json({
-          ...data,
-          message: 'Valid user metadata',
-        });
-      // res.end();
-    }
-  }).catch(error => {
-    next(error);
-  });
+  return db.task(async t => {
+    return t.one(q, [user_id, token]).then(data => {
+      // console.log('-data', data)
+      if (!data || data.is_deleted) {
+        error.httpStatusCode = 404;
+        error.message = "Invalid user metadata";
+        return next(error);
+      }
+      else {
+        return t.oneOrNone('select * from restaurant where restaurant_id=$1', data.restaurant_id).then(data1 => {
+          if (!data1) data1 = []; //happens when getting admin
+          // console.log('-data1', data1)
+          data['exp'] = '2'; //amount of days
+          res.status(200)
+            .json({
+              ...data,
+              ...data1,
+              message: 'Valid user metadata',
+            });
+        })
+      }
+    })
+  })
+    .catch(error => {
+      next(error);
+    });
 }
 
 
@@ -83,8 +91,8 @@ exports.confirmEmail = (req, res, next) => {
   const token = req.body.token;
 
   //need something to validate this email (like a token maybe?)
-  return db.task(t => {
-    return t.one("select user_id from tokens where token = $1", token).then(data => {
+  return db.task(async t => {
+    return t.one("select user_id from tokens where token = $1", token).then(async data => {
       //console.log(data[0].user_id);
       id = data.user_id;
       l = fs.readFileSync(__dirname + "/../views/confirm-email/confirmed-email.html", 'utf8', (err, data) => {
@@ -110,99 +118,118 @@ exports.confirmEmail = (req, res, next) => {
 
 
 exports.createUser = (req, res, next) => {
-  console.log('createUser')
-  const { code, email, password, first_name, last_name, gender } = req.body;
-  // console.log('password', password)
-  console.log('code', code)
-  // console.log('first_name', first_name)
+  console.log('createUser', req.body);
+  const { code, email, password, first_name, last_name, gender, employee_id, phone } = req.body;
+  const location = req.body.location || '';
 
-  let user_type = "";
-  const error = new Error();
+  // console.log('req.body', req.body);
+
+  let user_type = '';
+  let is_assistant_manager = undefined;
   req.app.locals.email = email;
+
+  const error = new Error();
+
   //check if user fields are filled
   if (!code || !email || !password || !first_name || !last_name || !gender) {
-    error.message = "Malformed Query: Missing Fields. (Required fields: first_name, last_name, email, password, gender)";
+    error.message = "Malformed Query: Missing Fields. (Required fields: code, first_name, last_name, email, password, gender)";
     error.httpStatusCode = 400;
     return next(error);
   }
 
   return db.task(async t => {
-    return t.one("Select permission_type From permissions Where code = $1", code).then(data => {
+    return t.any('Select permission_type, is_assistant_manager From permission Where code = $1', code).then(async data => {
+      data = data[0];
+      // console.log('data', data)
       if (!data) {
         error.message = "Provisional code does\'t exist";
         error.httpStatusCode = 403;
         throw error;
       } else {
         user_type = data.permission_type;
+        is_assistant_manager = data.is_assistant_manager
       }
       console.log('user_type', user_type)
+      console.log('is_assistant_manager', is_assistant_manager)
 
       //check if criteria exists 
-      //I was thinking, for employee will be either email or phone.
-      //Which ever the employee chooses
-      return t.any("Select * from users where email = $1", email).then(data2 => {
+      return t.any('Select * from users where email = $1', email).then(async data2 => {
+        // console.log('data2', data2)
         if (data2.length > 0) {
           error.message = "User Already Exist";
           error.httpStatusCode = 403;
           throw error;
         }
         else {
-          //user doesn't exist
-          const saltHash = authUtils.genPassword(password);
-          const hash = saltHash.hash;
-          const salt = saltHash.salt;
-          console.log('saltHash', saltHash);
+          //get restaurant_id for which the user belongs to
+          return t.manyOrNone('Select restaurant_id from restaurant where location=$1', location).then(data3 => {
+            restaurant_id = data3.restaurant_id;
+            // console.log('restaurant_id', restaurant_id);
 
-          const userInfo = [
-            first_name,
-            last_name,
-            email,
-            hash,
-            new Date().toUTCString(),
-            user_type,
-            gender,
-            salt
-          ];
+            //user doesn't exist
+            const saltHash = authUtils.genPassword(password);
+            const hash = saltHash.hash;
+            const salt = saltHash.salt;
 
-          if (user_type == 'admin' || user_type == 'manager') {
-            // console.log('userInfo', userInfo)
-            const query4 = `insert into users(first_name, last_name, email, password, creation_date, is_deleted,
-                user_type, gender, salt) values ($1, $2, $3, $4, $5,
-                FALSE, $6, $7, $8) returning user_id;`
+            const userInfo = [
+              first_name,
+              last_name,
+              email,
+              hash,
+              restaurant_id,
+              employee_id,
+              new Date().toUTCString(),
+              user_type,
+              gender,
+              phone,
+              salt
+            ];
 
+            let query4 = '';
+
+            if (user_type === 'manager') {
+              query4 = `with new_user AS (insert into users(first_name, last_name, email, password, restaurant_id, employee_id, creation_date, is_deleted,
+              user_type, gender, phone, salt) values ($1, $2, $3, $4, $5, $6, $7, FALSE, $8, $9, $10, $11) returning user_id AS id)
+              insert into manager (user_id, is_assistant) select id, $12 from new_user returning user_id`;
+
+              userInfo.push(is_assistant_manager)
+            }
+            else if (user_type === 'admin' || user_type === 'employee') {
+              query4 = `insert into users(first_name, last_name, email, password, restaurant_id, employee_id, creation_date, is_deleted,
+              user_type, gender, phone, salt) values ($1, $2, $3, $4, $5, $6, $7, FALSE, $8, $9, $10, $11) returning user_id`;
+            }
+            else {
+              error.message = 'Unsupported account type';
+              error.httpStatusCode = 401;
+              throw error;
+            }
+
+            console.log('userInfo', userInfo)
             return t.any(query4, userInfo);
-          }
-          else if (user_type == 'employee') {
-            // console.log('userInfo', userInfo)
-            const query4 = `insert into users(first_name, last_name, email, password, creation_date, is_deleted,
-                user_type, gender, salt) values ($1, $2, $3, $4, $5,
-                FALSE, $6, $7, $8) returning user_id;`
-
-            return t.any(query4, userInfo);
-          }
-          else {
-            error.message = 'Unsupported account type';
-            error.httpStatusCode = 401;
-            throw error;
-          }
-          // })
-          /* I recommend doing this only if administrators want to reuse provisional codes (non-unique code) */
-          // .then(_ => {
-          //   console.log('updating code to null')
-          //   const query5 = 'update permissions set code = null where code=$1;'
-          //   return task.one(query5, code)
-          // })
+          })
+            /* I recommend doing this only if administrators want to reuse provisional codes (non-unique code) */
+            .then(userIdData => {
+              req.app.locals.user_id = userIdData[0].user_id;
+              req.app.locals.user_type = user_type;
+              req.app.locals.email = email;
+              console.log('updating code to null', code)
+              t.any('update permission set code = null where code=$1', code)
+              next();
+            });
         }
       });
     });
-  }).then(data => {
-    req.app.locals.user_id = data[0].user_id;
-    req.app.locals.user_type = user_type;
-    req.app.locals.email = email;
-    next();
-  }).catch(error => {
-    next(error);
-  });
+  })
+    // .then(data => {
+    //   console.log('data', data)
+    //   req.app.locals.user_id = data.user_id;
+    //   req.app.locals.user_type = user_type;
+    //   req.app.locals.email = email;
+    //   next();
+    // })
+    .catch(error => {
+      next(error);
+    });
 };
 
 // exports.getUserById = async (req, res, next) => {
@@ -222,9 +249,12 @@ exports.getUserData = async (req, res, next) => {
   console.log('req.jwt', req.jwt)
   const user_id = req.jwt.sub;
   // const user_type = req.jwt.user_type;
-  console.log('\n\nuser_id', user_id)
-  const query = `select user_id, first_name, last_name, email, user_type, gender from users where user_id=$1`;
-  return db.one(query, [user_id]).then(data => {
+  // console.log('\n\nuser_id', user_id);
+
+  const q = `select user_id, first_name, last_name, email, user_type, gender, employee_id, location  
+  from users inner join restaurant on users.restaurant_id=restaurant.restaurant_id where user_id=$1`;
+
+  return db.one(q, user_id).then(data => {
     // console.log('data', data)
     res.status(200).json({
       // data,
@@ -269,7 +299,7 @@ exports.resetPassword = (req, res, next) => {
   });
 }
 
-exports.resetPassConfirmation = (req, res, next) => {
+exports.resetPassConfirmation = async (req, res, next) => {
   console.log('\n\nresetPassConfirmation\n\n');
   const user_id = req.params.user_id;
   const pid = req.params.pass_request_id;
@@ -289,3 +319,10 @@ exports.resetPassConfirmation = (req, res, next) => {
     }
   });
 };
+
+exports.getAllRestaurants = async (req, res, next) => {
+  return db.many('Select * from restaurant').then(data => {
+    res.status(200).json({ restaurants: data });
+    res.end();
+  });
+}

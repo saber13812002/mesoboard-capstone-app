@@ -1,15 +1,16 @@
-import './Auth.css'
-import { Redirect } from 'react-router-dom'
+import './Auth.css';
+import { Redirect } from 'react-router-dom';
 
-import MesoboardBackgroundImg from '../assets/mesoboard_background.jpg'
-import { MesonLogo } from '../components'
+import MesoboardBackgroundImg from '../assets/mesoboard_background.jpg';
+import { MesonLogo } from '../components';
+import { urlPaths } from '../services/urlService';
 
 const AuthWrapper = ({ children, redirectToApp }) => {
   // console.log('redirectToApp', redirectToApp)
 
   return (
     <>
-      {redirectToApp && <Redirect to={'/app/home'} />}
+      {redirectToApp && <Redirect to={urlPaths.home} />}
       {!redirectToApp && (
         <div className='auth'>
           <div className='auth__left'>

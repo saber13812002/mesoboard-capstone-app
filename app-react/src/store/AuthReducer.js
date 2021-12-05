@@ -12,7 +12,7 @@ const AuthReducer = (state, action) => {
 
   switch (type) {
     case types.SET_USER: {
-      const { user_id, first_name, last_name, email, user_type, gender } = payload
+      const { user_id, first_name, last_name, email, user_type, gender, location, employee_id } = payload
       return {
         // ...state,
         userId: user_id,
@@ -21,10 +21,12 @@ const AuthReducer = (state, action) => {
         email,
         userType: user_type,
         gender,
+        location,
+        employeeId: employee_id
       }
     }
     case types.LOGIN: {
-      const { user_id, first_name, last_name, email, user_type, gender, token, exp } = payload
+      const { user_id, first_name, last_name, email, user_type, gender, location, employee_id, token, exp } = payload
       if (token && exp)
         setLocalStorage({ token, exp, userId: user_id })
 
@@ -36,12 +38,20 @@ const AuthReducer = (state, action) => {
         email,
         userType: user_type,
         gender,
+        location,
+        employeeId: employee_id
       }
     }
     case types.VERIFY: {
+      const { permission_type, email, location, employee_id, restaurant_id } = payload;
+      // console.log(permission_type, employee_id, location, restaurant_id)
       return {
         ...state,
-        userType: payload.permission_type
+        userType: permission_type,
+        email,
+        location,
+        employeeId: employee_id,
+        restaurantId: restaurant_id,
       }
     }
     case types.RESET: {

@@ -11,36 +11,23 @@ import { beautifyDate } from '../../../services/scheduleService';
 let columns = [];
 
 const UserPermissionsManager = () => {
+  const [restaurants, setRestaurants] = useState([]);
   const [addingNewPermission, setAddingNewPermission] = useState(false);
   const [users, setUsers] = useState([]);
   const [details, setDetails] = useState({});
 
   useEffect(() => {
-    if (users.length > 0)
-      return; //then don't fetch
-
     columns = [{
       dataField: 'name',
       text: 'Nombre',
       sort: true,
       classes: 'nameTd',
-      // formatter: (name, data) => <>{name && <p className='name' onClick={() => setDetails(data)}>{name}</p>}</>
       formatter: (name, data) => {
-        console.log('data', data);
-
+        // console.log('data', data);
         if (data.creation_date)
           return <>{name && <p className='name' onClick={() => setDetails(data)}>{name}</p>}</>
         else if (data.last_update)
           return <p className='name permissionName'>{'N/A'}</p>
-
-
-        // let nameToDisplay
-        // if (data.creation_date && name)
-        //   nameToDisplay = name;
-        // else if (data.last_update)
-        //   nameToDisplay = 'N/A';
-
-        // return <p className='name' onClick={() => setDetails(data)}>{nameToDisplay}</p>
       }
 
     }, {
@@ -57,14 +44,16 @@ const UserPermissionsManager = () => {
       sort: true,
     }];
 
-    const getAllUsers = () => {
-      axios.get(server.getAllUsersAndPermissions()).then(res => {
-        console.log('res.data.data', res.data.data)
-        setUsers(res.data.data)
-      })
-    }
-    getAllUsers()
-  }, [])
+    axios.get(server.getAllUsersAndPermissions()).then(res => {
+      console.log('res.data.data', res.data.data)
+      setUsers(res.data.data)
+    })
+
+    axios.get(server.getAllRestaurants()).then(res => {
+      console.log('res.data', res.data.restaurants)
+      setRestaurants(res.data.restaurants)
+    })
+  }, [addingNewPermission])
 
 
   const defaultSorted = [{
@@ -75,34 +64,32 @@ const UserPermissionsManager = () => {
 
   return (
     <>
-
-      {(Object.keys(details).length > 0) ?
+      {(Object.keys(details).length > 0 && restaurants.length > 0) ?
         <EntityDetails details={details} onBack={() => setDetails({})} />
-        : (
-          <>
-            {addingNewPermission && <AddPermission onBack={() => setAddingNewPermission(false)} />}
-            {!addingNewPermission && (<>
-              {(users.length > 0) &&
-                <div className='userPermissionsManager'>
-                  <BootstrapTable responsive bootstrap4 bordered={false} keyField='email'
-                    defaultSorted={defaultSorted}
-                    data={users}
-                    columns={columns}
+        : <>
+          {addingNewPermission && <AddPermission onBack={() => setAddingNewPermission(false)} restaurants={restaurants} />}
+          {!addingNewPermission && (<>
+            {(users.length > 0) &&
+              <div className='userPermissionsManager'>
+                <BootstrapTable responsive bootstrap4 bordered={false} keyField='email'
+                  defaultSorted={defaultSorted}
+                  data={users}
+                  columns={columns}
+                />
+                <div style={{ marginTop: '-40px' }}>
+                  <MButton
+                    onClick={() => setAddingNewPermission(true)}
+                    IconComponent={iconComponents.Plus}
+                    iconSize='sm'
+                    text='Nuevo Permiso'
+                    variant='primary'
+                    size='sm'
+                    className='ml-4'
                   />
-                  <div style={{ marginTop: '-40px' }}>
-                    <MButton
-                      onClick={() => setAddingNewPermission(true)}
-                      IconComponent={iconComponents.Plus}
-                      iconSize='sm'
-                      text='Nuevo Permiso'
-                      variant='primary'
-                      size='sm'
-                      className='ml-4'
-                    />
-                  </div>
-                </div>}
-            </>)}
+                </div>
+              </div>}
           </>)}
+        </>}
     </>
   )
 }

@@ -3,11 +3,12 @@ import './ProfileSection.css';
 import { Icon, iconComponents } from '../../components';
 import { AuthContext } from '../../store';
 import { ProfileCard } from '..';
+import { truncateLocation } from '../../services/authService';
 
 const ProfileSection = ({ profileNameEl, onLogout }) => {
   const [profileCardDimensions, setProfileCardDimensions] = useState({});
-  const { authState } = useContext(AuthContext)
-  const { firstName, lastName } = authState;
+  const { authState } = useContext(AuthContext);
+  const { firstName, lastName, employeeId, location } = authState;
 
   /**
    * Display a card with at least the profile and logout items
@@ -26,7 +27,7 @@ const ProfileSection = ({ profileNameEl, onLogout }) => {
       {Object.keys(profileCardDimensions).length > 0 && (
         <ProfileCard profileCardDimensions={profileCardDimensions} onLogout={onLogout} onHideCard={() => setProfileCardDimensions({})} />
       )}
-      <p>Bienvenido{firstName && <>,</>}</p>
+      <p className='welcome'>Bienvenido{firstName && <>,</>}</p>
       <div className='profileSection__clickableName' onMouseEnter={showProfileCard}>
         {firstName && <>
           <p>{firstName} {lastName}</p>
@@ -40,6 +41,12 @@ const ProfileSection = ({ profileNameEl, onLogout }) => {
           </div>
         </>}
       </div>
+      {employeeId && (
+        <p>ID: {employeeId}</p>
+      )}
+      {location && (
+        <p>{truncateLocation(location)}</p>
+      )}
     </div>
   )
 }
