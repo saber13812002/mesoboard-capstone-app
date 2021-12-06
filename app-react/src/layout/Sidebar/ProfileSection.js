@@ -22,15 +22,24 @@ const ProfileSection = ({ profileNameEl, onLogout }) => {
     });
   }
 
-
+  const handlePressingProfileSection = () => {
+    const isAlreadyOpen = Object.keys(profileCardDimensions).length > 0
+    if (isAlreadyOpen) {
+      setProfileCardDimensions({});
+    }
+  }
 
   return (
-    <div className='profileSection' ref={profileNameEl} onMouseLeave={() => setProfileCardDimensions({})}>
+    <div className='profileSection' onMouseLeave={() => setProfileCardDimensions({})} >
       {Object.keys(profileCardDimensions).length > 0 && (
-        <ProfileCard profileCardDimensions={profileCardDimensions} onLogout={onLogout} onHideCard={() => setProfileCardDimensions({})} />
+        <ProfileCard cardDimensions={profileCardDimensions} onLogout={onLogout} onHideCard={() => setProfileCardDimensions({})} />
       )}
       <p className='welcome'>Bienvenido{firstName && <>,</>}</p>
-      <div className='profileSection__clickableName' onMouseEnter={showProfileCard}>
+      <div className='profileSection__clickableName'
+        ref={profileNameEl}
+        onMouseEnter={showProfileCard}
+        onClick={handlePressingProfileSection}
+      >
         {firstName && <>
           <p>{firstName} {lastName}</p>
           <div className='profileSection__icon'>

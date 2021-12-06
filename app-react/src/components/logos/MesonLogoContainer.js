@@ -6,7 +6,7 @@ const MesonLogoContainer = () => {
   return (
     <div className='mesonIconContainer__logoGrandparentContainer'>
       <div className='mesonIconContainer__logoParentContainer'>
-        <div className='mesonIconContainer__logoContainer'>
+        <div className='mesonIconContainer__logoContainer user-select-none'>
           <MesonLogo height={50} />
         </div>
       </div>

@@ -7,7 +7,15 @@
   margin: 0;
   padding: 0;
 }
-code { font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',monospace }
+code { font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace }
+
+.user-select-none {
+  user-select: none; /* supported by Chrome and Opera */
+   -webkit-user-select: none; /* Safari */
+   -khtml-user-select: none; /* Konqueror HTML */
+   -moz-user-select: none; /* Firefox */
+   -ms-user-select: none; /* Internet Explorer/Edge */
+}
 
 ul {
   padding: 0 !important;
@@ -57,6 +65,24 @@ input[type=number] {/* Firefox */
   border: 1px solid #ccc;
   box-shadow: 2px 2px 6px 0px  rgba(0,0,0,0.3);
 } 
+
+.cardItemContainer { margin: 0 -1px }
+.cardItemContainer:hover {
+  background: #E4E4E4;
+  cursor: pointer;
+}
+
+/* .cardItem {
+  white-space: nowrap;
+  margin: 4px 0;
+  padding-left: 8%;
+  display: flex;
+  align-items: center;
+}
+
+.cardItem > svg {
+  margin-right: 8px;
+} */
 
 /* forms */
 .form-control {

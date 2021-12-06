@@ -1,8 +1,9 @@
 const auth = require('../controllers/authentication');
 const tokens = require('../controllers/tokens');
-// const mailer = require('../controllers/mailer');
-const messenger = require('../controllers/messenger');
+const mailer = require('../controllers/mailer');
+// const messenger = require('../controllers/messenger');
 const security = require('../controllers/security');
+const notification = require('../controllers/notification');
 
 // tokens.removeExpiredTokens
 module.exports = app => {
@@ -13,8 +14,8 @@ module.exports = app => {
     .get(tokens.expireUserTokens);
 
   app.route('/api/auth/signup')
-    .post(auth.createUser, tokens.addToken, /*messenger.sendVerificationCode*/); //send message code MW only purpose is to end response, for now
-  // .post(auth.createUser, tokens.addToken, mailer.sendVerificationEmail);
+    // .post(auth.createUser, tokens.addToken, notification.notifyUserGotRegistered, mailer.sendVerificationEmail /*messenger.sendVerificationCode*/);
+    .post(auth.createUser, tokens.addToken, notification.notifyUserGotRegistered, mailer.sendVerificationEmail /*messenger.sendVerificationCode*/);
 
   app.route('/protected/auth/restaurant/all')
     .get(security.isAdminOrManager, auth.getAllRestaurants)

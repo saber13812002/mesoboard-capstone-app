@@ -101,7 +101,7 @@ const AddPermission = ({ onBack, restaurants }) => {
       axios.post(server.addPermission(), { email, permission_type, code: tempCode, restaurant_id, employee_id, is_assistant_manager: isAssistantManager })
     }
     addPermissionFetch();
-    onBack();
+    // setTimeout(() => onBack(), 900)
     e.preventDefault();
   }
 

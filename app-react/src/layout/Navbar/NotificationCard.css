@@ -1,0 +1,41 @@
+.notificationCard {
+  position: absolute;
+  width: 200px;
+  padding: 4px;
+}
+
+.notificationCard > .card {
+  padding-top: 8px;
+  /* padding: 8px 0 0; */
+}
+
+.notificationCard > .card > span {
+  padding-left: 12px;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+
+.notificationCard > .card > section {
+  /* height: 400px; */
+  max-height: 400px;
+  overflow: hidden auto;
+  margin: -1px;
+}
+
+.notificationCard > .card > section > .cardItemContainer > .cardItem {
+  font-size: 12px;
+  padding: 4px 0;
+  padding-left: 12px;
+  align-items: center;
+  border-top: 1px solid #D8D8D8;
+  cursor: initial;
+}
+
+.notificationCard > .card > section > .cardItemContainer > .cardItem > p {
+  margin: 0;
+  /* display: inline; */
+}
+
+/* .notificationCard > .card > .cardItemContainer > .cardItem > svg {
+  margin-right: 8px;
+} */
