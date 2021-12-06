@@ -12,18 +12,27 @@ const TurnsTable = ({ turns, onAddNewTurn, addingNewTurn, onSaveTurn, onCancel, 
   // const [selectTimeLunch, setSelectTimeLunch] = useState(14400)
   const [selectTimeEnd, setSelectTimeEnd] = useState(43200)  //represents 12:00 PM
   const [selectTimeLunch, setSelectTimeLunch] = useState(36000) //represents 10:AM
+  const [isStartDuplicate,setIsStartDuplicate] = useState(false)
+  const [isEndDuplicate,setIsEndDuplicate] = useState(false)
+  const [isLunchDuplicate,setIsLunchDuplicate] = useState(false)
   const handleSelectTimeStart = (e) => {
     const time = e / (3600)
+    const bol = turns.some(l => l.timeStart == timeFromInt(e, { format: 12, leadingZero: false }))
+    setIsStartDuplicate(bol)
     setSelectTimeStart(e)
     // console.log(e, time)
   }
   const handleSelectTimeEnd = (e) => {
     // const time = e / (3600)
+    const bol = turns.some(l => l.timeEnd == timeFromInt(e, { format: 12, leadingZero: false }))
+    setIsEndDuplicate(bol)
     setSelectTimeEnd(e)
     // console.log(e, time)
   }
   const handleSelectTimeLunch = (e) => {
     // const time = e / (3600)
+    const bol = turns.some(l => l.timeLunch == timeFromInt(e, { format: 12, leadingZero: false }))
+    setIsLunchDuplicate(bol)
     setSelectTimeLunch(e)
     // console.log(e, time)
   }
@@ -74,13 +83,13 @@ const TurnsTable = ({ turns, onAddNewTurn, addingNewTurn, onSaveTurn, onCancel, 
                     <td><TimePicker start={timeFromInt(selectTimeStart+(2 * 3600))} end="24:00" step={30} onChange={handleSelectTimeEnd} value={selectTimeEnd} /></td>
                     <td><TimePicker start={timeFromInt(selectTimeStart+(30*60))} end={timeFromInt(selectTimeEnd-(30*60))} step={30} onChange={handleSelectTimeLunch} value={selectTimeLunch} /></td>
                     <td className='text-center align-middle' onClick={() => onSaveTurn(selectTimeStart, selectTimeEnd, selectTimeLunch)}>
-                      <IIcon
+                    {!isStartDuplicate&& !isEndDuplicate&& !isLunchDuplicate && <IIcon
                         name='checkmark'
                         width={14}
                         height={14}
                         color='primary'
                       // onClick={() => onSaveTurn(selectTimeStart, selectTimeEnd, selectTimeLunch)}
-                      />
+                      />}
                     </td>
                   </tr>
                 )}

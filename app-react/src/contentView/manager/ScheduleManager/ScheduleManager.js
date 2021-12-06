@@ -17,8 +17,7 @@ import {
 } from "../../../services/scheduleService";
 import Papa from "papaparse";
 import XLSX from 'xlsx';
-//import Template from '../../../assets/Meson-Template.xlsx'
-import fileDownload from 'js-file-download'
+
 const m1 = moment();
 const m2 = moment();
 const sunday = m1.clone().startOf("week");
@@ -411,22 +410,21 @@ const ScheduleManager = () => {
     const downloadFile = () => {
       const link = document.createElement('a');
       link.href = `https://docs.google.com/spreadsheets/d/1zRWaJetJ-djrgXZpF-i-YuP-mN2ghdgG/edit?usp=sharing&ouid=104534025623240640660&rtpof=true&sd=true`;
-      link.setAttribute("download", 'test.xlsx');
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
     }
   const handleFileExport = () => {
     const data = users.map((user) => [user.userId, user.name, user.email]);
-    const fields = ["id", "name", "email"];
+    const fields = ["id", "name", "email","dateStart"];
     const csv = Papa.unparse({
       data,
       fields,
     });
     console.log("users", users);
     console.log("csv", csv);
-    const blob = new Blob([csv], { type: "text/xls;charset=utf-8;" });
-    const exportFilename = "download.xls";
+    const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+    const exportFilename = "download.csv";
     //const a = document.createElement('a');
     if (navigator.msSaveBlob) {
       navigator.msSaveBlob(blob, exportFilename);
@@ -500,6 +498,7 @@ const ScheduleManager = () => {
                 size="lg"
                 color="primary"
                 className="mt-1"
+                onClick={handleFileExport}
               />
             </div>
           </div>
