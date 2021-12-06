@@ -26,9 +26,8 @@ const UserPermissionsManager = () => {
         if (data.creation_date)
           return <>{name && <p className='name' onClick={() => setDetails(data)}>{name}</p>}</>
         else if (data.last_update)
-          return <p className='name permissionName'>{'N/A'}</p>
+          return <p className='name permissionName user-select-none'>{'N/A'}</p>
       }
-
     }, {
       dataField: 'email',
       text: 'Correo Electronico'

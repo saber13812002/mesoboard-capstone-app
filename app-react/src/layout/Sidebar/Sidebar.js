@@ -24,7 +24,7 @@ const Sidebar = () => {
   const [sidebarItems, setSidebarItems] = useState([]);
   // const [profileCardPos, setProfileCardPos] = useState({});
   // const [displayProfileCard, setDisplayProfileCard] = useState(false)
-  let profileNameEl = useRef(null);
+  const profileNameEl = useRef(null);
   const { authState, logout } = useContext(AuthContext);
   const { userType } = authState;
 
@@ -43,16 +43,14 @@ const Sidebar = () => {
         memosItem.setNext(permissionsItem);
         break;
       case 'admin':
-        scheduleItem.setNext(profilesItem);
         memosItem.setNext(permissionsItem);
         break;
       case 'manager':
-        scheduleItem.setNext(profilesItem);
         memosItem.setNext(permissionsItem);
       default:
         homeItem.setNext(scheduleItem);
         break;
-      
+
     }
     setSidebarItems(homeItem.toArray());
   }, [userType]);

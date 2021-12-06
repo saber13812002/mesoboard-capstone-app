@@ -52,4 +52,8 @@ export const userTypeObj = {
   }
 }
 
+
+// should be in a generalService.js file
 export const truncateLocation = l => (l.length < 26) ? l : l.substr(0, 24) + '...'
+
+export const truncateNotificationText = s => (s.length < 52) ? s : s.substr(0, 52) + '...'

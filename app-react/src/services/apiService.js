@@ -26,6 +26,9 @@ class UrlConstants {
   // static ALL_EMPLOYEES = 'employee/all';
   static USERS_WITH_SCHEDULE = 'profiles/schedule/all/<schedule_id>'
   static USER_WITH_SCHEDULE = 'profiles/schedule/<user_id>/<schedule_id>'
+  static ALL_NOTIFICATIONS = 'notification/all'
+  static ALL_UNSEEN_NOTIFICATIONS = 'notification/unseen'
+  static MARK_NOTIFICATIONS_AS_SEEN = 'notification/markAllAsSeen'
 }
 
 export class ServerRoutes {
@@ -82,9 +85,9 @@ export class ServerRoutes {
   }
 
   // PROFILES
-  static getAllEmployees() {
-    return UrlConstants.PROTECTED + UrlConstants.ALL_EMPLOYEES;
-  }
+  // static getAllEmployees() {
+  //   return UrlConstants.PROTECTED + UrlConstants.ALL_EMPLOYEES;
+  // }
   static getUsersWithSchedule(schedule_id) {
     return UrlConstants.PROTECTED + UrlConstants.USERS_WITH_SCHEDULE.replace('<schedule_id>', schedule_id)
   }
@@ -92,5 +95,16 @@ export class ServerRoutes {
     return UrlConstants.PROTECTED + UrlConstants.USER_WITH_SCHEDULE
       .replace('<user_id>', user_id)
       .replace('<schedule_id>', schedule_id);
+  }
+
+  // NOTIFICATIONS
+  static getAllNotifications() {
+    return UrlConstants.PROTECTED + UrlConstants.ALL_NOTIFICATIONS;
+  }
+  static getAllUnseenNotifications() {
+    return UrlConstants.PROTECTED + UrlConstants.ALL_UNSEEN_NOTIFICATIONS;
+  }
+  static markNotificationsAsSeen() {
+    return UrlConstants.PROTECTED + UrlConstants.MARK_NOTIFICATIONS_AS_SEEN;
   }
 }

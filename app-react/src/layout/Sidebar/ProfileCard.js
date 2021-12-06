@@ -1,8 +1,8 @@
-import { Icon, iconComponents } from '../../components';
 import './ProfileCard.css';
+import { Icon, iconComponents } from '../../components';
 
-const ProfileCard = ({ profileCardDimensions, onHideCard, onLogout }) => {
-  // console.log('profileCardDimensions', profileCardDimensions);
+const ProfileCard = ({ cardDimensions, onHideCard, onLogout }) => {
+  // console.log('cardDimensions', cardDimensions);
   const cardItems = [{
     IconComponent: iconComponents.Person,
     text: 'Perfil',
@@ -15,7 +15,7 @@ const ProfileCard = ({ profileCardDimensions, onHideCard, onLogout }) => {
   return (
     <div
       className='profileCard'
-      style={{ top: profileCardDimensions.top + 'px', left: profileCardDimensions.left + 'px', width: profileCardDimensions.width + 'px' }}
+      style={{ top: cardDimensions.top + 'px', left: cardDimensions.left + 'px', width: cardDimensions.width + 'px' }}
       onMouseLeave={onHideCard}
     >
       <div className='card'>

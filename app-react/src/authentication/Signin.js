@@ -27,9 +27,9 @@ const Signin = () => {
     <AuthWrapper redirectToApp={redirectToApp}>
       <h2 style={{ color: '#287F4E', textAlign: 'center' }}>Iniciar Sesión</h2>
       <Form onSubmit={handleSignin}>
-        <Form.Control className='mt-4' size="lg" type="text" placeholder="Correo electrónico" />
-        <Form.Control className='mt-3' size="lg" type="text" placeholder="Contraseña" />
-        <Button type="submit" variant="primary" className="w-100 mt-3">
+        <Form.Control className='mt-4' type='text' placeholder='Correo electrónico' />
+        <Form.Control className='mt-3' type='text' placeholder='Contraseña' />
+        <Button type='submit' variant='primary' className='w-100 mt-3'>
           Iniciar
         </Button>
       </Form>
