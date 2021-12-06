@@ -6,13 +6,12 @@ import TimePicker from 'react-bootstrap-time-picker';
 import { timeFromInt } from 'time-number';
 
 
-const TurnsTable = ({ turns, onAddNewTurn, addingNewTurn, onSaveTurn, onCancel, deleteTurn }) => {
+const TurnsTable = ({ turns, onAddNewTurn, addingNewTurn, onSaveTurn, onCancel, deleteTurn, isLimit }) => {
   const [selectTimeStart, setSelectTimeStart] = useState(14400) //represents 4:00 AM
   // const [selectTimeEnd, setSelectTimeEnd] = useState(14400)
   // const [selectTimeLunch, setSelectTimeLunch] = useState(14400)
   const [selectTimeEnd, setSelectTimeEnd] = useState(43200)  //represents 12:00 PM
   const [selectTimeLunch, setSelectTimeLunch] = useState(36000) //represents 10:AM
-
   const handleSelectTimeStart = (e) => {
     const time = e / (3600)
     setSelectTimeStart(e)
@@ -110,7 +109,7 @@ const TurnsTable = ({ turns, onAddNewTurn, addingNewTurn, onSaveTurn, onCancel, 
           <p>Create turn hours to manage user schedules</p>
         </div>
       )} */}
-      {!addingNewTurn && <div className='ml-2 pt-2' style={{ marginTop: '-48px' }}>
+      {!isLimit&&!addingNewTurn && <div className='ml-2 pt-2' style={{ marginTop: '-48px' }}>
         <MButton
           onClick={onAddNewTurn}
           IconComponent={iconComponents.Plus}
@@ -120,15 +119,12 @@ const TurnsTable = ({ turns, onAddNewTurn, addingNewTurn, onSaveTurn, onCancel, 
         // style={{ marginTop: '5px', marginLeft: '8px' }}
         />
       </div>}
-      {addingNewTurn && <div className='ml-2 pt-2' style={{ marginTop: '-48px' }}>
+      {!isLimit &&addingNewTurn && <div className='ml-2 pt-2' style={{ marginTop: '-48px' }}>
         <MButton
           onClick={onCancel}
           text='Cancel'
           variant='light'
           size='sm'
-
-        // style={{ marginTop: '-48px' }}
-        // style={{ marginTop: '5px', marginLeft: '8px' }}
         />
       </div>}
 

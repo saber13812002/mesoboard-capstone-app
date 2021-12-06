@@ -6,8 +6,8 @@ import { Modal } from '../..'
 import { Icon, iconComponents, MButton } from '../..'
 import { ScheduleHoursBox } from '../../../contentView'
 import { getDayName, beautifyDate, get24HourFormatOfTime, toISOYearFormat } from '../../../services/scheduleService'
-import Dropdown from 'react-dropdown';
 import 'react-dropdown/style.css';
+import Select from 'react-select'
 
 const ScheduleEdit = ({ user, turns, dateStart, dateEnd, mCurrent, onSaveChanges, onCloseScheduleEdit }) => {
   const deepCopy = JSON.parse(JSON.stringify(user))
@@ -16,10 +16,15 @@ const ScheduleEdit = ({ user, turns, dateStart, dateEnd, mCurrent, onSaveChanges
   const [userOriginal] = useState(deepCopy2)
   const [isSameData, setIsSameData] = useState(true)
   // const [selectedTurnIndex, setSelectedTurnIndex] = useState(undefined)
-
+  const [selectedOption, setSelectedOption] = useState(null);
   const { name, weekDates } = userToEdit;
-  const ids = turns.map(turn => turn.turnIndex)
-
+  const ids = turns.map((turn) => {
+    const res = {'value':turn.turnIndex,'label':turn.turnIndex};
+    return(res)
+  }
+    
+    )
+    console.log('this is ids',ids)
   useEffect(() => {
     setIsSameData(!hasDataChanged())
   }, [userToEdit])
@@ -47,7 +52,8 @@ const ScheduleEdit = ({ user, turns, dateStart, dateEnd, mCurrent, onSaveChanges
    *  @param {Event} e the event containing the input value.
    */
   const updateHours = (day, e) => {
-    console.log(e.value)
+    
+    console.log('e target',e.value)
     //e.target.value
     const turnId = e.value;
     if (!turnId || turnId <= 0 || turnId > turns.length)
@@ -165,8 +171,9 @@ const ScheduleEdit = ({ user, turns, dateStart, dateEnd, mCurrent, onSaveChanges
           {weekDates.map((weekDate, day) => {
             if (weekDate) {
               const turnIndex = getTurnIndexByTurnId(weekDate.turnId);
+              
               console.log('turnIndex', turnIndex);
-
+              
               return (
                 <div key={day} className='scheduleEdit__row w-100 mt-2'>
                   <Icon
@@ -176,11 +183,11 @@ const ScheduleEdit = ({ user, turns, dateStart, dateEnd, mCurrent, onSaveChanges
                     onClick={() => removeWeekDateFromUser(day)}
                   />
                   <h4>{getDayName(day)}</h4>
-                  {<Dropdown
-                    value={turnIndex}
+                  {<Select
+                    defaultValue={selectedOption}
                     options={ids}
-                    onChange={(e) => updateHours(day, e)}
-                  // placeholder={'9'}
+                    onChange={(e) => {updateHours(day, e);setSelectedOption(e.value)}}
+                    placeholder={turnIndex}
                   />}
                   <ScheduleHoursBox isHourLunch={userToEdit.isHourLunch} weekDate={weekDate} showLunchMins={true} />
                 </div>

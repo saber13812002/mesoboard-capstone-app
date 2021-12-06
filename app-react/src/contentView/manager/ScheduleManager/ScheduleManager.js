@@ -16,7 +16,9 @@ import {
   calculateTotalHours,
 } from "../../../services/scheduleService";
 import Papa from "papaparse";
-
+import XLSX from 'xlsx';
+//import Template from '../../../assets/Meson-Template.xlsx'
+import fileDownload from 'js-file-download'
 const m1 = moment();
 const m2 = moment();
 const sunday = m1.clone().startOf("week");
@@ -65,7 +67,7 @@ const ScheduleManager = () => {
   const [turns, setTurns] = useState([]); // the turns of this manager entity
   const [addingNewTurn, setAddingNewTurn] = useState(false); // determines if a turn is being added
   const [newTurn, setNewTurn] = useState({ turnId: -1, timeStart: undefined }); // the new turn being created
-
+  const [isLimit,setIsLimit] = useState(false)
   // context
   const { authState } = useContext(AuthContext);
 
@@ -281,7 +283,9 @@ const ScheduleManager = () => {
       });
 
       setAddingNewTurn(false);
+      checkLimit(turnClone)
       return turnClone;
+      
     });
   };
 
@@ -293,13 +297,17 @@ const ScheduleManager = () => {
       let turnClone = [...prev];
       turnClone.splice(turnId - 1, 1);
       turnClone.forEach((turn, i) => (turn.turnIndex = i + 1));
+      checkLimit(turnClone)
       return turnClone;
     });
+    
+
   };
   const removeAddedTurn = () => {
     turns.pop();
     setTurns(turns);
     setAddingNewTurn(false);
+
   };
 
   const addNewTurn = () => {
@@ -319,7 +327,14 @@ const ScheduleManager = () => {
     ]);
     setAddingNewTurn(true);
   };
-
+  const checkLimit = (turnClone) =>{
+    if(turnClone.length > 19){
+      setIsLimit(true)
+    }
+    else{
+      setIsLimit(false)
+    }
+  }
   /************************************************/
   /*           Schedule Edit Functions            */
   /************************************************/
@@ -347,20 +362,60 @@ const ScheduleManager = () => {
     setUserToEdit(emp);
   };
   const handleFileUpload = (e) => {
-    console.log("e.target", e.target);
     const files = e.target.files;
-    console.log(files);
-    if (files) {
-      console.log("files[0]", files[0]);
-      Papa.parse(files[0], {
-        complete: (results) => {
-          console.log("Finished:", results.data);
-        },
-      });
+    //console.log(files);
+    const reader =  new FileReader();
+    reader.readAsArrayBuffer(files[0]);
+    reader.onload = (e) => {
+    
+      // upload file
+      const binarystr = new Uint8Array(e.target.result);
+      const wb = XLSX.read(binarystr, { type: 'array', raw: true, cellFormula: false });
+      //console.log(wb.Sheets)
+
+      const wsname = wb.SheetNames[0];
+      const data = XLSX.utils.sheet_to_json(wb.Sheets[wsname], {header: 10, range: 10});
+      //parse data into user array
+      
+    const res=[]
+    for(var i = 0; i < data.length; i++) {
+      const a = {name:"",last:"",weekDates:[],isLunchHour:true};
+      
+      if(i%3==2){
+      a.name = data[i-2].nombre
+      a.last = data[i-1].apellido
+      if(data[i].HoraAlmuerzo==='NO'){a.isLunchHour=false}
+      let Sdates = data[i-2]
+      let Edates = data[i-1]
+      let Ldates = data[i]
+      for(let key in Sdates) {
+        //console.log(key, test[key]);
+        if(key === 'nombre'|| key==='apellido'||key ==='HoraAlmuerzo'){}
+        else{
+         const Shour = timeFromInt(Sdates[key]*24* 3600,{ format: 12 })
+         const Ehour = timeFromInt((Edates[key]*24)* 3600,{ format: 12 })
+         const Lhour = timeFromInt(Ldates[key]*24* 3600,{ format: 12 })
+          a.weekDates.push( {'date':key,'start':Shour,'end':Ehour,'lunch':Lhour})
+          console.log(timeFromInt(23400))
+        }
+    };
+      res.push(a) 
+      }
     }
+    console.log('Import data:',res)
+  
   };
 
+}
 
+    const downloadFile = () => {
+      const link = document.createElement('a');
+      link.href = `https://docs.google.com/spreadsheets/d/1zRWaJetJ-djrgXZpF-i-YuP-mN2ghdgG/edit?usp=sharing&ouid=104534025623240640660&rtpof=true&sd=true`;
+      link.setAttribute("download", 'test.xlsx');
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
   const handleFileExport = () => {
     const data = users.map((user) => [user.userId, user.name, user.email]);
     const fields = ["id", "name", "email"];
@@ -370,8 +425,8 @@ const ScheduleManager = () => {
     });
     console.log("users", users);
     console.log("csv", csv);
-    const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
-    const exportFilename = "download.csv";
+    const blob = new Blob([csv], { type: "text/xls;charset=utf-8;" });
+    const exportFilename = "download.xls";
     //const a = document.createElement('a');
     if (navigator.msSaveBlob) {
       navigator.msSaveBlob(blob, exportFilename);
@@ -436,17 +491,9 @@ const ScheduleManager = () => {
                 IconComponent={iconComponents.Download}
                 iconSize="sm"
                 iconColor="dark"
-                onClick={handleFileExport}
+                onClick={downloadFile}
+                
               />
-              {/* <MButton
-                className="mr-2"
-                text="Import CSV"
-                variant="secondary"
-                size="sm"
-                IconComponent={iconComponents.Upload}
-                iconSize="sm"
-                iconColor="dark"
-              /> */}
 
               <Icon
                 IconComponent={iconComponents.Download}
@@ -473,6 +520,7 @@ const ScheduleManager = () => {
             onSaveTurn={saveTurn}
             onCancel={removeAddedTurn}
             deleteTurn={deleteTurn}
+            isLimit={isLimit}
           />
 
           {/* section for the ScheduleEditModal portal component */}
