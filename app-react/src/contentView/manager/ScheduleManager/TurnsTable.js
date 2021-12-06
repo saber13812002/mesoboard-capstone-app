@@ -110,7 +110,7 @@ const TurnsTable = ({ turns, onAddNewTurn, addingNewTurn, onSaveTurn, onCancel, 
           <p>Create turn hours to manage user schedules</p>
         </div>
       )} */}
-      {!addingNewTurn && <div className='ml-2 pt-2' style={{ marginTop: '-48px' }}>
+      {!addingNewTurn && <div className='ml-2 pt-1' style={{ marginTop: '-48px' }}>
         <MButton
           onClick={onAddNewTurn}
           IconComponent={iconComponents.Plus}
@@ -120,18 +120,16 @@ const TurnsTable = ({ turns, onAddNewTurn, addingNewTurn, onSaveTurn, onCancel, 
         // style={{ marginTop: '5px', marginLeft: '8px' }}
         />
       </div>}
-      {addingNewTurn && <div className='ml-2 pt-2' style={{ marginTop: '-48px' }}>
+      {addingNewTurn && <div className='ml-2 pt-1' style={{ marginTop: '-48px' }}>
         <MButton
           onClick={onCancel}
           text='Cancel'
           variant='light'
           size='sm'
-
         // style={{ marginTop: '-48px' }}
         // style={{ marginTop: '5px', marginLeft: '8px' }}
         />
       </div>}
-
     </div>
   )
 }

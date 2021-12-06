@@ -14,7 +14,7 @@ import './MButton.css'
  * - style
  * - onClick
  */
-const MButton = ({ type, text = '', variant = 'primary', size = 'md', IconComponent, iconColor = 'white', className, style, onClick }) => {
+const MButton = ({ type, text = '', variant = 'primary', size = 'md', IconComponent, iconColor = 'white', className, style, ref, disabled = false, onClick }) => {
   let onMouseEnterIconColor = 'white'
   let onMouseEnterTextColor = ''
   let textColor = ''
@@ -49,7 +49,7 @@ const MButton = ({ type, text = '', variant = 'primary', size = 'md', IconCompon
 
   return (
     <Button
-      style={{ zIndex: '100' }}
+      style={{ zIndex: '1000' }}
       variant={variant}
       size={size}
       onClick={onClick}
@@ -60,6 +60,8 @@ const MButton = ({ type, text = '', variant = 'primary', size = 'md', IconCompon
       // onMouseEnter={() => setIconColorState(onMouseEnterIconColor)}
       // onMouseLeave={() => setIconColorState(originalIconColor)}
       onMouseLeave={() => handleMouseLeave()}
+      ref={ref}
+      disabled={disabled}
     >
       {
         IconComponent
@@ -70,6 +72,7 @@ const MButton = ({ type, text = '', variant = 'primary', size = 'md', IconCompon
               color={iconColorState}
               isButtonIcon={true}
               className='mr-1'
+              style={{ marginBottom: '-2px' }}
             />
             <span style={{ color: textColorState }}>{text}</span>
           </div>

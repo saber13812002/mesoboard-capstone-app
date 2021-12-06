@@ -1,5 +1,5 @@
 import './ScheduleButtons.css'
-import { useState, useEffect, useContext } from "react";
+import { useState, useEffect, useContext, useRef } from "react";
 import axios from "axios";
 import moment from "moment";
 import { AuthContext } from "../../../store";
@@ -68,6 +68,10 @@ const ScheduleManager = () => {
 
   // context
   const { authState } = useContext(AuthContext);
+
+  // others
+  const [amountMailsSend, setAmountMailsSend] = useState(0);
+  const sendMailButtonEl = useRef(null);
 
   /** Initializing the manager TURNS once. */
   const userId = authState.userId;
@@ -222,6 +226,11 @@ const ScheduleManager = () => {
     }
   };
 
+  // const mailSchedule = () => {
+  //   const schedule_id = getScheduleIdOfMoment(mWeekStart);
+  //   axios.post(server.mailSchedule(), { schedule_id });
+  // }
+
   /************************************************/
   /*           Schedule Turns Functions           */
   /************************************************/
@@ -347,12 +356,16 @@ const ScheduleManager = () => {
     setEditingUser(false);
   };
 
-
   const saveScheduleOfUser = (emp) => {
     console.log('emp', emp)
     setEditingUser(false);
     setUserToEdit(emp);
   };
+
+
+  /************************************************/
+  /*           Import/Export Functions            */
+  /************************************************/
 
 
   const handleFileUpload = (e) => {
@@ -462,6 +475,9 @@ const ScheduleManager = () => {
               onOpenScheduleEdit={openScheduleEdit}
               onOpenScheduleDetails={openScheduleDetails}
               isEditable={turns.length > 0 && turns[0].turnIndex > 0}
+            // onMailSchedule={mailSchedule}
+            // amountMailsSend={amountMailsSend}
+            // ref={sendMailButtonEl}
             />
           </section>
 

@@ -101,3 +101,11 @@ exports.sendRegisterInvitationEmail = (req, res, next) => {
   mailer.sendMail('Invitation email sent and permission added');
   // Added permission credentials of type ${type} with provisional code ${code} to ${email} successfully
 };
+
+exports.sendScheduleMail = (req, res, next) => {
+  const schedule_id = req.body.schedule_id;
+
+  console.log('schedule_id', schedule_id);
+
+  res.end();
+}

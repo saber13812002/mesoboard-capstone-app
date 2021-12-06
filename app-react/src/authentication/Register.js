@@ -105,17 +105,9 @@ const Register = ({ cachedEmail, cachedCode, onCancel, onRegister }) => {
           <Button onClick={() => onCancel(cachedEmail, cachedCode)} variant='light' className='w-100 mr-3'>
             Cancel
           </Button>
-          {isDataValid ? (
-            <Button type='submit' variant='primary' className='w-100'>
-              Registrarse
-            </Button>
-          ) : (
-            <Button
-              disabled={true}
-              variant='primary'
-              className='w-100'
-            >Registrarse</Button>
-          )}
+          <Button type='submit' variant='primary' className='w-100' disabled={!isDataValid}>
+            Registrarse
+          </Button>
         </div>
       </Form>
     </>

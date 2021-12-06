@@ -1,7 +1,6 @@
-import { useState, useEffect } from 'react'
-import Button from 'react-bootstrap/Button'
 import './ScheduleEdit.css'
 import classes from './ScheduleEditModal.module.css'
+import { useState, useEffect } from 'react'
 import { Modal } from '../..'
 import { Icon, iconComponents, MButton } from '../..'
 import { ScheduleHoursBox } from '../../../contentView'
@@ -182,20 +181,13 @@ const ScheduleEdit = ({ user, turns, dateStart, dateEnd, mCurrent, onSaveChanges
           <input type="checkbox" onChange={(e) => updateLunch(e)} checked={userToEdit.isHourLunch} />
           <span className='ml-1'>1 hora de almuerzo</span>
         </label>
-        {isSameData ? (
-          <Button
-            disabled={true}
-            className='w-100 mt-4'
-            variant='primary'
-          >Guardar Cambios</Button>
-        ) : (
-          <MButton
-            className='w-100 mt-4'
-            text='Guardar Cambios'
-            variant='primary'
-            onClick={() => onSaveChanges(userToEdit)}
-          />
-        )}
+        <MButton
+          className='w-100 mt-4'
+          text='Guardar Cambios'
+          variant='primary'
+          onClick={() => onSaveChanges(userToEdit)}
+          disabled={isSameData}
+        />
       </div>
     </Modal>
   )

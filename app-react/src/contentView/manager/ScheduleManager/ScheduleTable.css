@@ -3,10 +3,12 @@
   background: white;
   /* padding: 40px 0 55px; */
   /* margin-top: -40px; */
+  /* padding-bottom: 55px; */
 }
 
 .table-responsive > .scheduleTable__table {
   margin: 0;
+  /* padding */
 }
 
 .table-responsive > .scheduleTable__table > tbody {

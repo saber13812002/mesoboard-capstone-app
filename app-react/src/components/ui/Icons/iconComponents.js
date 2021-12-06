@@ -1,6 +1,9 @@
 /**  ai   **/
 import { AiOutlineUserAdd } from 'react-icons/ai'; //------------------
 
+/**  bi   **/
+import { BiMailSend } from 'react-icons/bi'; //------------------
+
 /**   bs   **/
 import { BsCaretDownFill } from 'react-icons/bs';
 import { BsCaretLeft } from 'react-icons/bs';
@@ -77,12 +80,10 @@ const iconComponents = {
   Person: BsPerson,
 
   /******   All Icon   ******/
-  UserAdd: AiOutlineUserAdd,
   Bell: FaBell,
   Bars: FaBars,
-  Pen: FaPencilAlt,
-  PenRuler: FaPencilRuler,
-  Save: FaRegSave,
+  Cancel: MdOutlineCancel,
+  Close: MdClose,
   ChevronLeft: FaChevronLeft,
   ChevronRight: FaChevronRight,
   CaretLeft: BsCaretLeftFill,
@@ -91,15 +92,18 @@ const iconComponents = {
   CaretDown: BsCaretDownFill,
   CaretLeftOutline: BsCaretLeft,
   CaretRightOutline: BsCaretRight,
-  Download: FaDownload,
-  Upload: FaUpload,
-  Csv: GrDocumentCsv,
-  Plus: FaPlus,
-  Close: MdClose,
-  Cancel: MdOutlineCancel,
   CheckMark: FaCheck,
   CheckMarkSquared: FaCheckSquare,
+  Csv: GrDocumentCsv,
+  Download: FaDownload,
+  Pen: FaPencilAlt,
+  PenRuler: FaPencilRuler,
+  Plus: FaPlus,
+  Save: FaRegSave,
+  SendMail: BiMailSend,
   Trash: FaRegTrashAlt,
-  Mail: FiMail
+  Mail: FiMail,
+  Upload: FaUpload,
+  UserAdd: AiOutlineUserAdd,
 }
 export default iconComponents

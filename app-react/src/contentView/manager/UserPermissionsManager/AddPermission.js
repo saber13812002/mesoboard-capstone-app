@@ -1,8 +1,8 @@
-import { useState, useEffect, useContext } from 'react';
 import './AddPermission.css';
-import { MButton } from '../../../components';
-import { Form, Dropdown, DropdownButton, Button } from 'react-bootstrap';
+import { useState, useEffect, useContext } from 'react';
 import axios from 'axios';
+import { MButton } from '../../../components';
+import { Form, Dropdown, DropdownButton } from 'react-bootstrap';
 import { ServerRoutes as server } from '../../../services/apiService';
 import { userTypeObj, truncateLocation } from '../../../services/authService';
 import { AuthContext } from '../../../store';
@@ -161,18 +161,12 @@ const AddPermission = ({ onBack, restaurants }) => {
             className='mr-3'
             variant='light'
           />
-          {isDataValid ? (
-            <MButton
-              type='submit'
-              text='Añadir Permiso'
-              variant='primary'
-            />
-          ) : (
-            <Button
-              disabled={true}
-              variant='primary'
-            >Añadir Permiso</Button>
-          )}
+          <MButton
+            type='submit'
+            text='Añadir Permiso'
+            variant='primary'
+            disabled={!isDataValid}
+          />
         </div>
       </Form>
     </div>

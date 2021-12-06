@@ -11,10 +11,4 @@ module.exports = app => {
 
   app.route('/protected/notification/all')
     .get(notification.getAllUserNotifications);
-
-  // app.route('/protected/notification/:id/sendNotification')
-  //   .post(security.isAdmin, notification.sendNotification);
-
-  // app.route('/protected/notification/new')
-  //     .post(security.isAdmin, notifications.sendNotification);
 };

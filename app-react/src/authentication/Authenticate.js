@@ -118,12 +118,9 @@ const Authenticate = () => {
             onChange={(e) => setCode(e.target.value)}
           />
 
-          {(code.length < minCodeLength) && <Button disabled className='w-100 mt-3'>Verificar</Button>}
-          {(code.length >= minCodeLength) && (
-            <Button type='submit' variant='primary' className='w-100 mt-3'>
-              Verificar
-            </Button>
-          )}
+          <Button type='submit' variant='primary' className='w-100 mt-3' disabled={code.length < minCodeLength}>
+            Verificar
+          </Button>
         </Form>
       )}
       {(userType.length > 0) && (
