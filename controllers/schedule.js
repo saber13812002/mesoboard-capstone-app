@@ -87,7 +87,7 @@ exports.setUserSchedule = async (req, res, next) => {
 
 
 exports.getEmployeeSchedules = async (req, res, next) => {
-  // console.log('getEmployeeSchedules', req.params)
+  console.log('getEmployeeSchedules')
   const schedule_id = req.params.schedule_id;
 
   /*
@@ -112,7 +112,9 @@ exports.getEmployeeSchedules = async (req, res, next) => {
       res.status(200).json({ status: 'success', message: 'No employees yet in the system' })
     else {
       userSchedulesData = scheduleUtils.joinUserSchedulesByUser(userSchedulesData);
-      // console.log('res', userSchedulesData)
+      console.log('res', userSchedulesData)
+      console.log('', userSchedulesData[0].weekDates[0])
+
       res.status(200).json({ userSchedulesData, status: 'success' })
     }
   })

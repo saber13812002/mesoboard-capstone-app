@@ -5,17 +5,12 @@ import { Icon } from '../../components'
 import { sidebarItemNames, setSidebarActiveItemNameByUrlPath } from '../../services/sidebarService'
 
 const SidebarList = ({ sidebarItems }) => {
-  const [activeItemName, setActiveItemName] = useState(sidebarItemNames.home)
+  const [activeItemName, setActiveItemName] = useState(sidebarItemNames.schedule)
   const [hoveredItemName, setHoveredItemName] = useState(undefined)
 
   useEffect(() => {
-    // console.log('sidebarItems', sidebarItems)
     setSidebarActiveItemNameByUrlPath(setActiveItemName)
   }, [])
-
-  const styles = {
-    activeClassName: 'activeClassName'
-  }
 
   return (
     <div className="sidebarList">
@@ -28,7 +23,7 @@ const SidebarList = ({ sidebarItems }) => {
           >
             <NavLink
               to={to}
-              activeClassName={styles.activeClassName}
+              activeClassName='activeClassName'
               onClick={() => setActiveItemName(name)}
             >
               <div className='d-flex align-items-center'>

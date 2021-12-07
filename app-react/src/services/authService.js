@@ -35,17 +35,17 @@ const getExpiration = () => {
 }
 
 export const userTypes = {
-  adminType: {
+  admin: {
     label: 'Administrator',
     value: 'admin',
     // dbValue: 'admin'
   },
-  managerType: {
+  manager: {
     label: 'Supervisor',
     value: 'manager',
     // dbValue: 'manager'
   },
-  employeeType: {
+  employee: {
     label: 'Empleado',
     value: 'employee',
     // dbValue: 'employee'

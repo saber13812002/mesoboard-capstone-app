@@ -73,7 +73,6 @@ const Register = ({ cachedEmail, cachedCode, onCancel, onRegister }) => {
 
   return (
     <>
-      {/* <h3 style={{ color: '#287F4E', textAlign: 'center' }}>Registrando como {userTypes[userType].text}</h3> */}
       <div className='register__headers text-center'>
         <p className='userType'>Registrando como {userTypes[userType].label}</p>
         {location && <p className='restaurant'>{`'${location}'`}</p>}

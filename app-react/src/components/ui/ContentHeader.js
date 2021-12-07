@@ -5,18 +5,12 @@ import { ContentHeaderInfo } from '..'
 
 const ContentHeader = ({ view }) => {
   const [header, setHeader] = useState('')
-  const { home, schedule, profiles, requests, memos, permissions } = urlSlugs;
+  const { schedule, profiles } = urlSlugs;
 
   useEffect(() => {
     switch (view) {
-      case home:
-        setHeader('Inicio'); break;
       case schedule:
         setHeader('Horarios'); break;
-      case requests:
-        setHeader('Solicitudes'); break;
-      case memos:
-        setHeader('Memorandos'); break;
       case profiles:
         setHeader('Perfiles'); break;
       default:

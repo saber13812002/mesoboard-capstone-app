@@ -10,7 +10,7 @@ const AuthWrapper = ({ children, redirectToApp }) => {
 
   return (
     <>
-      {redirectToApp && <Redirect to={urlPaths.home} />}
+      {redirectToApp && <Redirect to={urlPaths.schedule} />}
       {!redirectToApp && (
         <div className='auth'>
           <div className='auth__left'>

@@ -22,7 +22,6 @@ let permissionsItem = new SidebarItem(allLinks.PERMISSIONS);
 
 // variables
 const rootItem = scheduleItem;
-const { managerType, adminType } = userTypes;
 
 const Sidebar = () => {
   const [redirectToSignin, setRedirectToSignin] = useState(isLoggedOut()); //temporary logout HERE
@@ -40,16 +39,13 @@ const Sidebar = () => {
     scheduleItem.setNext(profilesItem)
     // scheduleItem.setNext(requestsItem); //request component is priority to implement
 
-    console.log('userType', userType);
-    console.log('managerType', managerType);
-
     // add items by type of user
     switch (userType) {
-      case managerType.value:
+      case userTypes.manager.value:
         // requestsItem.setNext(profilesItem);
         profilesItem.setNext(permissionsItem);
         break;
-      case adminType.value:
+      case userTypes.admin.value:
         // requestsItem.setNext(profilesItem);
         profilesItem.setNext(permissionsItem);
       default:
@@ -62,12 +58,9 @@ const Sidebar = () => {
   // clear sidebar item next references on dismount
   useEffect(() => {
     if (redirectToSignin)
-      return () => rootItem.clearAll()
+      return () => rootItem.clearAll();
   }, [redirectToSignin]);
 
-  const handleLogout = () => {
-    logout().then(redirect => setRedirectToSignin(redirect));
-  }
 
   return (
     <>
@@ -77,8 +70,13 @@ const Sidebar = () => {
           <div className='sidebar'>
             <MesonLogoContainer />
             <hr />
-            <ProfileSection profileNameEl={profileNameEl} onLogout={handleLogout} />
-            {(sidebarItems.length > 0) && <SidebarList sidebarItems={sidebarItems} />}
+            <ProfileSection
+              profileNameEl={profileNameEl}
+              onLogout={(() => logout().then(redirect => setRedirectToSignin(redirect)))}
+            />
+            {(sidebarItems.length > 0) && (
+              <SidebarList sidebarItems={sidebarItems} />
+            )}
           </div>
         }
       </>}

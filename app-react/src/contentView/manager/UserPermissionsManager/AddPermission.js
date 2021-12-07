@@ -4,21 +4,20 @@ import axios from 'axios';
 import { MButton } from '../../../components';
 import { Form, Dropdown, DropdownButton } from 'react-bootstrap';
 import { ServerRoutes as server } from '../../../services/apiService';
-import { userTypeObj, truncateLocation } from '../../../services/authService';
+import { userTypes, truncateLocation } from '../../../services/authService';
 import { AuthContext } from '../../../store';
 
-const { employee, manager, admin } = userTypeObj;
 
 const permissionTypes = [
   {
     id: 0,
-    label: employee.label,
-    value: employee.value
+    label: userTypes.employee.label,
+    value: userTypes.employee.value
   },
   {
     id: 1,
-    label: manager.label,
-    value: manager.value
+    label: userTypes.manager.label,
+    value: userTypes.manager.value
   }
 ];
 
@@ -35,17 +34,17 @@ const AddPermission = ({ onBack, restaurants }) => {
 
   // dropdown states
   const [selectedRestaurant, setSelectedRestaurant] = useState(initialRestaurantObj);
-  const [selectedPermissionType, setSelectedPermissionType] = useState({ label: employee.label, value: employee.value });
+  const [selectedPermissionType, setSelectedPermissionType] = useState({ label: userTypes.employee.label, value: userTypes.employee.value });
 
   const { authState } = useContext(AuthContext);
   const { userType } = authState;
 
   useEffect(() => {
-    if (userType === userTypeObj.admin.value) {
+    if (userType === userTypes.admin.value) {
       permissionTypes.push({
         id: 2,
-        label: admin.label,
-        value: admin.value
+        label: userTypes.admin.label,
+        value: userTypes.admin.value
       })
     }
   }, [])
@@ -57,7 +56,7 @@ const AddPermission = ({ onBack, restaurants }) => {
 
   const handlePermissionType = id => {
     const permissionType = permissionTypes.find(r => r.id === Number(id));
-    if (permissionType.value === userTypeObj.admin.value)
+    if (permissionType.value === userTypes.admin.value)
       setSelectedRestaurant(initialRestaurantObj); //reset restaurant id validation
     setSelectedPermissionType(permissionType);
   }
@@ -73,7 +72,7 @@ const AddPermission = ({ onBack, restaurants }) => {
 
     // const isValid = email && email.includes('@') && employeeId && tempCode.length >= 6 && permission_type && restaurant_id && true;
     let isValid = email && email.includes('@') && employeeId && tempCode.length >= 6 && permission_type && true;
-    if (permission_type !== userTypeObj.admin.value) {
+    if (permission_type !== userTypes.admin.value) {
       isValid = isValid && restaurant_id
     }
 
@@ -130,7 +129,7 @@ const AddPermission = ({ onBack, restaurants }) => {
           )}
         </DropdownButton>
 
-        {(selectedPermissionType.value === manager.value || selectedPermissionType.value === employee.value) && (
+        {(selectedPermissionType.value === userTypes.manager.value || selectedPermissionType.value === userTypes.employee.value) && (
           <DropdownButton
             title={
               <span style={{ color: (selectedRestaurant.location !== 'Restaurante') ? 'black' : '' }}>
@@ -147,7 +146,7 @@ const AddPermission = ({ onBack, restaurants }) => {
           </DropdownButton>
         )}
 
-        {(selectedPermissionType.value === manager.value) && (
+        {(selectedPermissionType.value === userTypes.manager.value) && (
           <label className='mb-3'>
             <input type="checkbox" onClick={(e) => setIsAssistantManager(e.target.checked)} />
             <span className='ml-1'>¿Es supervisor asistente?</span>

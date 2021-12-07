@@ -1,18 +1,19 @@
-
-
-/* this one is also in ScheduleTable.css */
-/* td.nameTd {
-  width: 160px;
-  text-align: left;
+.profilesManager > .react-bootstrap-table {
+  width: 50%;
 }
 
-td.nameTd > .name {
-  display: inline-block;
-  font-size: 14px;
-  font-weight: 500;
-  background-color: #287f4e1e;
-  border-radius: 30px;
-  padding: 6px 12px;
-  cursor: pointer;
-  margin-bottom: auto;
-} */
+.profilesManager > .react-bootstrap-table > table > thead > tr > th:first-child,
+.profilesManager > .react-bootstrap-table > table > tbody > tr > td:first-child {
+  width: 60%
+}
+
+.profilesManager > .react-bootstrap-table > table > tbody > tr > td {
+  vertical-align: middle;
+}
+
+
+@media only screen and (max-width: 1200px) {
+  .profilesManager > .react-bootstrap-table {
+    width: 100%;
+  }
+}
