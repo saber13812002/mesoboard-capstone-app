@@ -232,4 +232,3 @@ values (1104,	'Lee Vista',	'In-line','Jonathan Cancel',	'1-407-852-3131',	'6622 
 
 INSERT INTO permission(email, permission_type, code, employee_id, is_assistant_manager)
 VALUES('admin@test.com', 'admin', '123456', '123456', false);
-

@@ -5,20 +5,23 @@ import { ContentHeader } from '../../components';
 import {
   ScheduleManager,
   ProfilesManager,
-  UserPermissionsManager
+  UserPermissionsManager,
+  Profile
 } from '../../contentView';
 
 /** returns the component to be viewed */
 const handleView = view => {
-  const { schedule, profiles } = urlSlugs;
+  const { schedule, profiles, permissions, profile } = urlSlugs;
 
   switch (view) {
     case schedule:
       return <ScheduleManager />
     case profiles:
       return <ProfilesManager />
-    default:
+    case permissions:
       return <UserPermissionsManager />
+    default:
+      return <Profile />
   }
 }
 

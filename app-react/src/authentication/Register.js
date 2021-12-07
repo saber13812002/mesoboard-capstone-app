@@ -1,26 +1,7 @@
 import { useState, useEffect, useContext } from 'react';
 import { Form, Button, DropdownButton, Dropdown } from 'react-bootstrap';
-import { userTypes } from '../services/authService';
+import { userTypes, genders } from '../services/authService';
 import { AuthContext } from '../store';
-
-const genders = [{
-  id: 0,
-  label: 'Masculino',
-  value: 'male'
-}, {
-  id: 1,
-  label: 'Fémina',
-  value: 'female'
-}, {
-  id: 2,
-  label: 'Prefiero no revelar',
-  value: 'pnr'
-}, {
-  id: 3,
-  label: 'Otro',
-  value: 'otro'
-},
-]
 
 const Register = ({ cachedEmail, cachedCode, onCancel, onRegister }) => {
   const [isDataValid, setIsDataValid] = useState(false);

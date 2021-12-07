@@ -6,8 +6,6 @@ import { MesonLogo } from '../components';
 import { urlPaths } from '../services/urlService';
 
 const AuthWrapper = ({ children, redirectToApp }) => {
-  // console.log('redirectToApp', redirectToApp)
-
   return (
     <>
       {redirectToApp && <Redirect to={urlPaths.schedule} />}
@@ -19,7 +17,6 @@ const AuthWrapper = ({ children, redirectToApp }) => {
             </div>
           </div>
 
-          {/* {childrenWithProps} */}
           <div className='auth__right'>
             <img className='auth__backImg' src={MesoboardBackgroundImg} alt='background img' />
             <MesonLogo className='auth__logo' height={200} />

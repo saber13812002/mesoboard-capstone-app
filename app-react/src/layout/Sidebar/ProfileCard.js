@@ -1,11 +1,17 @@
 import './ProfileCard.css';
 import { Icon, iconComponents } from '../../components';
+import { useHistory } from 'react-router-dom';
+import { urlPaths, urlSlugs } from '../../services/urlService';
 
 const ProfileCard = ({ cardDimensions, onHideCard, onLogout }) => {
+  const history = useHistory();
+  const redirectToProfile = () => history.push(urlPaths.profile);
+
   // console.log('cardDimensions', cardDimensions);
   const cardItems = [{
     IconComponent: iconComponents.Person,
     text: 'Perfil',
+    onClick: redirectToProfile
   }, {
     IconComponent: iconComponents.Logout,
     text: 'Cerrar Sesión',

@@ -52,6 +52,24 @@ export const userTypes = {
   }
 }
 
+export const genders = [{
+  id: 0,
+  label: 'Masculino',
+  value: 'male'
+}, {
+  id: 1,
+  label: 'Fémina',
+  value: 'female'
+}, {
+  id: 2,
+  label: 'Prefiero no revelar',
+  value: 'pnr'
+}, {
+  id: 3,
+  label: 'Otro',
+  value: 'otro'
+}]
+
 
 // should be in a generalService.js file
 export const truncateLocation = l => (l.length < 26) ? l : l.substr(0, 24) + '...'

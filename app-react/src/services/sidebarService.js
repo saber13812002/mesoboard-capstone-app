@@ -68,11 +68,11 @@ export const sidebarItemNames = {
 }
 
 export const allLinks = {
-  HOME: {
-    to: urlPaths.home,
-    name: sidebarItemNames.home,
-    IconComponent: iconComponents.Home,
-  },
+  // HOME: {
+  //   to: urlPaths.home,
+  //   name: sidebarItemNames.home,
+  //   IconComponent: iconComponents.Home,
+  // },
   SCHEDULE: {
     to: urlPaths.schedule,
     name: sidebarItemNames.schedule,
@@ -88,16 +88,16 @@ export const allLinks = {
   //   name: sidebarItemNames.checks,
   //   IconComponent: iconComponents.MoneyCheck,
   // },
-  REQUESTS: {
-    to: urlPaths.requests,
-    name: sidebarItemNames.requests,
-    IconComponent: iconComponents.Requests,
-  },
-  MEMOS: {
-    to: urlPaths.memos,
-    name: sidebarItemNames.memos,
-    IconComponent: iconComponents.Memos,
-  },
+  // REQUESTS: {
+  //   to: urlPaths.requests,
+  //   name: sidebarItemNames.requests,
+  //   IconComponent: iconComponents.Requests,
+  // },
+  // MEMOS: {
+  //   to: urlPaths.memos,
+  //   name: sidebarItemNames.memos,
+  //   IconComponent: iconComponents.Memos,
+  // },
   PERMISSIONS: {
     to: urlPaths.permissions,
     name: sidebarItemNames.permissions,

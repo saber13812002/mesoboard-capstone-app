@@ -7,7 +7,7 @@ const EntityDetails = ({ details, onBack }) => {
   return (
     <div>
       <BackButton onClick={onBack} />
-      <DetailsCard data={details} />
+      <DetailsCard />
     </div>
   )
 }
