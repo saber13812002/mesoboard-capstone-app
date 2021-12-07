@@ -7,6 +7,8 @@ const DetailsCard = ({ data }) => {
     <div>
       <div className='scheduleDetails__profileInfo mb-3 p-3'>
         <h4>{name}</h4>
+
+        
         <h3>Información del usuario va aqui</h3>
       </div>
     </div>

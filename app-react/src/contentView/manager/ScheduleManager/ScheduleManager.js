@@ -15,7 +15,7 @@ import {
   get24HourFormatOfTime,
   calculateTotalHours,
 } from "../../../services/scheduleService";
-import Papa from "papaparse";
+// import Papa from "papaparse";
 
 const m1 = moment();
 const m2 = moment();
@@ -355,45 +355,45 @@ const ScheduleManager = () => {
   };
 
 
-  const handleFileUpload = (e) => {
-    console.log("e.target", e.target);
-    const files = e.target.files;
-    console.log(files);
-    if (files) {
-      console.log("files[0]", files[0]);
-      Papa.parse(files[0], {
-        complete: (results) => {
-          console.log("Finished:", results.data);
-        },
-      });
-    }
-  };
+//   const handleFileUpload = (e) => {
+//     console.log("e.target", e.target);
+//     const files = e.target.files;
+//     console.log(files);
+//     if (files) {
+//       console.log("files[0]", files[0]);
+//      Papa.parse(files[0], { 
+//         complete: (results) => {
+//           console.log("Finished:", results.data);
+//         },
+//       });
+//     }
+//   };
 
 
-  const handleFileExport = () => {
-    const data = users.map((user) => [user.userId, user.name, user.email]);
-    const fields = ["id", "name", "email"];
-    const csv = Papa.unparse({
-      data,
-      fields,
-    });
-    console.log("users", users);
-    console.log("csv", csv);
-    const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
-    const exportFilename = "download.csv";
-    //const a = document.createElement('a');
-    if (navigator.msSaveBlob) {
-      navigator.msSaveBlob(blob, exportFilename);
-    } else {
-      //In FF link must be added to DOM to be clicked
-      var link = document.createElement("a");
-      link.href = window.URL.createObjectURL(blob);
-      link.setAttribute("download", exportFilename);
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-    }
-  };
+//   const handleFileExport = () => {
+//     const data = users.map((user) => [user.userId, user.name, user.email]);
+//     const fields = ["id", "name", "email"];
+//     const csv = Papa.unparse({
+//       data,
+//       fields,
+//     });
+//     console.log("users", users);
+//     console.log("csv", csv);
+//     const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+//     const exportFilename = "download.csv";
+//     //const a = document.createElement('a');
+//     if (navigator.msSaveBlob) {
+//       navigator.msSaveBlob(blob, exportFilename);
+//     } else {
+//       //In FF link must be added to DOM to be clicked
+//       var link = document.createElement("a");
+//       link.href = window.URL.createObjectURL(blob);
+//       link.setAttribute("download", exportFilename);
+//       document.body.appendChild(link);
+//       link.click();
+//       document.body.removeChild(link);
+//     }
+//   };
 
 
   // console.log('mCurrent', mCurrent)
@@ -430,13 +430,13 @@ const ScheduleManager = () => {
                 />
                 <span>Import CSV</span>
               </label>
-              <input
+              {/* <input
                 type="file"
                 id="upload"
                 style={{ display: "none" }}
                 accept=".csv,.xlsx,.xls"
                 onChange={(e) => handleFileUpload(e)}
-              />
+              /> */}
               <MButton
                 className="mr-2"
                 text="Template CSV"
@@ -445,7 +445,7 @@ const ScheduleManager = () => {
                 IconComponent={iconComponents.Download}
                 iconSize="sm"
                 iconColor="dark"
-                onClick={handleFileExport}
+                // onClick={handleFileExport}
               />
               <Icon
                 IconComponent={iconComponents.Download}
