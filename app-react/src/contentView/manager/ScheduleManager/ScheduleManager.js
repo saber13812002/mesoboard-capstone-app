@@ -10,6 +10,8 @@ import { timeFromInt, timeToInt } from "time-number";
 import { DateRange } from "../..";
 import { ServerRoutes as server } from "../../../services/apiService";
 import {
+  getScheduleIdOfIsoDateStr,
+  getScheduleIdOfDate,
   getScheduleIdOfMoment,
   getTurnIdByTime,
   get24HourFormatOfTime,
@@ -264,7 +266,7 @@ const ScheduleManager = () => {
         // console.log('\n\n')
         let aHour = timeToInt(a.timeStart);
         let bHour = timeToInt(b.timeStart);
-        console.log(aHour, bHour);
+        //console.log(aHour, bHour);
         return ("" + aHour).localeCompare(bHour);
       });
 
@@ -360,6 +362,8 @@ const ScheduleManager = () => {
     setEditingUser(false);
     setUserToEdit(emp);
   };
+
+
   const handleFileUpload = (e) => {
     const files = e.target.files;
     //console.log(files);
@@ -374,15 +378,31 @@ const ScheduleManager = () => {
 
       const wsname = wb.SheetNames[0];
       const data = XLSX.utils.sheet_to_json(wb.Sheets[wsname], {header: 10, range: 10});
-      //parse data into user array
-      
+      const Datedata = XLSX.utils.sheet_to_json(wb.Sheets[wsname], {header: 7, range: 7});
+     
+  
+    let push = []
     const res=[]
+    //Get Schedule ID
+    const ar = Datedata[0]
+    let date =''
+    for(let key in ar) {
+      var d = new Date(ar[key])
+      d.setDate(d.getDate()- (d.getDay()+6)%7);
+      date = d.toISOString().substring(0, 10);
+      
+    }
+    console.log('date',date)
+    const sId = getScheduleIdOfIsoDateStr(date)
+    
+    console.log('s id',sId)
+    //  
+    //get users & Data
     for(var i = 0; i < data.length; i++) {
-      const a = {name:"",last:"",weekDates:[],isLunchHour:true};
+      const a = {name:"",weekDates:[],isLunchHour:true};
       
       if(i%3==2){
-      a.name = data[i-2].nombre
-      a.last = data[i-1].apellido
+      a.name = data[i-2].nombre+' '+ data[i-1].apellido
       if(data[i].HoraAlmuerzo==='NO'){a.isLunchHour=false}
       let Sdates = data[i-2]
       let Edates = data[i-1]
@@ -395,37 +415,106 @@ const ScheduleManager = () => {
          const Ehour = timeFromInt((Edates[key]*24)* 3600,{ format: 12 })
          const Lhour = timeFromInt(Ldates[key]*24* 3600,{ format: 12 })
           a.weekDates.push( {'date':key,'start':Shour,'end':Ehour,'lunch':Lhour})
-          console.log(timeFromInt(23400))
+          //console.log(timeFromInt(23400))
         }
     };
       res.push(a) 
       }
     }
-    console.log('Import data:',res)
+    //get userID, loop thru users to get id
+    const json = users.map((user)=>{
+    for(let key in res){
+      
+      if(user.name === res[key].name){
+        return{userId:user.userId,scheduleId:sId, is_hour_lunch:res[key].isLunchHour}
+      }
+      if(user.weekDates){
+
+      }
+    }})
+    console.log(res)
+    console.log(json)
   
   };
 
 }
 
-    const downloadFile = () => {
+  const downloadFile = () => {
       const link = document.createElement('a');
       link.href = `https://docs.google.com/spreadsheets/d/1zRWaJetJ-djrgXZpF-i-YuP-mN2ghdgG/edit?usp=sharing&ouid=104534025623240640660&rtpof=true&sd=true`;
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
     }
+
+  const parseDate=(e)=>{
+    let date = ''
+    let time = ''
+    for (let i = 0; i < e.length; i++) {
+      if(e[i]!='T' && i<10){
+        date+=(e[i])
+      }
+      if(e[i]!='T' && i>10 && i<16){
+        time+=(e[i])
+      }
+      
+  }
+  return date + ' ' + time
+}
   const handleFileExport = () => {
-    const data = users.map((user) => [user.userId, user.name, user.email]);
-    const fields = ["id", "name", "email","dateStart"];
-    const csv = Papa.unparse({
-      data,
-      fields,
-    });
-    console.log("users", users);
+    //const fields = ["id", "name", "email","dateStart","dateEnd","dateLunch"];
+    const res = []
+    const data = users.map((user) => {
+     
+      const test =[]
+      
+    
+      user.weekDates.map((turn)=>
+      {
+        
+        if(!(turn===null)){
+        console.log("weekdate",turn)
+        const start = parseDate(turn.dateStart)
+        //console.log("start",start)
+        const end = parseDate(turn.dateEnd)
+        const lunch = parseDate(turn.dateLunch)
+        test.push({start:start,end:end,lunch:lunch})
+        
+      
+      }
+      
+      
+      })
+
+      console.log('this is tes',test)
+      let count = 0;
+      for (let turn in test){
+        if(count===0){
+          res.push({id:user.userId, name:user.name, email:user.email, start:test[turn].start,end:test[turn].end,lunch:test[turn].lunch})
+          console.log('start',turn)
+        }
+        else{
+          res.push({id:"", name:"", email:"", start:test[turn].start,end:test[turn].end,lunch:test[turn].lunch})
+        }
+        count++
+      }
+      
+      return res
+    
+  }
+    )
+console.log('data',res)
+    const fields=["id","name","email","start","end","lunch"]
+    const csv = Papa.unparse(
+      
+      res
+    );
+    //console.log("users", users);
     console.log("csv", csv);
     const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
     const exportFilename = "download.csv";
-    //const a = document.createElement('a');
+    
+    
     if (navigator.msSaveBlob) {
       navigator.msSaveBlob(blob, exportFilename);
     } else {
@@ -465,7 +554,7 @@ const ScheduleManager = () => {
               />
             )}
             <div className="d-flex align-items-start">
-              <label htmlFor="upload" className="btn-secondary importCsvLabel">
+              {/* <label htmlFor="upload" className="btn-secondary importCsvLabel">
                 <Icon
                   IconComponent={iconComponents.Upload}
                   size="sm"
@@ -491,7 +580,7 @@ const ScheduleManager = () => {
                 iconColor="dark"
                 onClick={downloadFile}
                 
-              />
+              /> */}
 
               <Icon
                 IconComponent={iconComponents.Download}

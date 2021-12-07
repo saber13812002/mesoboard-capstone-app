@@ -65,6 +65,11 @@ export const getScheduleIdOfMoment = m => m.format('YYYYMMDD')
  */
 export const getScheduleIdOfDate = d => toISOYearFormat(d).replace('-', '')
 
+/** 
+ * Returns a string representation of a date in YYYYMMDD format.
+ * @param {String} s a string representing a date in Iso Format
+ */
+ export const getScheduleIdOfIsoDateStr = sIso => sIso.replaceAll('-', '')
 
 /** 
  * Returns a string representing the database id of a schedule turn.

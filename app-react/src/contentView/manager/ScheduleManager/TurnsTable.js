@@ -16,10 +16,11 @@ const TurnsTable = ({ turns, onAddNewTurn, addingNewTurn, onSaveTurn, onCancel, 
   const [isEndDuplicate,setIsEndDuplicate] = useState(false)
   const [isLunchDuplicate,setIsLunchDuplicate] = useState(false)
   const handleSelectTimeStart = (e) => {
-    const time = e / (3600)
+    //const time = e / (3600)
     const bol = turns.some(l => l.timeStart == timeFromInt(e, { format: 12, leadingZero: false }))
     setIsStartDuplicate(bol)
     setSelectTimeStart(e)
+    setSelectTimeLunch(e+(30*60))
     // console.log(e, time)
   }
   const handleSelectTimeEnd = (e) => {
@@ -67,11 +68,11 @@ const TurnsTable = ({ turns, onAddNewTurn, addingNewTurn, onSaveTurn, onCancel, 
                   <td>{timeEnd}</td>
                   <td>{timeLunch}</td>
                   <td>
-                    <Icon
+                  {!addingNewTurn &&<Icon
                       IconComponent={iconComponents.Trash}
                       onClick={() => deleteTurn(turn.turnIndex)}
                       color='red'
-                    />
+                    />}
                   </td>
                   {/* <td></td> */}
                 </tr>}
@@ -80,9 +81,9 @@ const TurnsTable = ({ turns, onAddNewTurn, addingNewTurn, onSaveTurn, onCancel, 
                   <tr style={{ fontWeight: '500' }}>
                     {isValidIndex ? <td><strong>{turnIndex}</strong></td> : <td></td>}
                     <td><TimePicker start="04:00" end="18:00" format="12" step={30} onChange={handleSelectTimeStart} value={selectTimeStart} /></td>
-                    <td><TimePicker start={timeFromInt(selectTimeStart+(2 * 3600))} end="24:00" step={30} onChange={handleSelectTimeEnd} value={selectTimeEnd} /></td>
-                    <td><TimePicker start={timeFromInt(selectTimeStart+(30*60))} end={timeFromInt(selectTimeEnd-(30*60))} step={30} onChange={handleSelectTimeLunch} value={selectTimeLunch} /></td>
-                    <td className='text-center align-middle' onClick={() => onSaveTurn(selectTimeStart, selectTimeEnd, selectTimeLunch)}>
+                    <td><TimePicker start={timeFromInt(selectTimeStart+(2 * 3600))} end="23:30" format="12" step={30} onChange={handleSelectTimeEnd} value={selectTimeEnd} /></td>
+                    <td><TimePicker start={timeFromInt(selectTimeStart+(30*60))} end={timeFromInt(selectTimeEnd-(30*60))} format="12" step={30} onChange={handleSelectTimeLunch} value={selectTimeLunch} /></td>
+                    {!isStartDuplicate&& !isEndDuplicate&& !isLunchDuplicate &&<td className='text-center align-middle' onClick={() => onSaveTurn(selectTimeStart, selectTimeEnd, selectTimeLunch)}>
                     {!isStartDuplicate&& !isEndDuplicate&& !isLunchDuplicate && <IIcon
                         name='checkmark'
                         width={14}
@@ -90,7 +91,7 @@ const TurnsTable = ({ turns, onAddNewTurn, addingNewTurn, onSaveTurn, onCancel, 
                         color='primary'
                       // onClick={() => onSaveTurn(selectTimeStart, selectTimeEnd, selectTimeLunch)}
                       />}
-                    </td>
+                    </td>}
                   </tr>
                 )}
               </Fragment>
