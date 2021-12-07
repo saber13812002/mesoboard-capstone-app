@@ -6,23 +6,9 @@ import { ServerRoutes as server } from '../../services/apiService';
 import axios from 'axios';
 
 
-// const NotificationAmountLabel = ({ unseenNotificationAmount }) => {
 const NotificationAmountLabel = ({ unseenNotificationAmount }) => {
-  // const [unseenNotificationAmount, setUnseenNotificationAmount] = useState(0)
-  console.log('unseenNotificationAmount', unseenNotificationAmount)
-  // useEffect(() => {
-  //   axios.get(server.getAllUnseenNotifications()).then(res => {
-  //     // console.log('unseen', res.data.notifications)
-  //     setUnseenNotificationAmount(res.data.notifications.length)
-  //   })
-  // }, [])
-
-  //       axios.post(server.markNotificationsAsSeen())
-
-
   return (
     <div className='notificationAmountLabel'>
-      {/* Label of the amount of notifications */}
       {(unseenNotificationAmount > 0) && (
         <span className="label">{unseenNotificationAmount}</span>
       )}
@@ -40,10 +26,9 @@ const Navbar = () => {
   const bellIconEl = useRef(null);
 
   useEffect(() => {
-    console.log(server.getAllNotifications());
     const fetchNotifications = async () => {
       axios.get(server.getAllNotifications()).then(res => {
-        console.log('res.data', res.data)
+        // console.log('res.data', res.data)
         setNotifications(res.data.notifications)
       })
 

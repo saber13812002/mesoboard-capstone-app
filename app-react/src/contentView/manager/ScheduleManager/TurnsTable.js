@@ -52,7 +52,7 @@ const TurnsTable = ({ turns, onAddNewTurn, addingNewTurn, onSaveTurn, onCancel, 
             const isValidIndex = turnIndex >= 0
             // console.log('turnIndex', turnIndex)
             return (
-              <Fragment key={turnIndex + i + 20}>
+              <Fragment key={turnIndex + timeStart + timeEnd + timeLunch}>
                 {isValidIndex && <tr style={{ fontWeight: '500' }}>
                   <td><strong>{turnIndex}</strong></td>
                   <td>{timeStart}</td>

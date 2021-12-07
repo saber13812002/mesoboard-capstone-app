@@ -34,18 +34,18 @@ const getExpiration = () => {
   return moment(expiresAt);
 }
 
-export const userTypeObj = {
-  admin: {
+export const userTypes = {
+  adminType: {
     label: 'Administrator',
     value: 'admin',
     // dbValue: 'admin'
   },
-  manager: {
+  managerType: {
     label: 'Supervisor',
     value: 'manager',
     // dbValue: 'manager'
   },
-  employee: {
+  employeeType: {
     label: 'Empleado',
     value: 'employee',
     // dbValue: 'employee'
