@@ -6,11 +6,11 @@ const ProfileCard = ({ cardDimensions, onHideCard, onLogout }) => {
   const cardItems = [{
     IconComponent: iconComponents.Person,
     text: 'Perfil',
-    // onClick: redirectToProfile
+    onClick: redirectToProfile
   }, {
     IconComponent: iconComponents.Logout,
     text: 'Cerrar Sesión',
-    // onClick: onLogout
+    onClick: onLogout
   }]
 
   return (

@@ -4,26 +4,32 @@ import { AuthContext } from '../../../store';
 
 
 const Profile = () => {
-  const { authState } = useContext(AuthContext);
-  console.log('authState', authState)
 
-  const userInfoUsedOnProfile = [
-    'first_name',
-    'last_name',
-    'gender',
-    'email',
-    'user_type',
-    // the once not implemented yet
-    'restaurant',
-    'id' //not userId
-  ]
+    const { firstName, lastName, employeeId, location, gender, userType, email } = authState;
+    console.log('authState', authState)
+    const { authState } = useContext(AuthContext);
+
+
 
   return (
     <div className='profile'>
-      {/* remove this */}
-      <ul>
-        {userInfoUsedOnProfile.map(userInfo => <li key={userInfo}>{userInfo}</li>)}
-      </ul>
+      <div className='dc_container'>
+            <h6 className = 'title'>email</h6>
+            <h5>{email}</h5> 
+            
+            <h6 className= 'title'>Restaurante</h6>
+            <h5>{location}</h5>
+        </div>
+        <div className='dc_container2'>
+            <h6 className= 'title'>Género</h6>
+            <h5>{gender}</h5>
+
+            <h6 className= 'title'>ID</h6>
+            <h5>{employeeId}</h5>
+
+            <h6 className= 'title'>Tipo de Usuario</h6>
+            <h5>{userType}</h5>
+        </div>
     </div>
   )
 }
