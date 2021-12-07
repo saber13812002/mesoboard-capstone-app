@@ -1,9 +1,8 @@
+.userPermissionsManager > .react-bootstrap-table {
+  padding: 0 0 55px;
+}
+
 td.nameTd > .permissionName {
   background-color: #ba302b23;
   cursor: initial;
-  user-select: none; /* supported by Chrome and Opera */
-   -webkit-user-select: none; /* Safari */
-   -khtml-user-select: none; /* Konqueror HTML */
-   -moz-user-select: none; /* Firefox */
-   -ms-user-select: none; /* Internet Explorer/Edge */
 }

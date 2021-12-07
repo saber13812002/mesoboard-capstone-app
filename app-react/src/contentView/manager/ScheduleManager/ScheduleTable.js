@@ -5,7 +5,7 @@ import { IIcon, iconComponents, MButton } from '../../../components'
 
 const tableHeaders = ['Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo', 'Lunes', 'Horas Asignadas']
 
-const ScheduleTable = ({ users, isEditable, onOpenScheduleEdit, onOpenScheduleDetails }) => {
+const ScheduleTable = ({ users, isEditable, onOpenScheduleEdit, onOpenScheduleDetails, onMailSchedule, amountMailsSend, ref }) => {
   /** Displays the user schedule hours for each day of the week within one row.
    * @param user user with schedule information
    */
@@ -64,19 +64,32 @@ const ScheduleTable = ({ users, isEditable, onOpenScheduleEdit, onOpenScheduleDe
         <tbody>
           {users.map((user, i) => handleRow(user, i))}
           {/* <tr>
+            <td></td>
             <td>
               <MButton
-                IconComponent={iconComponents.CheckMark}
+                IconComponent={iconComponents.SendMail}
                 iconSize='sm'
-                text='Aprobar'
+                text='Enviar'
                 variant='primary'
                 size='sm'
-                className='ml-2 mt-3 mb-2'
+                style={{ margin: '0 0 0 -22px' }}
+                ref={ref}
+                disabled={amountMailsSend > 1}
+                onClick={onMailSchedule}
               />
             </td>
           </tr> */}
         </tbody>
       </Table>
+      {/* <div className='ml-2 pt-2' style={{ marginTop: '-48px' }}>
+        <MButton
+          IconComponent={iconComponents.SendMail}
+          iconSize='sm'
+          text='Enviar'
+          variant='primary'
+          size='sm'
+        />
+      </div> */}
     </div>
   )
 }

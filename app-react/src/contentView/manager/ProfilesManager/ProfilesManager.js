@@ -1,18 +1,22 @@
-import { useState, useEffect } from 'react'
 import './ProfilesManager.css';
+import { useState, useEffect } from 'react'
 import axios from 'axios';
-import BootstrapTable from 'react-bootstrap-table-next';
-// import { iconComponents, MButton } from '../../../components';
-import { ServerRoutes as server } from '../../../services/apiService';
-import { getScheduleIdOfMoment } from '../../../services/scheduleService';
 import moment from 'moment';
+import BootstrapTable from 'react-bootstrap-table-next';
 import { ProfileScheduleDetails } from '../..';
+import { ServerRoutes as server } from '../../../services/apiService';
+import { getScheduleIdOfMoment, calculateAccumulatedHours } from '../../../services/scheduleService';
 
 
 const m1 = moment()
 const m2 = moment()
 const sunday = m1.clone().startOf('week')
 const monday = m2.clone().startOf('week').add(1, 'day')
+// console.log('m1', m1)
+// console.log('m2', m2)
+// console.log('m1.isSame(sunday, date)', m1.isSame(sunday, 'date'))
+// console.log('m2.isSame(monday, date)', m2.isSame(monday, 'date'))
+
 
 let startOfThisWeek = moment().clone();
 let endOfThisWeek = moment().clone();
@@ -26,6 +30,7 @@ else if (m2.isSame(monday, 'date')) {
   startOfThisWeek.add(-6, 'day')
 }
 else {
+  // console.log('ELSE')
   startOfThisWeek = moment().clone().startOf('week').add(2, 'day');
   endOfThisWeek = moment().clone().endOf('week').add(2, 'day')
 }
@@ -34,8 +39,9 @@ else {
 let columns = [];
 
 const ProfilesManager = () => {
-  const [mCurrent, setMCurrent] = useState(moment()) // the current moment
-  const [mWeekStart, setMWeekStart] = useState(startOfThisWeek.clone()) //always a tuesday
+  const [mCurrent,] = useState(moment()) // the current moment
+  const [mWeekStart,] = useState(startOfThisWeek.clone()) //always a tuesday
+  // const [mWeekEnd,] = useState(endOfThisWeek.clone()) //always a monday
 
   const [profileDetails, setProfileDetails] = useState({});
   const [profiles, setProfiles] = useState([]);
@@ -47,14 +53,20 @@ const ProfilesManager = () => {
       sort: true,
       // formatter: (cell, row) => profiles[cell]
       classes: 'nameTd',
-      formatter: (name, data) => <p className='name' onClick={() => setProfileDetails(data)}>{name}</p>
-    }, {
-      dataField: 'assigned_hours',
-      text: 'Horas Acumuladas',
-      sort: true,
-      headerAlign: 'center',
-      align: 'center',
-    }, {
+      formatter: (name, data) => <span className='name' onClick={() => setProfileDetails(data)}>{name}</span>
+    },
+    // {
+    //   dataField: 'accumulatedHours',
+    //   text: 'Horas Acumuladas',
+    //   sort: true,
+    //   headerAlign: 'center',
+    //   align: 'center',
+    //   formatter: assignedHour =>
+    //     <span className='accumulatedHours'>
+    //       {(assignedHour === null) ? 'calculating...' : assignedHour}
+    //     </span>
+    // }, 
+    {
       dataField: 'totalHours',
       text: 'Horas Asignadas',
       sort: true,
@@ -62,30 +74,23 @@ const ProfilesManager = () => {
       align: 'center',
     }];
 
-    console.log('useEffect')
     const getAllProfiles = () => {
       // axios.get(server.getAllEmployees()).then(res => {
       //   console.log('res.data.employees', res.data.employees)
       const scheduleId = getScheduleIdOfMoment(mWeekStart);
       const url = server.getUsersWithSchedule(scheduleId);
       axios.get(url).then(res => {
-        console.log('res.data.userSchedulesData', res.data.userSchedulesData)
-        setProfiles(res.data.userSchedulesData)
+        setProfiles(res.data.userSchedulesData);
+        // const prefilesArr = res.data.userSchedulesData;
+        // calculateAccumulatedHours(prefilesArr);
+        // console.log('prefilesArr', prefilesArr)
+        // setProfiles(prefilesArr);
       })
     }
     getAllProfiles();
   }, [])
 
-  // const openScheduleDetails = () => {
-  //   setAddingNewPermission(false)
-  // }
-
-  // const handleAddNewPermission = () => {
-  //   setAddingNewPermission(true)
-  // }
-
-  console.log('profiles', profiles, profiles.length > 0);
-
+  // console.log('profiles', profiles);
   return (
     <>
       {(Object.keys(profileDetails).length > 0) ? (

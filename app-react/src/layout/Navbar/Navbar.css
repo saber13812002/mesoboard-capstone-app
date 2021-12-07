@@ -5,6 +5,25 @@
   min-height: 80px;
 }
 
+.navbar__icon > .notificationAmountLabel > .label {
+  background-color: #F11008;
+  color: white;
+  border-radius: 50%;
+  display: inline-block;
+  padding-left: 4px;
+  padding-right: 4px;
+  text-align: center;
+  font-size: 10px;
+  /* margin-top: -40px; */
+}
+.navbar__icon > .notificationAmountLabel {
+  display: inline-block;
+  position: absolute;
+  top: 14px;
+  right: -10px;
+}
+
+
 
 
 @media only screen and (max-width: 425px) {

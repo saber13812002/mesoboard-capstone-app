@@ -1,13 +1,16 @@
-import { useState, useEffect } from 'react'
-import Button from 'react-bootstrap/Button'
 import './ScheduleEdit.css'
 import classes from './ScheduleEditModal.module.css'
+import { useState, useEffect } from 'react'
 import { Modal } from '../..'
 import { Icon, iconComponents, MButton } from '../..'
 import { ScheduleHoursBox } from '../../../contentView'
 import { getDayName, beautifyDate, get24HourFormatOfTime, toISOYearFormat } from '../../../services/scheduleService'
 import Dropdown from 'react-dropdown';
 import 'react-dropdown/style.css';
+import moment from 'moment';
+
+const portalElement = document.getElementById('navdrawer-portal');
+
 
 const ScheduleEdit = ({ user, turns, dateStart, dateEnd, mCurrent, onSaveChanges, onCloseScheduleEdit }) => {
   const deepCopy = JSON.parse(JSON.stringify(user))
@@ -53,6 +56,7 @@ const ScheduleEdit = ({ user, turns, dateStart, dateEnd, mCurrent, onSaveChanges
       return;
 
     const dateToModify = userToEdit.weekDates[day].dateStart;
+    // console.log('updateHours dateToModify', dateToModify)
     setTimeOfWeekDate(day, turnIndex, dateToModify);
   }
 
@@ -62,8 +66,17 @@ const ScheduleEdit = ({ user, turns, dateStart, dateEnd, mCurrent, onSaveChanges
    */
   const setWeekDateIntoUser = day => {
     if (turns.length > 0) {
+      console.log('day', day)
       const turnIndex = 1;
-      const dateToModify = mCurrent.clone().startOf('week').isoWeekday(day + 2).toDate();
+      const dateToModify = mCurrent.clone().startOf('week').clone().add(2, 'days').isoWeekday(day + 2).toDate();
+
+      // when today is tuesday
+      // console.log('INCORRECT', mCurrent.clone().startOf('week').isoWeekday(day + 2))
+      // console.log('\n')
+      // console.log('CORRECT', mCurrent.clone().startOf('week').clone().add(2, 'days').isoWeekday(day + 2))
+      // console.log('ALSO CORRECT', mCurrent.clone().isoWeekday(day + 2))
+
+      // console.log('dateToModify', dateToModify)
       setTimeOfWeekDate(day, turnIndex, dateToModify);
     }
   }
@@ -75,7 +88,7 @@ const ScheduleEdit = ({ user, turns, dateStart, dateEnd, mCurrent, onSaveChanges
    *  @param {string} dateToModify the date of the week to be modified.
    */
   const setTimeOfWeekDate = (day, turnIndex, dateToModify) => {
-    // console.log('turnIndex', turnIndex)
+    // console.log('dateToModify', dateToModify)
     const turn = turns[turnIndex - 1];
     // console.log('turn', turn)
 
@@ -88,6 +101,7 @@ const ScheduleEdit = ({ user, turns, dateStart, dateEnd, mCurrent, onSaveChanges
     const newDateStart = new Date(`${isoYearFormat}T${newTimeStart}Z`).toISOString();
     const newDateEnd = new Date(`${isoYearFormat}T${newTimeEnd}Z`).toISOString();
     const newDateLunch = new Date(`${isoYearFormat}T${newTimeLunch}Z`).toISOString();
+    // console.log('newDateEnd', newDateEnd)
 
     const newWeekDate = {
       turnId: turn.turnId,
@@ -95,6 +109,7 @@ const ScheduleEdit = ({ user, turns, dateStart, dateEnd, mCurrent, onSaveChanges
       dateEnd: newDateEnd,
       dateLunch: newDateLunch
     }
+    // console.log('newWeekDate', newWeekDate)
 
     setUserToEdit(emp => {
       const newUser = { ...emp };
@@ -119,9 +134,7 @@ const ScheduleEdit = ({ user, turns, dateStart, dateEnd, mCurrent, onSaveChanges
    */
   const getTurnIndexByTurnId = turnId => turns.find(turn => turn.turnId === turnId)?.turnIndex;
 
-  const portalElement = document.getElementById('navdrawer-portal');
-
-  // console.log('userToEdit', userToEdit)
+  // console.log('dateStart', dateStart)
   return (
     <Modal
       onClose={onCloseScheduleEdit}
@@ -178,24 +191,17 @@ const ScheduleEdit = ({ user, turns, dateStart, dateEnd, mCurrent, onSaveChanges
             return null
           })}
         </div>
-        <label className='mt-4 mb-1'>
+        <label className='mt-4 mb-3'>
           <input type="checkbox" onChange={(e) => updateLunch(e)} checked={userToEdit.isHourLunch} />
           <span className='ml-1'>1 hora de almuerzo</span>
         </label>
-        {isSameData ? (
-          <Button
-            disabled={true}
-            className='w-100 mt-4'
-            variant='primary'
-          >Guardar Cambios</Button>
-        ) : (
-          <MButton
-            className='w-100 mt-4'
-            text='Guardar Cambios'
-            variant='primary'
-            onClick={() => onSaveChanges(userToEdit)}
-          />
-        )}
+        <MButton
+          className='w-100 mt-4'
+          text='Guardar Cambios'
+          variant='primary'
+          onClick={() => onSaveChanges(userToEdit)}
+          disabled={isSameData}
+        />
       </div>
     </Modal>
   )

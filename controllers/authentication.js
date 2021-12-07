@@ -49,7 +49,7 @@ exports.login = (req, res, next) => {
 
 
 // not protected - need to get token from body
-exports.checkTokenAndGetUser = (req, res, next) => {
+exports.checkTokenAndGetUser = async (req, res, next) => {
   console.log('checkTokenAndGetUser')
   const { user_id, token } = req.body
 
@@ -127,6 +127,7 @@ exports.createUser = (req, res, next) => {
   let user_type = '';
   let is_assistant_manager = undefined;
   req.app.locals.email = email;
+  req.app.locals.name = `${first_name} ${last_name}`;
 
   const error = new Error();
 
@@ -163,8 +164,9 @@ exports.createUser = (req, res, next) => {
         else {
           //get restaurant_id for which the user belongs to
           return t.oneOrNone('Select restaurant_id from restaurant where location=$1', location).then(data3 => {
-            restaurant_id = data3.restaurant_id;
+            restaurant_id = data3?.restaurant_id;
             console.log('\nrestaurant_id', restaurant_id);
+            req.app.locals.restaurant_id = restaurant_id;
 
             //user doesn't exist
             const saltHash = authUtils.genPassword(password);
@@ -220,13 +222,6 @@ exports.createUser = (req, res, next) => {
       });
     });
   })
-    // .then(data => {
-    //   console.log('data', data)
-    //   req.app.locals.user_id = data.user_id;
-    //   req.app.locals.user_type = user_type;
-    //   req.app.locals.email = email;
-    //   next();
-    // })
     .catch(error => {
       next(error);
     });

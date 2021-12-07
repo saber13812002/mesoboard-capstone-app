@@ -1,6 +1,6 @@
 import { useState, useEffect, useContext } from 'react';
 import { Form, Button, DropdownButton, Dropdown } from 'react-bootstrap';
-import { userTypeObj } from '../services/authService';
+import { userTypes } from '../services/authService';
 import { AuthContext } from '../store';
 
 const genders = [{
@@ -73,9 +73,8 @@ const Register = ({ cachedEmail, cachedCode, onCancel, onRegister }) => {
 
   return (
     <>
-      {/* <h3 style={{ color: '#287F4E', textAlign: 'center' }}>Registrando como {userTypeObj[userType].text}</h3> */}
       <div className='register__headers text-center'>
-        <p className='userType'>Registrando como {userTypeObj[userType].label}</p>
+        <p className='userType'>Registrando como {userTypes[userType].label}</p>
         {location && <p className='restaurant'>{`'${location}'`}</p>}
         <p className='employeeId'>{`ID - ${employeeId}`}</p>
       </div>
@@ -105,17 +104,9 @@ const Register = ({ cachedEmail, cachedCode, onCancel, onRegister }) => {
           <Button onClick={() => onCancel(cachedEmail, cachedCode)} variant='light' className='w-100 mr-3'>
             Cancel
           </Button>
-          {isDataValid ? (
-            <Button type='submit' variant='primary' className='w-100'>
-              Registrarse
-            </Button>
-          ) : (
-            <Button
-              disabled={true}
-              variant='primary'
-              className='w-100'
-            >Registrarse</Button>
-          )}
+          <Button type='submit' variant='primary' className='w-100' disabled={!isDataValid}>
+            Registrarse
+          </Button>
         </div>
       </Form>
     </>

@@ -8,8 +8,6 @@ import { timeFromInt } from 'time-number';
 
 const TurnsTable = ({ turns, onAddNewTurn, addingNewTurn, onSaveTurn, onCancel, onDeleteTurn }) => {
   const [selectTimeStart, setSelectTimeStart] = useState(14400) //represents 4:00 AM
-  // const [selectTimeEnd, setSelectTimeEnd] = useState(14400)
-  // const [selectTimeLunch, setSelectTimeLunch] = useState(14400)
   const [selectTimeEnd, setSelectTimeEnd] = useState(43200)  //represents 12:00 PM
   const [selectTimeLunch, setSelectTimeLunch] = useState(36000) //represents 10:AM
 
@@ -52,7 +50,7 @@ const TurnsTable = ({ turns, onAddNewTurn, addingNewTurn, onSaveTurn, onCancel, 
             const isValidIndex = turnIndex >= 0
             // console.log('turnIndex', turnIndex)
             return (
-              <Fragment key={turnIndex + i + 20}>
+              <Fragment key={turnIndex + timeStart + timeEnd + timeLunch}>
                 {isValidIndex && <tr style={{ fontWeight: '500' }}>
                   <td><strong>{turnIndex}</strong></td>
                   <td>{timeStart}</td>
@@ -74,13 +72,15 @@ const TurnsTable = ({ turns, onAddNewTurn, addingNewTurn, onSaveTurn, onCancel, 
                     <td><TimePicker start="04:00" end="18:00" format="12" step={30} onChange={handleSelectTimeStart} value={selectTimeStart} /></td>
                     <td><TimePicker start={timeFromInt(selectTimeStart)} end="24:00" step={30} onChange={handleSelectTimeEnd} value={selectTimeEnd} /></td>
                     <td><TimePicker start={timeFromInt(selectTimeStart + (30 * 60))} end={timeFromInt(selectTimeEnd)} step={30} onChange={handleSelectTimeLunch} value={selectTimeLunch} /></td>
-                    <td className='text-center align-middle' onClick={() => onSaveTurn(selectTimeStart, selectTimeEnd, selectTimeLunch)}>
+                    <td
+                      className='text-center align-middle'
+                      onClick={() => onSaveTurn(selectTimeStart, selectTimeEnd, selectTimeLunch)}
+                    >
                       <IIcon
                         name='checkmark'
                         width={14}
                         height={14}
                         color='primary'
-                      // onClick={() => onSaveTurn(selectTimeStart, selectTimeEnd, selectTimeLunch)}
                       />
                     </td>
                   </tr>
@@ -110,7 +110,7 @@ const TurnsTable = ({ turns, onAddNewTurn, addingNewTurn, onSaveTurn, onCancel, 
           <p>Create turn hours to manage user schedules</p>
         </div>
       )} */}
-      {!addingNewTurn && <div className='ml-2 pt-2' style={{ marginTop: '-48px' }}>
+      {!addingNewTurn && <div className='ml-2 pt-1' style={{ marginTop: '-48px' }}>
         <MButton
           onClick={onAddNewTurn}
           IconComponent={iconComponents.Plus}
@@ -120,18 +120,16 @@ const TurnsTable = ({ turns, onAddNewTurn, addingNewTurn, onSaveTurn, onCancel, 
         // style={{ marginTop: '5px', marginLeft: '8px' }}
         />
       </div>}
-      {addingNewTurn && <div className='ml-2 pt-2' style={{ marginTop: '-48px' }}>
+      {addingNewTurn && <div className='ml-2 pt-1' style={{ marginTop: '-48px' }}>
         <MButton
           onClick={onCancel}
           text='Cancel'
           variant='light'
           size='sm'
-
         // style={{ marginTop: '-48px' }}
         // style={{ marginTop: '5px', marginLeft: '8px' }}
         />
       </div>}
-
     </div>
   )
 }

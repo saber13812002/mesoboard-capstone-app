@@ -9,24 +9,6 @@ const Mailer = require('../models/Mailer/Mailer');
 const utils = require('../lib/utils');
 
 
-// setTransporter = () => {
-//   let transporter = nodemailer.createTransport({
-//     pool: true,
-//     host: config.mailServiceCredentials.host,
-//     port: config.mailServiceCredentials.port,
-//     secure: config.mailServiceCredentials.ssl,
-//     auth: {
-//       user: config.mailServiceCredentials.email,
-//       pass: config.mailServiceCredentials.password
-//     },
-//     tls: {
-//       rejectUnauthorized: false
-//     }
-//   });
-//   return transporter;
-// };
-
-
 readFile = (dir, file) => {
   const content = fs.readFileSync(dir + "/" + file, 'utf8', (err, data) => {
     if (err) {
@@ -41,64 +23,39 @@ attachLink = (html1, html2, link) => {
   let htmlContent = readFile(views_dir, html1);
   htmlContent += link;
   htmlContent += readFile(views_dir, html2);
-
   return htmlContent;
 };
 
-setMailOptions = (mailInfo) => {
-  let cc = "";
-  const dSize = mailInfo.cc.length;
 
-  //converts array to string of recipients
-  for (let d = 0; d < dSize; d++) {
-    cc += mailInfo.cc[d];
-    if (d < dSize - 1) {
-      cc += ",";
-    }
-  }
+exports.sendVerificationEmail = async (req, res, next) => {
+  console.log('\nsendVerificationEmail', req.app.locals)
+  // const email = req.app.locals.email;
+  // const token = req.app.locals.token;
+  const { email, token } = req.app.locals;
 
-  console.log("mailer.js - setMailOptions(mailInfo)");
-
-  const mailOptions = {
-    from: '"' + mailInfo.displayName + '"' + '<' + config.mailServiceCredentials.email + '>',
-    bcc: cc,
-    subject: mailInfo.subject,
-    text: mailInfo.content,
-    html: mailInfo.htmlContent
-  };
-
-  console.log('mailOptions', mailOptions.from)
-
-  return mailOptions;
-};
-
-
-
-exports.sendVerificationEmail = (req, res, next) => {
-  console.log('sendVerificationEmail')
-  const { token, email } = req.app.locals
+  console.log('email', email);
+  // console.log('token', token);
 
   if (!email) {
-    return db.any("select email from users natural inner join tokens where token_str = $1", [token]).then(data => {
+    return db.any("select email from users natural inner join tokens where token_str = $1", token).then(data => {
       email = data.email;
     });
   }
 
   const link = utils.getUrlByEnvironment(req, `api/auth/confirmEmail/${email}/${token}`);
-  console.log('link', link)
+  console.log('link', link);
   const html = attachLink("confirm-email/confirm-email1.html", "confirm-email/confirm-email2.html", link);
   const mailInfo = preparations.prepareVerification(req, html);
   const mailer = new Mailer(mailInfo);
-  mailer.sendMail(mailOptions);
+  mailer.sendMail('Register confirmation email sent');
 };
 
 
-exports.sendResetPasswordEmail = (req, res, next) => {
+exports.sendResetPasswordEmail = async (req, res, next) => {
   const email = req.body.email;
   console.log('\n\nemail', email);
 
   let link = utils.getUrlByEnvironment(req, 'api/auth/');
-  // console.log('link', link);
 
   return db.task(async t => {
     return t.one("select * from users where email = $1", email).then(data => {
@@ -110,23 +67,8 @@ exports.sendResetPasswordEmail = (req, res, next) => {
     console.log('link', link, '\n\n');
     let html = attachLink("reset-password/reset-password1.html", "reset-password/reset-password2.html", link);
     let mailInfo = preparations.prepareResetEmail(req, html);
-    // let transporter = setTransporter();
-    // let mailOptions = setMailOptions(mailInfo);
-    // return transporter.sendMail(mailOptions).then(data => {
     const mailer = new Mailer(mailInfo);
-
-    mailer.sendMail('Password Reset Email sent');
-    // return mailer.sendMail(mailOptions).then(data => {
-    //   console.log('-data', data)
-    //   res.status(200).json({
-    //     data: data,
-    //     status: "Success",
-    //     message: 'Password Reset Email sent'
-    //   });
-    //   res.end();
-    // }).catch(error => {
-    //   next(error);
-    // });
+    mailer.sendMail('Password reset email sent');
   }).catch(error => {
     next(error);
   });
@@ -159,3 +101,11 @@ exports.sendRegisterInvitationEmail = (req, res, next) => {
   mailer.sendMail('Invitation email sent and permission added');
   // Added permission credentials of type ${type} with provisional code ${code} to ${email} successfully
 };
+
+exports.sendScheduleMail = (req, res, next) => {
+  const schedule_id = req.body.schedule_id;
+
+  console.log('schedule_id', schedule_id);
+
+  res.end();
+}

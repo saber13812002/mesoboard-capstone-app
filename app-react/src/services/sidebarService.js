@@ -107,18 +107,16 @@ export const allLinks = {
 
 export const setSidebarActiveItemNameByUrlPath = setter => {
   const pathname = window.location.pathname;
-  const { schedule, profiles, requests, memos, permissions } = urlSlugs;
+  const { profiles, permissions } = urlSlugs;
   const includes = slug => pathname.includes(`/${slug}`);
 
-  let activeItemName = sidebarItemNames.home;
-  if (includes(schedule))
-    activeItemName = sidebarItemNames.schedule;
-  else if (includes(profiles))
+  let activeItemName = sidebarItemNames.schedule;
+  if (includes(profiles))
     activeItemName = sidebarItemNames.profiles;
-  else if (includes(requests))
-    activeItemName = sidebarItemNames.requests;
-  else if (includes(memos))
-    activeItemName = sidebarItemNames.memos;
+  // else if (includes(requests))
+  //   activeItemName = sidebarItemNames.requests;
+  // else if (includes(memos))
+  //   activeItemName = sidebarItemNames.memos;
   else if (includes(permissions))
     activeItemName = sidebarItemNames.permissions;
 

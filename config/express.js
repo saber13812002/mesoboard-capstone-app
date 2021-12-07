@@ -50,6 +50,7 @@ module.exports = function () {
   require('../routes/permission-routes')(app);
   require('../routes/schedule-routes')(app);
   require('../routes/profiles-routes')(app);
+  require('../routes/notification-routes')(app);
 
   // Have Node serve the files for our built React app
   app.use(express.static(path.resolve(__dirname, '../app-react/build')));

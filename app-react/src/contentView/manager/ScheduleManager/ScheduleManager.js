@@ -1,5 +1,5 @@
 import './ScheduleButtons.css'
-import { useState, useEffect, useContext } from "react";
+import { useState, useEffect, useContext, useRef } from "react";
 import axios from "axios";
 import moment from "moment";
 import { AuthContext } from "../../../store";
@@ -17,10 +17,16 @@ import {
 } from "../../../services/scheduleService";
 import Papa from "papaparse";
 
-const m1 = moment();
-const m2 = moment();
+const m1 = moment().clone();
+const m2 = moment().clone();
 const sunday = m1.clone().startOf("week");
 const monday = m2.clone().startOf("week").add(1, "day");
+
+console.log('m1', m1)
+console.log('m2', m2)
+console.log('m1.isSame(sunday, date)', m1.isSame(sunday, 'date'))
+console.log('m2.isSame(monday, date)', m2.isSame(monday, 'date'))
+
 // console.log('sunday', sunday)moment()
 // console.log('monday', monday)
 // console.log('m1.isSame(sunday)', m1.isSame(sunday, 'date'))
@@ -28,11 +34,11 @@ const monday = m2.clone().startOf("week").add(1, "day");
 let startOfThisWeek = moment().clone();
 let endOfThisWeek = moment().clone();
 if (m1.isSame(sunday, "date")) {
-  // console.log('decrementing...')
+  console.log('decrementing...')
   startOfThisWeek.add(-5, "day"); //tuesday
   endOfThisWeek.add(1, "day"); //monday
 } else if (m2.isSame(monday, "date")) {
-  // console.log('MONDAY decrement')
+  console.log('MONDAY decrement')
   startOfThisWeek.add(-6, "day");
 } else {
   startOfThisWeek = moment().clone().startOf("week").add(2, "day");
@@ -68,6 +74,10 @@ const ScheduleManager = () => {
 
   // context
   const { authState } = useContext(AuthContext);
+
+  // others
+  // const [amountMailsSend, setAmountMailsSend] = useState(0);
+  // const sendMailButtonEl = useRef(null);
 
   /** Initializing the manager TURNS once. */
   const userId = authState.userId;
@@ -222,6 +232,11 @@ const ScheduleManager = () => {
     }
   };
 
+  // const mailSchedule = () => {
+  //   const schedule_id = getScheduleIdOfMoment(mWeekStart);
+  //   axios.post(server.mailSchedule(), { schedule_id });
+  // }
+
   /************************************************/
   /*           Schedule Turns Functions           */
   /************************************************/
@@ -347,12 +362,16 @@ const ScheduleManager = () => {
     setEditingUser(false);
   };
 
-
   const saveScheduleOfUser = (emp) => {
     console.log('emp', emp)
     setEditingUser(false);
     setUserToEdit(emp);
   };
+
+
+  /************************************************/
+  /*           Import/Export Functions            */
+  /************************************************/
 
 
   const handleFileUpload = (e) => {
@@ -462,6 +481,9 @@ const ScheduleManager = () => {
               onOpenScheduleEdit={openScheduleEdit}
               onOpenScheduleDetails={openScheduleDetails}
               isEditable={turns.length > 0 && turns[0].turnIndex > 0}
+            // onMailSchedule={mailSchedule}
+            // amountMailsSend={amountMailsSend}
+            // ref={sendMailButtonEl}
             />
           </section>
 

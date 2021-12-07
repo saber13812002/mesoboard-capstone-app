@@ -1,10 +1,11 @@
 // import { useEffect, useContext } from 'react' //rafce shortcut
 import './App.css';
 import { BrowserRouter as Router, Route, Redirect } from 'react-router-dom'
-import { Layout } from './layout'
+import { Layout } from './layout';
 import { AuthProvider } from './store';
 import { Signin, Authenticate, ForgotPassword } from './authentication';
-import { isLoggedIn } from './services/authService'
+import { isLoggedIn } from './services/authService';
+import { urlSlugs } from './services/urlService';
 
 const ProtectedRoute = ({ children, ...rest }) => {
   return (
@@ -13,7 +14,7 @@ const ProtectedRoute = ({ children, ...rest }) => {
       return isLoggedIn()
         ? children
         : <Redirect to={{
-          pathname: '/signin',
+          pathname: `/${urlSlugs.signin}`,
           state: { from: location }
         }} />
     }} />
@@ -24,10 +25,10 @@ function App() {
   return (
     <AuthProvider>
       <Router>
-        <Route exact path='/'><Redirect to='/signin' /></Route>
-        <Route exact path='/authenticate' component={Authenticate} />
-        <Route exact path='/signin' component={Signin} />
-        <Route exact path='/forgot-password' component={ForgotPassword} />
+        <Route exact path='/'><Redirect to={`/${urlSlugs.signin}`} /></Route>
+        <Route exact path={`/${urlSlugs.authenticate}`} component={Authenticate} />
+        <Route exact path={`/${urlSlugs.signin}`} component={Signin} />
+        <Route exact path={`/${urlSlugs.forgotPassword}`} component={ForgotPassword} />
         <ProtectedRoute path='/app/:view'>
           <Layout />
         </ProtectedRoute>

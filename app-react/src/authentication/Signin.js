@@ -4,6 +4,7 @@ import { Form, Button } from 'react-bootstrap';
 import { AuthContext } from '../store'
 import { AuthWrapper } from '.';
 import { isLoggedIn } from '../services/authService';
+import { urlSlugs } from '../services/urlService';
 import { NavLink } from 'react-router-dom';
 
 const Signin = () => {
@@ -27,19 +28,19 @@ const Signin = () => {
     <AuthWrapper redirectToApp={redirectToApp}>
       <h2 style={{ color: '#287F4E', textAlign: 'center' }}>Iniciar Sesión</h2>
       <Form onSubmit={handleSignin}>
-        <Form.Control className='mt-4' size="lg" type="text" placeholder="Correo electrónico" />
-        <Form.Control className='mt-3' size="lg" type="text" placeholder="Contraseña" />
-        <Button type="submit" variant="primary" className="w-100 mt-3">
+        <Form.Control className='mt-4' type='text' placeholder='Correo electrónico' />
+        <Form.Control className='mt-3' type='password' placeholder='Contraseña' />
+        <Button type='submit' variant='primary' className='w-100 mt-3'>
           Iniciar
         </Button>
       </Form>
       <p className='auth__redirect auth__resetPassword'>
-        <NavLink to={'forgot-password'}>
+        <NavLink to={`/${urlSlugs.forgotPassword}`}>
           ¿Olvidó su contraseña?
         </NavLink>
       </p>
       <p className='auth__redirect'>
-        <NavLink to={'authenticate'}>
+        <NavLink to={`/${urlSlugs.authenticate}`}>
           Registrarse
         </NavLink>
       </p>
