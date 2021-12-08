@@ -1,9 +1,9 @@
 
 .addPermission__card {
-  width: 32%;
+  width: 38%;
   /* width: 420px; */
-  min-width: 302px;
-  max-width: 420px;
+  min-width: 320px;
+  max-width: 430px;
 }
 
 .addPermission__card > header {
@@ -27,4 +27,8 @@
 .addPermission__form > .dropdown > button,
 .dropdown-menu {
   width: 100%;
+}
+
+.addPermission__form > .dropdown > .dropdown-item {
+  word-wrap: break-word;
 }

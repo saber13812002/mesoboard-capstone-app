@@ -10,14 +10,13 @@ import { timeFromInt, timeToInt } from "time-number";
 import { DateRange } from "../..";
 import { ServerRoutes as server } from "../../../services/apiService";
 import {
-  getScheduleIdOfIsoDateStr,
   getScheduleIdOfMoment,
   getTurnIdByTime,
   get24HourFormatOfTime,
   calculateTotalHours,
 } from "../../../services/scheduleService";
 import Papa from "papaparse";
-import XLSX from 'xlsx';
+// import XLSX from 'xlsx';
 
 const m1 = moment().clone();
 const m2 = moment().clone();
@@ -117,15 +116,13 @@ const ScheduleManager = () => {
       const scheduleId = getScheduleIdOfMoment(mWeekStart);
       const url = server.getUserSchedule(scheduleId);
       // console.log('url', url)
-      axios
-        .get(url)
-        .then((res) => {
-          if (res.data.userSchedulesData) {
-            const userSchedulesData = res.data.userSchedulesData;
-            // console.log('res.userSchedulesData', userSchedulesData);
-            setUsers(userSchedulesData);
-          } else setUsers([]);
-        })
+      axios.get(url).then((res) => {
+        if (res.data.userSchedulesData) {
+          const userSchedulesData = res.data.userSchedulesData;
+          // console.log('res.userSchedulesData', userSchedulesData);
+          setUsers(userSchedulesData);
+        } else setUsers([]);
+      })
         .catch((err) => console.log(err));
     };
     // setTimeout(() => getWeekSchedule(), 2000)

@@ -1,4 +1,3 @@
-// manager
 import HomeManager from "./manager/HomeManager/HomeManager";
 import ScheduleManager from "./manager/ScheduleManager/ScheduleManager";
 import CheckManager from "./manager/CheckManager/CheckManager";
@@ -16,6 +15,8 @@ import ScheduleHoursBox from './shared/ScheduleShared/ScheduleHoursBox';
 import ProfileScheduleDetails from './shared/Details/ProfileScheduleDetails';
 import EntityDetails from './shared/Details/EntityDetails';
 import DetailsCard from './shared/Details/DetailsCard';
+
+import ScheduleEmployee from './employee/ScheduleEmployee/ScheduleEmployee';
 
 
 export {
@@ -35,5 +36,6 @@ export {
   AddPermission,
   ProfileScheduleDetails,
   EntityDetails,
-  DetailsCard
+  DetailsCard,
+  ScheduleEmployee
 }

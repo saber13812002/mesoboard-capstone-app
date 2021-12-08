@@ -43,12 +43,12 @@ const UserPermissionsManager = () => {
     }];
 
     axios.get(server.getAllUsersAndPermissions()).then(res => {
-      console.log('.users', res.data.data)
+      // console.log('.users', res.data.data)
       setUsers(res.data.data)
     })
 
     axios.get(server.getAllRestaurants()).then(res => {
-      console.log('.restaurants', res.data.restaurants)
+      // console.log('.restaurants', res.data.restaurants)
       setRestaurants(res.data.restaurants)
     })
   }, [addingNewPermission])

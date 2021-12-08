@@ -55,6 +55,7 @@ const AuthReducer = (state, action) => {
       }
     }
     case types.RESET: {
+      console.log('payload', payload)
       return payload
     }
     default:
