@@ -18,7 +18,7 @@ const pgp = require('pg-promise')(options);
 
 // Use pgp to connect to postgres
 // const db = pgp(config.connectionString);
-const db = process.env.DATABASE_URL;
+const db = config.connectionString;
 
 // Define the postgres configuration method
 module.exports = function () {
