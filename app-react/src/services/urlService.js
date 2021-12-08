@@ -14,6 +14,9 @@ export const urlSlugs = {
 
 export const urlPaths = {
   // transfer above to here
+  signin: `/app/${urlSlugs.signin}`,
+  authenticate: `/app/${urlSlugs.authenticate}`,
+  forgotPassword: `/app/${urlSlugs.forgotPassword}`,
   profile: `/app/${urlSlugs.profile}`,
   // home: `/app/${urlSlugs.home}`,
   schedule: `/app/${urlSlugs.schedule}`,
