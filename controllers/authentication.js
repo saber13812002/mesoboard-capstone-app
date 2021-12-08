@@ -2,8 +2,8 @@
 /* first include the db config. This is important for every controller file because it does the db queries. */
 const db = require('../config/postgres')();
 const fs = require('fs');
-const authUtils = require('../lib/authUtils')
-const utils = require('../lib/utils')
+const authUtils = require('../lib/authUtils');
+const utils = require('../lib/utils');
 
 exports.login = (req, res, next) => {
   const { email, password } = req.body
