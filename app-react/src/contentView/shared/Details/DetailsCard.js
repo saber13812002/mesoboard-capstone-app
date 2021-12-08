@@ -27,9 +27,6 @@ const genders = {
 const DetailsCard = () => {
   const { authState } = useContext(AuthContext);
   const { firstName, lastName, employeeId, location, gender, userType, email } = authState;
-  console.log(genders)
-  console.log(gender)
-  console.log('userTypes', userTypes)
 
   return (
     <div>
@@ -44,13 +41,13 @@ const DetailsCard = () => {
         </div>
         <div className='dc_container2'>
           <h6 className='title'>Género</h6>
-          <h5>{genders[gender].label}</h5>
+          <h5>{genders[gender]?.label}</h5>
 
           <h6 className='title'>ID</h6>
           <h5>{employeeId}</h5>
 
           <h6 className='title'>Tipo de Usuario</h6>
-          <h5>{userTypes[userType].label}</h5>
+          <h5>{userTypes[userType]?.label}</h5>
         </div>
       </div>
     </div>

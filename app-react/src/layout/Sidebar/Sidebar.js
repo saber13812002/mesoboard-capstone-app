@@ -21,7 +21,7 @@ let profilesItem = new SidebarItem(allLinks.PROFILES);
 let permissionsItem = new SidebarItem(allLinks.PERMISSIONS);
 
 // variables
-const rootItem = scheduleItem;
+let rootItem = scheduleItem;
 
 const Sidebar = () => {
   const [redirectToSignin, setRedirectToSignin] = useState(isLoggedOut()); //temporary logout HERE
@@ -36,20 +36,21 @@ const Sidebar = () => {
     if (!userType) return;
 
     // // initialize sidebar list with items that are shared by every type of user
-    scheduleItem.setNext(profilesItem)
     // scheduleItem.setNext(requestsItem); //request component is priority to implement
 
     // add items by type of user
     switch (userType) {
       case userTypes.manager.value:
-        // requestsItem.setNext(profilesItem);
+        scheduleItem.setNext(profilesItem)
         profilesItem.setNext(permissionsItem);
         break;
       case userTypes.admin.value:
+        rootItem = profilesItem;
         // requestsItem.setNext(profilesItem);
         profilesItem.setNext(permissionsItem);
         break;
       default:
+        // scheduleItem.setNext(profilesItem)
         break;
     }
     setSidebarItems(rootItem.toArray());

@@ -83,7 +83,7 @@ exports.sendRegisterInvitationEmail = (req, res, next) => {
   const userType = utils.getUserTypeInSpanish(request_data.permission_type);
   const toAdd = ` ${userType}. Su codigo temporero es ${code}`;
 
-  const link = utils.getUrlByEnvironment(req, 'authenticate', 3000);
+  const link = utils.getUrlByEnvironment(req, 'autenticar', 3000);
   const html = attachLink("register-invitation/register-invitation1.html",
     "register-invitation/register-invitation2.html", toAdd) +
     link + readFile(views_dir, "register-invitation/register-invitation3.html");

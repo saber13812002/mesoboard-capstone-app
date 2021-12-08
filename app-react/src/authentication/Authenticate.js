@@ -38,13 +38,12 @@ const Authenticate = () => {
     setVerificationFetch(undefined)
     setCode(cachedCode)
     setEmail(cachedEmail)
-    // maybe add a state and use it along with the userType in context 
-    // to speed up the switch
   }
 
   const handleVerifyPermission = async (e) => {
     const email = e.target[0]?.value;
     const codeValue = e.target[1]?.value;
+    // console.log('code', code)
     console.log(email, codeValue);
 
     if (codeValue.length > 0 && email.includes('@')) {

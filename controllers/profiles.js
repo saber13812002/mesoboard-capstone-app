@@ -43,9 +43,10 @@ exports.getAllUsersWithSchedule = async (req, res, next) => {
   const q = scheduleUtils.outerJoinUserScheduleQuery;
 
 
-  return db.many(q, schedule_id).then(userSchedulesData => {
-    // console.log('userSchedulesData', userSchedulesData)
-    userSchedulesData = scheduleUtils.joinUserSchedulesByUser(userSchedulesData);
+  return db.manyOrNone(q, schedule_id).then(userSchedulesData => {
+    console.log('userSchedulesData', userSchedulesData);
+    if (userSchedulesData.length > 0)
+      userSchedulesData = scheduleUtils.joinUserSchedulesByUser(userSchedulesData);
     console.log('-res', userSchedulesData)
     // res.status(200).json({ userSchedulesData, status: 'success' })
     // console.log('data', data)

@@ -1,4 +1,5 @@
 var db = require('../config/postgres')();
+const utils = require('../lib/utils');
 
 const notificationTypes = {
   newUser: 'new_user',
@@ -9,7 +10,8 @@ const notificationTypes = {
 
 exports.notifyUserGotRegistered = async (req, res, next) => {
   const user_full_name = req.app.locals.name;
-  const user_type = req.app.locals.user_type;
+  let user_type = req.app.locals.user_type;
+  user_type = utils.getUserTypeInSpanish(user_type);
   const title = 'User Registered';
   const body = `${user_type} ${user_full_name} ha sido registrado`;
   const restaurant_id = req.app.locals.restaurant_id;

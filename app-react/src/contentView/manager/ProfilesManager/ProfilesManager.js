@@ -90,6 +90,9 @@ const ProfilesManager = () => {
     getAllProfiles();
   }, [])
 
+  if (profiles.length === 0)
+    return <h4 className='mt-3'>No Users to Display</h4>
+
   // console.log('profiles', profiles);
   return (
     <>
@@ -105,3 +108,21 @@ const ProfilesManager = () => {
 }
 
 export default ProfilesManager
+
+
+// <>
+//       {(Object.keys(profileDetails).length > 0) && (
+//         <ProfileScheduleDetails userScheduleData={profileDetails} currentMoment={mCurrent} weekStartMoment={mWeekStart} onBack={() => setProfileDetails({})} />
+//       )
+//       {(Object.keys(profileDetails).length === 0) && (<>
+//         {profiles.length > 0 && (
+//           <h2>No Users to Display</h2>
+//         )}
+//         {profiles.length === 0 && (
+//           <div className='profilesManager'>
+//             {(profiles.length > 0 && columns.length > 0) && <BootstrapTable responsive bootstrap4 bordered={false} keyField='name' data={profiles} columns={columns} />}
+//           </div>
+//         )}
+//         </>
+//         )}
+//     </>
