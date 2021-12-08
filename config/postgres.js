@@ -15,8 +15,11 @@ const options = {
 //  overrode pg-promise’s default promise library - ES6 Promises - 
 // with Bluebird by setting the promiseLib property in the options object.
 const pgp = require('pg-promise')(options);
+
 // Use pgp to connect to postgres
-const db = pgp(config.connectionString);
+// const db = pgp(config.connectionString);
+const db = process.env.DATABASE_URL;
+
 // Define the postgres configuration method
 module.exports = function () {
   //return connection instance
