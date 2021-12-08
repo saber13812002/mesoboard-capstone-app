@@ -11,7 +11,7 @@ import {
 
 /** returns the component to be viewed */
 const handleView = view => {
-  const { schedule, profiles, permissions, profile } = urlSlugs;
+  const { schedule, profiles, permissions } = urlSlugs;
 
   switch (view) {
     case schedule:

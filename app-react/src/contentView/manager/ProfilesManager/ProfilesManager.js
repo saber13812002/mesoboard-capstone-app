@@ -5,7 +5,7 @@ import moment from 'moment';
 import BootstrapTable from 'react-bootstrap-table-next';
 import { ProfileScheduleDetails } from '../..';
 import { ServerRoutes as server } from '../../../services/apiService';
-import { getScheduleIdOfMoment, calculateAccumulatedHours } from '../../../services/scheduleService';
+import { getScheduleIdOfMoment } from '../../../services/scheduleService';
 
 
 const m1 = moment()

@@ -11,7 +11,6 @@
   vertical-align: middle;
 }
 
-
 @media only screen and (max-width: 1200px) {
   .profilesManager > .react-bootstrap-table {
     width: 100%;

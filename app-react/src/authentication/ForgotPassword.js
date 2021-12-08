@@ -1,6 +1,6 @@
 import './Auth.css';
 import { useState, useEffect } from 'react';
-import { Form, Button } from 'react-bootstrap';
+import { Form } from 'react-bootstrap';
 import { AuthWrapper } from '.';
 import { isLoggedIn } from '../services/authService';
 import { useHistory } from 'react-router-dom';

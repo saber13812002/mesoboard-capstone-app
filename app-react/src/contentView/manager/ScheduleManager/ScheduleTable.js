@@ -17,7 +17,7 @@ const ScheduleTable = ({ users, isEditable, onOpenScheduleEdit, onOpenScheduleDe
     // let weekDatesArr = [0, 1, 2, 3, 4, 5, 6].map(day => weekDates[day] ? weekDates[day] : null)
 
     return (
-      <tr key={name}>
+      <tr key={name + key}>
         {isEditable && (
           <td className='align-middle icon'>
             <IIcon
@@ -36,11 +36,11 @@ const ScheduleTable = ({ users, isEditable, onOpenScheduleEdit, onOpenScheduleDe
         </td>
         {(window.innerWidth > 1080) && weekDates.map((weekDate, i) => weekDate
           ? (
-            <td key={key + i} className='hoursBox'>
+            <td key={key + i + name} className='hoursBox'>
               <ScheduleHoursBox weekDate={weekDate} isHourLunch={isHourLunch} />
             </td>
           )
-          : <td key={i}></td>
+          : <td key={name + i}></td>
         )}
         {(weekDates.length === 0) && [0, 1, 2, 3, 4, 5, 6].map(i => <td key={i}></td>)}
         <td className='totalHours'>{totalHours}</td>

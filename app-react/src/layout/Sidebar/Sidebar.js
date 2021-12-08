@@ -48,6 +48,7 @@ const Sidebar = () => {
       case userTypes.admin.value:
         // requestsItem.setNext(profilesItem);
         profilesItem.setNext(permissionsItem);
+        break;
       default:
         break;
     }

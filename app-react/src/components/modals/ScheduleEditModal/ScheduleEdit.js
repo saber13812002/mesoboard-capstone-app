@@ -1,13 +1,12 @@
-import './ScheduleEdit.css'
-import classes from './ScheduleEditModal.module.css'
-import { useState, useEffect } from 'react'
-import { Modal } from '../..'
-import { Icon, iconComponents, MButton } from '../..'
-import { ScheduleHoursBox } from '../../../contentView'
-import { getDayName, beautifyDate, get24HourFormatOfTime, toISOYearFormat } from '../../../services/scheduleService'
-import Dropdown from 'react-dropdown';
+import './ScheduleEdit.css';
+import classes from './ScheduleEditModal.module.css';
+import { useState, useEffect } from 'react';
+import { Modal } from '../..';
+import { Icon, iconComponents, MButton } from '../..';
+import { ScheduleHoursBox } from '../../../contentView';
+import { getDayName, beautifyDate, get24HourFormatOfTime, toISOYearFormat } from '../../../services/scheduleService';
+import Select from 'react-select'
 import 'react-dropdown/style.css';
-import moment from 'moment';
 
 const portalElement = document.getElementById('navdrawer-portal');
 
@@ -19,10 +18,14 @@ const ScheduleEdit = ({ user, turns, dateStart, dateEnd, mCurrent, onSaveChanges
   const [userOriginal] = useState(deepCopy2)
   const [isSameData, setIsSameData] = useState(true)
   // const [selectedTurnIndex, setSelectedTurnIndex] = useState(undefined)
-
+  const [selectedOption, setSelectedOption] = useState(null);
   const { name, weekDates } = userToEdit;
-  const ids = turns.map(turn => turn.turnIndex)
+  const ids = turns.map((turn) => {
+    const res = { 'value': turn.turnIndex, 'label': turn.turnIndex };
+    return (res)
+  }
 
+  )
   useEffect(() => {
     setIsSameData(!hasDataChanged())
   }, [userToEdit])
@@ -178,12 +181,12 @@ const ScheduleEdit = ({ user, turns, dateStart, dateEnd, mCurrent, onSaveChanges
                     onClick={() => removeWeekDateFromUser(day)}
                   />
                   <h4>{getDayName(day)}</h4>
-                  {<Dropdown
-                    value={turnIndex}
+                  <Select
+                    defaultValue={selectedOption}
                     options={ids}
-                    onChange={(e) => updateHours(day, e)}
-                    arrowOpen={<span className="arrow-open" />}
-                  />}
+                    // onChange={(e) => { updateHours(day, e); setSelectedOption(e.value) }}
+                    placeholder={turnIndex}
+                  />
                   <ScheduleHoursBox isHourLunch={userToEdit.isHourLunch} weekDate={weekDate} showLunchMins={true} />
                 </div>
               )

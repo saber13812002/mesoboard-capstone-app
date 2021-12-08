@@ -106,7 +106,7 @@ export const get24HourFormatOfTime = (t, zeroOnHour) => {
 
   if (t.includes('PM')) {
     let hour = Number(split[0]);
-    if (hour != 12)
+    if (hour !== 12)
       hour += 12;
     return (hour + ':' + split[1]).substr(0, t.length - 2).trim();
   }
@@ -136,7 +136,7 @@ export const get12HourFormatByTurnId = (tid, spaceBeforePeriod) => {
     hour = Number(tid[0] + tid[1]);
     minute = tid[2] + tid[3];
     if (hour >= 12) period = 'PM';
-    if (hour == 24) hour = '00';
+    if (hour === 24) hour = '00';
   }
   // console.log(hour + ':' + minute + (spaceBeforePeriod ? ' ' : '') + period)
   return hour + ':' + minute + (spaceBeforePeriod ? ' ' : '') + period;
@@ -209,7 +209,7 @@ export const calculateAccumulatedHours = profileArr => {
 
     const isHourLunch = profile.isHourLunch;
     let now = moment.utc().clone();
-    let mCurrStart, mCurrEnd, mCurrLunch, nowDay, mCurrStartDay, mCurrEndDay;
+    let mCurrStart, mCurrEnd, mCurrLunch, nowDay, mCurrStartDay; //mCurrEndDay;
     let accHours = 0;
     // iterate through each valid week date
     for (let d of weekDates) {
@@ -227,7 +227,7 @@ export const calculateAccumulatedHours = profileArr => {
       // day of the week for each
       nowDay = now.toDate().getDate();
       mCurrStartDay = mCurrStart.toDate().getDate();
-      mCurrEndDay = mCurrEnd.toDate().getDate();
+      // mCurrEndDay = mCurrEnd.toDate().getDate();
 
 
       // console.log('mCurrStartDay', mCurrStartDay)

@@ -1,7 +1,7 @@
 import './ProfileCard.css';
 import { Icon, iconComponents } from '../../components';
 import { useHistory } from 'react-router-dom';
-import { urlPaths, urlSlugs } from '../../services/urlService';
+import { urlPaths } from '../../services/urlService';
 
 const ProfileCard = ({ cardDimensions, onHideCard, onLogout }) => {
   const history = useHistory();

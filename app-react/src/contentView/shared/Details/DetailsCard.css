@@ -2,7 +2,7 @@
     border: 1px solid #D8D8D8;
     background: white;
     border-radius: 10px;
-    
+
 }
 
 .title{
@@ -31,4 +31,8 @@
 
 .scheduleDetails__profileInfo{
     width: 50%;
+}
+
+@media only screen and (max-width: 1000px) {
+   
 }
