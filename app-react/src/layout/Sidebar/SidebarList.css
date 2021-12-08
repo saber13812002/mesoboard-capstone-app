@@ -1,0 +1,33 @@
+.sidebarList > ul > li {
+  height: 50px;
+}
+
+.sidebarList > ul > li > a {
+  color:#767676;
+  display: flex;
+  padding-left: 22px;
+  height: 100%;
+}
+
+.sidebarList > ul > li > a.activeClassName {
+  color: #287F4E !important;
+  font-weight: 500;
+}
+
+.sidebarList > ul > li > a:hover {
+  color: #287F4E !important;
+}
+
+.sidebarList > ul > li > a:hover {
+  font-weight: 500;
+}
+
+
+@media only screen and (max-width: 425px) {
+  .sidebarIcon{
+    position: relative;
+    top: none;
+    transform: translate(-50%,-30%);
+    display: flex;
+  }  
+}

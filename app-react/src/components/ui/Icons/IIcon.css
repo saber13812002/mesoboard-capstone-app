@@ -1,0 +1,15 @@
+.iicon:hover {
+  cursor: pointer !important;
+}
+
+.iicon > svg > path {
+  fill: #3E3C3C;
+}
+
+.iicon.primary > svg > path {
+  fill: #287F4E;
+}
+
+.iicon.secondary > svg > path {
+  fill: #F5D40A;
+}

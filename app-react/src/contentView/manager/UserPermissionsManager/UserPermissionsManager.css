@@ -1,0 +1,8 @@
+.userPermissionsManager > .react-bootstrap-table {
+  padding: 0 0 55px;
+}
+
+td.nameTd > .permissionName {
+  background-color: #ba302b23;
+  cursor: initial;
+}

@@ -1,0 +1,30 @@
+
+.addPermission__card {
+  width: 32%;
+  /* width: 420px; */
+  min-width: 302px;
+  max-width: 420px;
+}
+
+.addPermission__card > header {
+  margin: -1px -1px 0 0;
+}
+
+.addPermission__card > form {
+  width: 80%;
+  margin: 0 auto;
+  text-align: center;
+}
+
+/* .addPermission__card > form > h2 {
+  white-space: nowrap
+} */
+
+.addPermission__card > form > .form-control {
+  border: 1px solid #287F4E;
+}
+
+.addPermission__form > .dropdown > button,
+.dropdown-menu {
+  width: 100%;
+}

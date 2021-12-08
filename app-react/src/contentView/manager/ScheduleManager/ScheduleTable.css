@@ -1,0 +1,111 @@
+.scheduleTable > .table-responsive {
+  box-shadow: rgba(50, 50, 93, 0.25) 0px 6px 12px -2px, rgba(0, 0, 0, 0.3) 0px 3px 7px -3px;
+  background: white;
+  /* padding: 40px 0 55px; */
+  /* margin-top: -40px; */
+  /* padding-bottom: 55px; */
+}
+
+.table-responsive > .scheduleTable__table {
+  margin: 0;
+  /* padding */
+}
+
+.table-responsive > .scheduleTable__table > tbody {
+  user-select: none; /* supported by Chrome and Opera */
+  -webkit-user-select: none; /* Safari */
+  -khtml-user-select: none; /* Konqueror HTML */
+  -moz-user-select: none; /* Firefox */
+  -ms-user-select: none; /* Internet Explorer/Edge */
+}
+
+/* .table-responsive {
+  background: #FFFFFF;
+  border: 1px solid #D8D8D8;
+  box-shadow: rgba(50, 50, 93, 0.25) 0px 6px 12px -2px, rgba(0, 0, 0, 0.3) 0px 3px 7px -3px;
+} */
+
+.scheduleTable__table>:not(:first-child) {
+  border-top: none;
+}
+
+
+/* .responsiveTable > thead > tr > th:first-child() {
+  white-space: pre-wrap
+} */
+
+.scheduleTable__table > thead,
+.scheduleTable__table > tbody {
+  border: 1.5px solid #d8d8d8;
+}
+
+/* .scheduleTable__table > thead > tr {
+  height: 40px
+} */
+
+.scheduleTable__table > thead > tr > th:first-child {
+  padding-left: 16px;
+}
+/* .scheduleTable__table > thead > tr > th:not(:first-child) { */
+
+.scheduleTable__table > thead > tr > th.name {
+  text-align: left !important;
+}
+.scheduleTable__table > thead > tr > th:not(:nth-child(1)) {
+  text-align: center;
+}
+
+.scheduleTable__table > thead > tr > th:last-child {
+  padding-right: 8px
+}
+
+.scheduleTable__table > tbody > tr {
+  height: 60px;
+}
+.scheduleTable__table > tbody > tr > td {
+  /* padding-left: 0; */
+  white-space: nowrap;
+}
+
+.scheduleTable__table > tbody > tr > td.icon {
+  /* border-bottom-width: 0 !important; */
+  width: 36px;
+}
+
+
+.scheduleTable__table > tbody > tr > td:first-child {
+  /* padding-left: 16px !important; */
+  /* padding: 0 16px !important; */
+  /* padding: 0 16px 0 0 !important; */
+  /* padding: 0 8px 0 12px !important; */
+  padding-left: 16px;
+  padding-right: 0;
+
+  /* text-align: center; */
+}
+/* .scheduleTable__table > tbody > tr > td:not(:first-child) { */
+.scheduleTable__table > tbody > tr > td:not(:nth-child(1)):not(:nth-child(2)) {
+  text-align: center;
+  /* padding: 4px 0; */
+}
+
+.scheduleTable__table > tbody > tr > td.hoursBox {
+  font-size: 11px;
+}
+
+.scheduleTable__table > tbody > tr > td.totalHours {
+  font-size: 14px;
+}
+
+.scheduleTable__table > tbody > tr > td {
+  vertical-align: middle;
+}
+
+
+
+@media only screen and (max-width: 1080px) {
+  .scheduleTable {
+    width: 36%;
+    min-width: 400px;
+  }
+}

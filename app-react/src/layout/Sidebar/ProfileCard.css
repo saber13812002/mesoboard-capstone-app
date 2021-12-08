@@ -1,0 +1,40 @@
+.profileCard {
+  position: absolute;
+}
+
+.profileCard > .card {
+  padding: 8px 0;
+  /* margin-left: -1px; */
+  width: 140px;
+}
+
+.profileCard > .card > .cardItemContainer > .cardItem {
+  white-space: nowrap;
+  margin: 4px 0;
+  padding-left: 8%;
+  display: flex;
+  align-items: center;
+}
+
+.profileCard > .card > .cardItemContainer > .cardItem > svg {
+  margin-right: 8px;
+}
+
+/*  NOW IN index.css */
+/* .cardItemContainer { margin: 0 -1px }
+.cardItemContainer:hover {
+  background: #E4E4E4;
+  cursor: pointer;
+}
+
+.cardItem {
+  white-space: nowrap;
+  margin: 4px 0;
+  padding-left: 8%;
+  display: flex;
+  align-items: center;
+}
+
+.cardItem > svg {
+  margin-right: 8px;
+} */

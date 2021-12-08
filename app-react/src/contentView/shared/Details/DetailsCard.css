@@ -1,0 +1,38 @@
+.detailsCard {
+    border: 1px solid #D8D8D8;
+    background: white;
+    border-radius: 10px;
+
+}
+
+.title{
+    font-size: 12px;
+    color:#817D7D;
+}
+
+.dc_container{
+    padding-bottom: 20px;
+    column-count: 2;
+    column-width: 55px;
+    /* width: 50%; */
+    /* display: grid;
+    grid-template-columns: 120px 120px ;
+    grid-template-rows: 30px 30px;
+    padding-left: 100px; */
+}
+
+
+.dc_container2{
+    width: 75%;
+    padding-bottom: 5px;
+    
+    column-count: 3;
+}
+
+.scheduleDetails__profileInfo{
+    width: 50%;
+}
+
+@media only screen and (max-width: 1000px) {
+   
+}

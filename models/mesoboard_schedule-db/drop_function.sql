@@ -1,0 +1,1 @@
+DROP FUNCTION IF EXISTS orders.get_date_primary_key(tstz timestamp with time zone);

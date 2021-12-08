@@ -1,0 +1,18 @@
+.profilesManager > .react-bootstrap-table {
+  width: 50%;
+}
+
+.profilesManager > .react-bootstrap-table > table > thead > tr > th:first-child,
+.profilesManager > .react-bootstrap-table > table > tbody > tr > td:first-child {
+  width: 60%
+}
+
+.profilesManager > .react-bootstrap-table > table > tbody > tr > td {
+  vertical-align: middle;
+}
+
+@media only screen and (max-width: 1200px) {
+  .profilesManager > .react-bootstrap-table {
+    width: 100%;
+  }
+}

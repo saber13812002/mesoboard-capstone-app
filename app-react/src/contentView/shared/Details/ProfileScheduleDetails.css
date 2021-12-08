@@ -1,0 +1,32 @@
+.scheduleDetails__profileInfo {
+  border: 1px solid #D8D8D8;
+  background: white;
+  border-radius: 10px;
+}
+
+.scheduleDetails__profileInfo > h4 {
+  font-weight: 800;
+  color: #287F4E;
+}
+
+.scheduleDetails__Cards {
+  min-width: 160px;
+  font-size: 14px;  
+  padding: 14px;
+  /* padding-bottom: 4px; */
+  /* margin-bottom: 0; */
+  /* p-3 pb-0 */
+}
+
+.scheduleDetails__Cards > .timeInfo {
+  display: flex;
+  justify-content: space-between;
+  padding-bottom: 8px;
+}
+
+.scheduleDetails__Cards > .timeInfo.start { color: #287F4E; }
+.scheduleDetails__Cards > .timeInfo.end { color: #BA302B }
+.scheduleDetails__Cards > .timeInfo.lunch { color: #767676 }
+.timeInfo > .time { font-weight: 700 }
+
+
