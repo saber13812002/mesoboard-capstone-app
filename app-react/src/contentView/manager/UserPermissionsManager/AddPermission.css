@@ -25,8 +25,13 @@
 }
 
 .addPermission__form > .dropdown > button,
-.dropdown-menu {
-  width: 100%;
+.addPermission__form > .dropdown > .dropdown-menu {
+  width: 101%;
+}
+
+.addPermission__form > .dropdown.restaurant > .dropdown-menu {
+  height: 200px;
+  overflow: hidden auto;
 }
 
 .addPermission__form > .dropdown > .dropdown-item {

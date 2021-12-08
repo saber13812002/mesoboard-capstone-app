@@ -135,7 +135,7 @@ const AddPermission = ({ onBack, restaurants }) => {
               <span style={{ color: (selectedRestaurant.location !== 'Restaurante') ? 'black' : '' }}>
                 {truncateLocation(selectedRestaurant.location)}
               </span>}
-            className='mb-3'
+            className='restaurant mb-3'
             onSelect={handleSelectedRestaurant}
           >
             {restaurants.map(r =>
