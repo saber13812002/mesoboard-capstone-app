@@ -381,85 +381,85 @@ const ScheduleManager = () => {
   };
 
 
-  const handleFileUpload = (e) => {
-    const files = e.target.files;
-    //console.log(files);
-    const reader = new FileReader();
-    reader.readAsArrayBuffer(files[0]);
-    reader.onload = (e) => {
+  // const handleFileUpload = (e) => {
+  //   const files = e.target.files;
+  //   //console.log(files);
+  //   const reader = new FileReader();
+  //   reader.readAsArrayBuffer(files[0]);
+  //   reader.onload = (e) => {
 
-      // upload file
-      const binarystr = new Uint8Array(e.target.result);
-      const wb = XLSX.read(binarystr, { type: 'array', raw: true, cellFormula: false });
-      //console.log(wb.Sheets)
+  //     // upload file
+  //     const binarystr = new Uint8Array(e.target.result);
+  //     const wb = XLSX.read(binarystr, { type: 'array', raw: true, cellFormula: false });
+  //     //console.log(wb.Sheets)
 
-      const wsname = wb.SheetNames[0];
-      const data = XLSX.utils.sheet_to_json(wb.Sheets[wsname], { header: 10, range: 10 });
-      const Datedata = XLSX.utils.sheet_to_json(wb.Sheets[wsname], { header: 7, range: 7 });
+  //     const wsname = wb.SheetNames[0];
+  //     const data = XLSX.utils.sheet_to_json(wb.Sheets[wsname], { header: 10, range: 10 });
+  //     const Datedata = XLSX.utils.sheet_to_json(wb.Sheets[wsname], { header: 7, range: 7 });
 
 
-      const res = []
-      //Get Schedule ID
-      const ar = Datedata[0]
-      let date = ''
-      for (let key in ar) {
-        var d = new Date(ar[key])
-        d.setDate(d.getDate() - (d.getDay() + 6) % 7);
-        date = d.toISOString().substring(0, 10);
+  //     const res = []
+  //     //Get Schedule ID
+  //     const ar = Datedata[0]
+  //     let date = ''
+  //     for (let key in ar) {
+  //       var d = new Date(ar[key])
+  //       d.setDate(d.getDate() - (d.getDay() + 6) % 7);
+  //       date = d.toISOString().substring(0, 10);
 
-      }
-      // console.log('date', date)
-      const sId = getScheduleIdOfIsoDateStr(date)
+  //     }
+  //     // console.log('date', date)
+  //     const sId = getScheduleIdOfIsoDateStr(date)
 
-      // console.log('s id', sId)
-      //
-      //get users & Data
-      for (var i = 0; i < data.length; i++) {
-        const a = { name: "", weekDates: [], isLunchHour: true };
+  //     // console.log('s id', sId)
+  //     //
+  //     //get users & Data
+  //     for (var i = 0; i < data.length; i++) {
+  //       const a = { name: "", weekDates: [], isLunchHour: true };
 
-        if (i % 3 == 2) {
-          a.name = data[i - 2].nombre + ' ' + data[i - 1].apellido
-          if (data[i].HoraAlmuerzo === 'NO') { a.isLunchHour = false }
-          let Sdates = data[i - 2]
-          let Edates = data[i - 1]
-          let Ldates = data[i]
-          for (let key in Sdates) {
-            //console.log(key, test[key]);
-            if (key === 'nombre' || key === 'apellido' || key === 'HoraAlmuerzo') { }
-            else {
-              const Shour = timeFromInt(Sdates[key] * 24 * 3600, { format: 12 })
-              const Ehour = timeFromInt((Edates[key] * 24) * 3600, { format: 12 })
-              const Lhour = timeFromInt(Ldates[key] * 24 * 3600, { format: 12 })
-              a.weekDates.push({ 'date': key, 'start': Shour, 'end': Ehour, 'lunch': Lhour })
-              //console.log(timeFromInt(23400))
-            }
-          };
-          res.push(a)
-        }
-      }
-      //get userID, loop thru users to get id
-      const json = users.map((user) => {
-        for (let key in res) {
-          if (user.name === res[key].name) {
-            return { userId: user.userId, scheduleId: sId, is_hour_lunch: res[key].isLunchHour }
-          }
-          // if(user.weekDates){
+  //       if (i % 3 == 2) {
+  //         a.name = data[i - 2].nombre + ' ' + data[i - 1].apellido
+  //         if (data[i].HoraAlmuerzo === 'NO') { a.isLunchHour = false }
+  //         let Sdates = data[i - 2]
+  //         let Edates = data[i - 1]
+  //         let Ldates = data[i]
+  //         for (let key in Sdates) {
+  //           //console.log(key, test[key]);
+  //           if (key === 'nombre' || key === 'apellido' || key === 'HoraAlmuerzo') { }
+  //           else {
+  //             const Shour = timeFromInt(Sdates[key] * 24 * 3600, { format: 12 })
+  //             const Ehour = timeFromInt((Edates[key] * 24) * 3600, { format: 12 })
+  //             const Lhour = timeFromInt(Ldates[key] * 24 * 3600, { format: 12 })
+  //             a.weekDates.push({ 'date': key, 'start': Shour, 'end': Ehour, 'lunch': Lhour })
+  //             //console.log(timeFromInt(23400))
+  //           }
+  //         };
+  //         res.push(a)
+  //       }
+  //     }
+  //     //get userID, loop thru users to get id
+  //     const json = users.map((user) => {
+  //       for (let key in res) {
+  //         if (user.name === res[key].name) {
+  //           return { userId: user.userId, scheduleId: sId, is_hour_lunch: res[key].isLunchHour }
+  //         }
+  //         // if(user.weekDates){
 
-          // }
-        }
-      })
-      console.log(res)
-      console.log(json)
-    };
-  }
+  //         // }
+  //       }
+  //     })
+  //     console.log(res)
+  //     console.log(json)
+  //   };
+  // }
 
-  const downloadFile = () => {
-    const link = document.createElement('a');
-    link.href = `https://docs.google.com/spreadsheets/d/1zRWaJetJ-djrgXZpF-i-YuP-mN2ghdgG/edit?usp=sharing&ouid=104534025623240640660&rtpof=true&sd=true`;
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-  }
+  // const downloadFile = () => {
+  //   const link = document.createElement('a');
+  //   link.href = `https://docs.google.com/spreadsheets/d/1zRWaJetJ-djrgXZpF-i-YuP-mN2ghdgG/edit?usp=sharing&ouid=104534025623240640660&rtpof=true&sd=true`;
+  //   document.body.appendChild(link);
+  //   link.click();
+  //   document.body.removeChild(link);
+  // }
 
   const parseDate = (e) => {
     let date = ''
@@ -471,10 +471,11 @@ const ScheduleManager = () => {
       if (e[i] != 'T' && i > 10 && i < 16) {
         time += (e[i])
       }
-
     }
+
     return date + ' ' + time
   }
+
   const handleFileExport = () => {
     //const fields = ["id", "name", "email","dateStart","dateEnd","dateLunch"];
     const res = []
@@ -516,8 +517,8 @@ const ScheduleManager = () => {
 
     }
     )
-    console.log('data', res)
-    const fields = ["id", "name", "email", "start", "end", "lunch"]
+    // console.log('data', res)
+    // const fields = ["id", "name", "email", "start", "end", "lunch"]
     const csv = Papa.unparse(
       res
     );
@@ -567,21 +568,21 @@ const ScheduleManager = () => {
             )}
             <div className="d-flex align-items-start">
               {/* <label htmlFor="upload" className="btn-secondary importCsvLabel">
-              <Icon
-                IconComponent={iconComponents.Upload}
-                size="sm"
-                color="dark"
-                className="mt-1 mr-1 mb-1"
-              />
-              <span>Import CSV</span>
-            </label>
-            {/* <input
+                <Icon
+                  IconComponent={iconComponents.Upload}
+                  size="sm"
+                  color="dark"
+                  className="mt-1 mr-1 mb-1"
+                />
+                <span>Import CSV</span>
+              </label>
+              <input
                 type="file"
                 id="upload"
                 style={{ display: "none" }}
                 accept=".csv,.xlsx,.xls"
                 onChange={(e) => handleFileUpload(e)}
-              /> */}
+              />
               <MButton
                 className="mr-2"
                 text="Template CSV"
@@ -591,7 +592,7 @@ const ScheduleManager = () => {
                 iconSize="sm"
                 iconColor="dark"
                 onClick={downloadFile}
-              />
+              /> */}
 
               <Icon
                 IconComponent={iconComponents.Download}
