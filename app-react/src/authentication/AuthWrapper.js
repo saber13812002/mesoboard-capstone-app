@@ -1,14 +1,41 @@
 import './Auth.css';
-import { Redirect } from 'react-router-dom';
-
+import { useEffect, useContext } from 'react';
+import { useHistory } from 'react-router-dom';
 import MesoboardBackgroundImg from '../assets/mesoboard_background.jpg';
 import { MesonLogo } from '../components';
 import { urlPaths } from '../services/urlService';
+import { userTypes } from '../services/authService';
+import { AuthContext } from '../store';
+
+let redirectTo;
 
 const AuthWrapper = ({ children, redirectToApp }) => {
+  // console.log('redirectToApp', redirectToApp)
+  const { authState, fetchUserDataByToken } = useContext(AuthContext);
+  const { userType } = authState;
+  const history = useHistory();
+
+  useEffect(() => {
+    // console.log('userType', userType)
+    if (!userType) {
+      if (redirectToApp)
+        fetchUserDataByToken()
+      return;
+    }
+
+    if (userType === userTypes.admin.value)
+      redirectTo = urlPaths.profiles;
+    else
+      redirectTo = urlPaths.schedule;
+
+    if (redirectToApp)
+      history.push(redirectTo)
+
+  }, [userType, redirectToApp])
+
+
   return (
     <>
-      {redirectToApp && <Redirect to={urlPaths.schedule} />}
       {!redirectToApp && (
         <div className='auth'>
           <div className='auth__left'>

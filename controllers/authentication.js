@@ -2,8 +2,8 @@
 /* first include the db config. This is important for every controller file because it does the db queries. */
 const db = require('../config/postgres')();
 const fs = require('fs');
-const authUtils = require('../lib/authUtils')
-const utils = require('../lib/utils')
+const authUtils = require('../lib/authUtils');
+const utils = require('../lib/utils');
 
 exports.login = (req, res, next) => {
   const { email, password } = req.body
@@ -243,15 +243,18 @@ exports.getUserData = async (req, res, next) => {
   // const user_type = req.body.user_type;
   console.log('req.jwt', req.jwt)
   const user_id = req.jwt.sub;
-  // const user_type = req.jwt.user_type;
+  const user_type = req.jwt.user_type;
   console.log('\n\nuser_id', user_id);
 
-  const q = `select user_id, first_name, last_name, email, user_type, gender, employee_id, location  
-  from users inner join restaurant on users.restaurant_id=restaurant.restaurant_id where user_id=$1`;
-  // let q;
-  // if ()
+  let q;
+  if (user_type === 'admin')
+    q = `select user_id, first_name, last_name, email, user_type, gender, employee_id from users where user_id=$1`;
+  else
+    q = `select user_id, first_name, last_name, email, user_type, gender, employee_id, location  
+      from users inner join restaurant on users.restaurant_id=restaurant.restaurant_id where user_id=$1`;
 
-  return db.one(q, user_id).then(data => {
+
+  return db.oneOrNone(q, user_id).then(data => {
     // console.log('data', data)
     res.status(200).json({
       // data,

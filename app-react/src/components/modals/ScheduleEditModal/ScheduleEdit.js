@@ -121,7 +121,7 @@ const ScheduleEdit = ({ user, turns, dateStart, dateEnd, mCurrent, onSaveChanges
     })
   }
   const updateLunch = (e) => {
-    //console.log(e.target.checked)
+    // console.log(e.target.checked)
     setUserToEdit(emp => {
       const newUser = { ...emp };
       newUser.isHourLunch = e.target.checked;
@@ -147,55 +147,57 @@ const ScheduleEdit = ({ user, turns, dateStart, dateEnd, mCurrent, onSaveChanges
       <div className='scheduleEdit'>
         <h4>{name}</h4>
         <small>{beautifyDate(dateStart)} - {beautifyDate(dateEnd)}</small>
-        <div className='d-flex flex-wrap mt-4'>
-          {weekDates.map((weekDate, day) => {
-            if (!weekDate) {
-              return (
-                <MButton
-                  key={day + name}
-                  IconComponent={iconComponents.Plus}
-                  iconColor='dark'
-                  text={getDayName(day)}
-                  variant='outline-primary'
-                  className='mr-2 mb-3'
-                  size='sm'
-                  onClick={() => setWeekDateIntoUser(day)}
-                />
-              )
-            }
-            return null
-          })}
-        </div>
-        <div className='scheduleEdit__data'>
-          {weekDates.map((weekDate, day) => {
-            if (weekDate) {
-              const turnIndex = getTurnIndexByTurnId(weekDate.turnId);
-              // console.log('turnIndex', turnIndex);
+        <div className='overflow'>
+          <div className='d-flex flex-wrap mt-4'>
+            {weekDates.map((weekDate, day) => {
+              if (!weekDate) {
+                return (
+                  <MButton
+                    key={day + name}
+                    IconComponent={iconComponents.Plus}
+                    iconColor='dark'
+                    text={getDayName(day)}
+                    variant='outline-primary'
+                    className='mr-2 mb-3'
+                    size='sm'
+                    onClick={() => setWeekDateIntoUser(day)}
+                  />
+                )
+              }
+              return null
+            })}
+          </div>
+          <div className='scheduleEdit__data'>
+            {weekDates.map((weekDate, day) => {
+              if (weekDate) {
+                const turnIndex = getTurnIndexByTurnId(weekDate.turnId);
+                // console.log('turnIndex', turnIndex);
 
-              return (
-                <div key={day + turnIndex} className='scheduleEdit__row w-100 mt-2'>
-                  <Icon
-                    IconComponent={iconComponents.Trash}
-                    size='md'
-                    color='red'
-                    onClick={() => removeWeekDateFromUser(day)}
-                  />
-                  <h4>{getDayName(day)}</h4>
-                  <Select
-                    defaultValue={selectedOption}
-                    options={ids}
-                    // onChange={(e) => { updateHours(day, e); setSelectedOption(e.value) }}
-                    placeholder={turnIndex}
-                  />
-                  <ScheduleHoursBox isHourLunch={userToEdit.isHourLunch} weekDate={weekDate} showLunchMins={true} />
-                </div>
-              )
-            }
-            return null
-          })}
+                return (
+                  <div key={day + turnIndex} className='scheduleEdit__row w-100 mt-2'>
+                    <Icon
+                      IconComponent={iconComponents.Trash}
+                      size='md'
+                      color='red'
+                      onClick={() => removeWeekDateFromUser(day)}
+                    />
+                    <h4>{getDayName(day)}</h4>
+                    <Select
+                      defaultValue={selectedOption}
+                      options={ids}
+                      onChange={(e) => { updateHours(day, e); setSelectedOption(e.value) }}
+                      placeholder={turnIndex}
+                    />
+                    <ScheduleHoursBox isHourLunch={userToEdit.isHourLunch} weekDate={weekDate} showLunchMins={true} />
+                  </div>
+                )
+              }
+              return null
+            })}
+          </div>
         </div>
         <label className='mt-4 mb-3'>
-          <input type="checkbox" onChange={(e) => updateLunch(e)} checked={userToEdit.isHourLunch} />
+          <input type="checkbox" onChange={e => updateLunch(e)} checked={userToEdit.isHourLunch} />
           <span className='ml-1'>1 hora de almuerzo</span>
         </label>
         <MButton

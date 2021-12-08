@@ -72,6 +72,6 @@ export const genders = [{
 
 
 // should be in a generalService.js file
-export const truncateLocation = l => (l.length < 26) ? l : l.substr(0, 24) + '...'
+export const truncateLocation = (l, n) => (l.length < 26) ? l : l.substr(0, n ? n : 24) + '...'
 
-export const truncateNotificationText = s => (s.length < 52) ? s : s.substr(0, 52) + '...'
+export const truncateNotificationText = (s, n) => (s.length < 52) ? s : s.substr(0, n ? n : 52) + '...'

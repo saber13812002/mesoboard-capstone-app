@@ -8,7 +8,7 @@ module.exports = app => {
     .post(security.isAdminOrManager, schedule.setUserSchedule)
 
   app.route('/protected/schedule/week/all/:schedule_id')
-    .get(security.isAdminOrManager, schedule.getEmployeeSchedules)
+    .get(schedule.getEmployeeSchedules)
 
   // app.route('/protected/schedule/turn/:turn_id/:user_id')
   app.route('/protected/schedule/turn')

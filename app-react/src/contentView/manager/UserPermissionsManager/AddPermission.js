@@ -100,7 +100,7 @@ const AddPermission = ({ onBack, restaurants }) => {
       axios.post(server.addPermission(), { email, permission_type, code: tempCode, restaurant_id, employee_id, is_assistant_manager: isAssistantManager })
     }
     addPermissionFetch();
-    // setTimeout(() => onBack(), 900)
+    setTimeout(() => onBack(), 900)
     e.preventDefault();
   }
 
@@ -135,7 +135,7 @@ const AddPermission = ({ onBack, restaurants }) => {
               <span style={{ color: (selectedRestaurant.location !== 'Restaurante') ? 'black' : '' }}>
                 {truncateLocation(selectedRestaurant.location)}
               </span>}
-            className='pb-3'
+            className='mb-3'
             onSelect={handleSelectedRestaurant}
           >
             {restaurants.map(r =>
@@ -153,17 +153,18 @@ const AddPermission = ({ onBack, restaurants }) => {
           </label>
         )}
 
-        <div className='d-flex justify-content-start w-100'>
+        <div className='d-flex justify-content-between w-100 gap-3'>
           <MButton
             text='Cancelar'
             onClick={onBack}
-            className='mr-3'
+            className='w-75'
             variant='light'
           />
           <MButton
             type='submit'
             text='Añadir Permiso'
             variant='primary'
+            className='w-100'
             disabled={!isDataValid}
           />
         </div>

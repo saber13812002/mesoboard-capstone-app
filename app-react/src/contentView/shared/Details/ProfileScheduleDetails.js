@@ -1,14 +1,19 @@
 import './ProfileScheduleDetails.css';
-import { useState, useEffect } from 'react'
+import { useContext } from 'react';
 import { BackButton } from '../../../components';
-import { DetailsCard } from '../..'
+import { DetailsCard } from '../..';
+import { AuthContext } from '../../../store';
 import { get12HourFormatOfDate, getDayName, getScheduleIdOfMoment } from '../../../services/scheduleService';
-import axios from 'axios';
-import moment from 'moment';
+import { userTypes } from '../../../services/authService';
+// import axios from 'axios';
+// import moment from 'moment';
 
-const ProfileScheduleDetails = ({ userScheduleData, currentMoment, weekStartMoment, onBack }) => {
-  const [mCurrent, setMCurrent] = useState(currentMoment ? currentMoment.clone() : moment()) // the current moment
+const ProfileScheduleDetails = ({ userScheduleData, /*currentMoment, weekStartMoment,*/ onBack }) => {
+  // const [mCurrent, setMCurrent] = useState(currentMoment ? currentMoment.clone() : moment()) // the current moment
   // const [userScheduleData, setUserScheduleData] = useState({}) // the current moment
+
+  const { authState } = useContext(AuthContext);
+  const { userType } = authState;
 
   // useEffect(() => {
   //   // if (userScheduleData.length > 0) return;
@@ -27,19 +32,22 @@ const ProfileScheduleDetails = ({ userScheduleData, currentMoment, weekStartMome
   // }, []);
 
   const { weekDates } = userScheduleData;
-  console.log('---userScheduleData', userScheduleData);
+  const isEmployee = userType === userTypes.employee.value;
+  // console.log('---weekDates', weekDates);
 
   return (
     <>
       {(Object.keys(userScheduleData).length > 0) && <>
-        <BackButton onClick={onBack} />
-        <DetailsCard data={userScheduleData} />
+        {!isEmployee && <>
+          <BackButton onClick={onBack} />
+          <DetailsCard data={userScheduleData} />
+        </>}
 
         <div className='d-flex flex-wrap gap-3'>
-          {weekDates.length === 0 && (
-            <p>No tiene horarios para esta semana</p>
+          {(!weekDates || weekDates.length === 0) && (
+            <p>{`No tiene${isEmployee ? 's' : ''} horarios para esta semana.`}</p>
           )}
-          {weekDates.map((weekDate, day) => {
+          {weekDates?.map((weekDate, day) => {
             if (weekDate)
               return (
                 <div key={day} className='scheduleDetails__Cards card p-3 pb-0'>

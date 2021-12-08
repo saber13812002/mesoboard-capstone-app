@@ -6,7 +6,6 @@ import { logoutStorage } from '../services/authService'
 import { ServerRoutes as server } from '../services/apiService'
 
 const AuthProvider = ({ children }) => {
-
   const initState = {
     userId: undefined,
     employeeId: undefined,
@@ -118,6 +117,9 @@ const AuthProvider = ({ children }) => {
       return axios.get(server.logout()).then(_ => {
         logoutStorage();
         resetState();
+        dispatchAuthAction({ type: 'RESET', payload: initState })
+
+        console.log('resetting state')
         return true;
       }).catch(_ => false)
     }
