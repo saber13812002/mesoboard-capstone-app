@@ -55,14 +55,14 @@ const pgp = require('pg-promise')(options);
 // Use pgp to connect to postgres
 let db;
 
-if (process.env.NODE_ENV === 'production') {
-  const profConfig = { connectionString: process.env.DATABASE_URL };
-  const pool = new Pool(profConfig);
-  db = pool;
-}
-else {
-  db = pgp(config.connectionString);
-}
+// if (process.env.NODE_ENV === 'production') {
+const profConfig = { connectionString: process.env.DATABASE_URL };
+const pool = new Pool(profConfig);
+db = pool;
+// }
+// else {
+//   db = pgp(config.connectionString);
+// }
 
 // Define the postgres configuration method
 module.exports = function () {
