@@ -16,9 +16,9 @@ const options = {
 // with Bluebird by setting the promiseLib property in the options object.
 const pgp = require('pg-promise')(options);
 
+// console.log('config', config)
 // Use pgp to connect to postgres
-// const db = pgp(config.connectionString);
-const db = config.connectionString;
+const db = pgp(config.connectionString);
 
 // Define the postgres configuration method
 module.exports = function () {
