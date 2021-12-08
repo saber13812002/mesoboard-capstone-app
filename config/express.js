@@ -36,11 +36,11 @@ module.exports = function () {
   // // app.use(cors(corsOptions));
   // ////// app.use(fileUpload());
 
-  // /** Routes that contain '/protected' in their path string will first
-  //  *  verify the user's authorization by a Bearer Token and assign the
-  //  *  jwt payload to the request object if verification was successful.
-  //  */
-  // app.use('/protected', require('../controllers/security').verifyJWT);
+  /** Routes that contain '/protected' in their path string will first
+   *  verify the user's authorization by a Bearer Token and assign the
+   *  jwt payload to the request object if verification was successful.
+   */
+  app.use('/protected', require('../controllers/security').verifyJWT);
 
   // /***************************/
   // /* REQUIRE THE ROUTES HERE */
