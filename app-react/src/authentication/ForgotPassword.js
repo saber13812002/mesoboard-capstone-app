@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react';
 import { Form } from 'react-bootstrap';
 import { AuthWrapper } from '.';
 import { isLoggedIn } from '../services/authService';
+import { urlPaths } from '../services/urlService';
 import { useHistory } from 'react-router-dom';
 import { ServerRoutes as server } from '../services/apiService';
 import { MButton, iconComponents } from '../components';
@@ -23,7 +24,7 @@ const ForgotPassword = () => {
     setEmailToSend(undefined);
   }, [emailToSend])
 
-  const handleCancel = () => history.push('signin')
+  const handleCancel = () => history.push(`${urlPaths.signin}`)
 
   const sendResetPassword = (e) => {
     setEmailToSend(email)

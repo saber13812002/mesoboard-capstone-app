@@ -4,6 +4,7 @@ import { AuthWrapper, Register } from '.';
 import { AuthContext } from '../store';
 import { isLoggedIn } from '../services/authService';
 import { NavLink } from 'react-router-dom';
+import { urlPaths } from '../services/urlService'
 
 const minCodeLength = 6;
 
@@ -134,7 +135,7 @@ const Authenticate = () => {
       )}
       <p className='auth__redirect'>
         ¿Ya tienes una cuenta?
-        <NavLink to={'signin'} className='ml-1' onClick={() => resetState()}>
+        <NavLink to={`${urlPaths.signin}`} className='ml-1' onClick={() => resetState()}>
           Iniciar
         </NavLink>
       </p>
