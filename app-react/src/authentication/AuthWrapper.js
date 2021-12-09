@@ -33,7 +33,6 @@ const AuthWrapper = ({ children, redirectToApp }) => {
 
   }, [userType, redirectToApp])
 
-
   return (
     <>
       {!redirectToApp && (

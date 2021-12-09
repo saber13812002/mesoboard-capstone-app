@@ -26,18 +26,24 @@ const initialRestaurantObj = { location: 'Restaurante' };
 const AddPermission = ({ onBack, restaurants }) => {
   const [isDataValid, setIsDataValid] = useState(false);
 
+  // context
+  const { authState } = useContext(AuthContext);
+  const { userType, location } = authState;
+  const isManager = (userType === userTypes.manager.value);
+
   // input states
   const [email, setEmail] = useState('');
   const [employeeId, setEmployeeId] = useState('');
   const [tempCode, setTempCode] = useState('');
   const [isAssistantManager, setIsAssistantManager] = useState(false);
 
-  // dropdown states
-  const [selectedRestaurant, setSelectedRestaurant] = useState(initialRestaurantObj);
-  const [selectedPermissionType, setSelectedPermissionType] = useState({ label: userTypes.employee.label, value: userTypes.employee.value });
+  console.log('userType', userType)
+  console.log('userTypes.manager.label', userTypes.manager.label)
 
-  const { authState } = useContext(AuthContext);
-  const { userType } = authState;
+  // dropdown states
+  const [selectedRestaurant, setSelectedRestaurant] = useState(isManager ? { location } : initialRestaurantObj);
+  const [selectedPermissionType, setSelectedPermissionType] = useState({ label: userTypes.employee.label, value: userTypes.employee.value });
+  console.log('authState', authState);
 
   useEffect(() => {
     if (userType === userTypes.admin.value) {
@@ -132,11 +138,12 @@ const AddPermission = ({ onBack, restaurants }) => {
         {(selectedPermissionType.value === userTypes.manager.value || selectedPermissionType.value === userTypes.employee.value) && (
           <DropdownButton
             title={
-              <span style={{ color: (selectedRestaurant.location !== 'Restaurante') ? 'black' : '' }}>
-                {truncateLocation(selectedRestaurant.location)}
+              <span style={{ color: (selectedRestaurant.location !== initialRestaurantObj.location) ? 'black' : '' }}>
+                {truncateLocation(selectedRestaurant?.location)}
               </span>}
-            className='mb-3'
+            className='restaurant mb-3'
             onSelect={handleSelectedRestaurant}
+            disabled={isManager}
           >
             {restaurants.map(r =>
               <Dropdown.Item key={r.restaurant_id} eventKey={r.restaurant_id}>

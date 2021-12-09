@@ -11,22 +11,21 @@ import axios from 'axios';
 
 const ForgotPassword = () => {
   const history = useHistory();
-
   const [redirectToApp] = useState(isLoggedIn());
-  const [email] = useState('kevin.ramirez3@upr.edu');
   const [emailToSend, setEmailToSend] = useState(undefined)
 
   useEffect(() => {
     if (!emailToSend) return;
-    axios.post(server.sendResetPassword(), { email }).then(res => {
-      console.log('res.data', res.data);
-    })
+    axios.post(server.sendResetPassword(), { email: emailToSend })
     setEmailToSend(undefined);
+    handleCancel();
   }, [emailToSend])
 
   const handleCancel = () => history.push(`${urlPaths.signin}`)
 
   const sendResetPassword = (e) => {
+    const email = e.target[0]?.value;
+    console.log('email', email)
     setEmailToSend(email)
     e.preventDefault();
   }
@@ -44,6 +43,7 @@ const ForgotPassword = () => {
             onClick={handleCancel}
           />
           <MButton
+            type='submit'
             className='w-100'
             text='Enviar'
             variant='primary'
