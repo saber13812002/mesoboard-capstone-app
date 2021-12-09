@@ -56,6 +56,7 @@ exports.sendResetPasswordEmail = async (req, res, next) => {
   console.log('\n\nemail', email);
 
   let link = utils.getUrlByEnvironment(req, 'api/auth/');
+  console.log('link', link)
 
   return db.task(async t => {
     return t.one("select * from users where email = $1", email).then(data => {

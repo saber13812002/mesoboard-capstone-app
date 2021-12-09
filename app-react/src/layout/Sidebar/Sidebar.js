@@ -41,6 +41,7 @@ const Sidebar = () => {
     // add items by type of user
     switch (userType) {
       case userTypes.manager.value:
+        console.log('manager')
         scheduleItem.setNext(profilesItem)
         profilesItem.setNext(permissionsItem);
         break;

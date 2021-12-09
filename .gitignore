@@ -3,7 +3,6 @@ node_modules/
 node_modules/*
 node_modules/**
 app-react/node_modules/
-
 package-lock.json
 .env
 id_rsa_priv.pem
