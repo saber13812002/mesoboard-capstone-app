@@ -18,7 +18,7 @@ const pgp = require('pg-promise')(options);
 
 let PROD_DATABASE_URL;
 // if (process.env.NODE_ENV === 'production')
-PROD_DATABASE_URL = `postgres://yxdxovsklgoakk:189290976e2eb41d4c3377ce0f8743ab4e826007eb5526af496eec159e173637@
+PROD_DATABASE_URL = `postgresql://yxdxovsklgoakk:189290976e2eb41d4c3377ce0f8743ab4e826007eb5526af496eec159e173637@
   ec2-18-210-159-154.compute-1.amazonaws.com:5432/d7utqaaqfbc7n0`;
 
 // Use pgp to connect to postgres
@@ -28,10 +28,6 @@ module.exports = function () {
   //return connection instance
   return db;
 };
-
-
-console.log(`postgresql://${config.user}:${config.password}@${config.host}:${config.post}/${config.database}`)
-
 
 
 // // Load the module dependencies
