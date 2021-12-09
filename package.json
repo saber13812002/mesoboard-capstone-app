@@ -9,7 +9,7 @@
   },
   "scripts": {
     "start": "node app.js",
-    "heroku-postbuild": "cd app-react && npm install && npm run build"
+    "heroku-postbuild": "node generateKeypair.js cd app-react && npm install && npm run build"
   },
   "keywords": [],
   "author": "mesoboard-dev-team",
